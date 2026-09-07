@@ -285,8 +285,14 @@ const PROBE = `(() => {
   out.collapsed = out.collapsed.slice(0, 8);
 
   // Images that did not load, and tap targets under 24px.
-  for (const img of document.images)
-    if (!img.complete || img.naturalWidth === 0) out.broken.push(img.getAttribute('src') || '(no src)');
+  for (const img of document.images) {
+    if (img.complete && img.naturalWidth > 0) continue;
+    // A lazy image still below the viewport has not failed; it has not been
+    // asked for yet. Only an image the browser should have fetched counts.
+    const r = img.getBoundingClientRect();
+    if (img.loading === 'lazy' && r.top > vh * 1.5) continue;
+    out.broken.push(img.getAttribute('src') || '(no src)');
+  }
   for (const el of document.querySelectorAll('a, button, input, select, textarea, [role=button]')) {
     if (!vis(el)) continue;
     // WCAG 2.5.8 exempts targets in a sentence or block of text. An inline link
