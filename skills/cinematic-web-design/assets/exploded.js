@@ -14,13 +14,18 @@
    Bottom of the list = bottom of the stack. Callouts are projected onto each
    slab's real world position, so they track it through the turn. With no
    WebGL, reduced motion, or no three.js, the list stays and reads fine. */
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+/* three.js is ~160 KB. A static import would download it on every page that
+   loads this file, including every page with no exploded view on it. Check the
+   DOM first, then fetch. */
+const roots = [...document.querySelectorAll('.exploded')].filter(
+  (r) => r.querySelectorAll('li').length >= 2,
+);
+if (roots.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+const THREE = await import('three');
+const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
 
-for (const root of document.querySelectorAll('.exploded')) {
+for (const root of roots) {
   const items = [...root.querySelectorAll('li')];
-  if (items.length < 2) continue;
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) continue;
 
   let renderer;
   try {
@@ -31,7 +36,9 @@ for (const root of document.querySelectorAll('.exploded')) {
   const stage = document.createElement('div');
   stage.className = 'exploded__gl';
   root.prepend(stage);
-  root.classList.add('is-live');
+  // is-live hides the fallback list. Only claim it once something has actually
+  // rendered, or a shader failure leaves an empty box where the content was.
+  let live = false;
 
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -135,20 +142,32 @@ for (const root of document.querySelectorAll('.exploded')) {
     camera.lookAt(0, 0, 0);
     camera.updateMatrixWorld();
     renderer.render(scene, camera);
+    if (!live) { live = true; root.classList.add('is-live'); }
 
     const rect = stage.getBoundingClientRect();
+    const placed = [];
     layers.forEach((g, i) => {
       g.getWorldPosition(_w);
       _w.x += W / 2 + 0.12;
       const p = toScreen(_w, rect);
       const t = tags[i];
       if (!p || spread < 0.25) { t.style.opacity = '0'; return; }
+      // A projected point can land past the stage, and a label hanging off the
+      // right edge gives the whole document a horizontal scrollbar.
+      const x = Math.max(0, Math.min(p.x, rect.width - t.offsetWidth));
+      const y = Math.max(0, Math.min(p.y, rect.height - t.offsetHeight));
+      // Two slabs can project to the same point mid-turn. Two labels on top of
+      // each other are unreadable, so the later one steps aside.
+      const h = t.offsetHeight || 16;
+      if (placed.some((q) => Math.abs(q - y) < h + 2)) { t.style.opacity = '0'; return; }
+      placed.push(y);
       t.style.opacity = String(Math.min(1, (spread - 0.25) / 0.3));
-      t.style.transform = `translate3d(${Math.round(p.x)}px, ${Math.round(p.y)}px, 0)`;
+      t.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
     });
 
     if (Math.abs(target - eased) > 0.0004) requestAnimationFrame(frame);
     else running = false;
   }
   renderer.compileAsync(scene, camera).then(read).catch(read);
+}
 }

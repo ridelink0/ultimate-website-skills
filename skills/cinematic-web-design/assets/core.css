@@ -586,7 +586,7 @@ figcaption { margin-top: var(--s-3); font-family: var(--font-ui); font-size: var
             max-width: 40rem; margin-inline: auto; }
 .exploded__gl { position: absolute; inset: 0; }
 .exploded__gl canvas { width: 100% !important; height: 100% !important; display: block; }
-.exploded__tags { position: absolute; inset: 0; pointer-events: none; }
+.exploded__tags { position: absolute; inset: 0; pointer-events: none; overflow: clip; }
 .exploded__tag {
   position: absolute; top: 0; left: 0; opacity: 0; white-space: nowrap;
   font-family: var(--font-ui); font-size: var(--step--2); font-weight: 500;

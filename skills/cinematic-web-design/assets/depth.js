@@ -137,11 +137,25 @@
     const gl = cv.getContext('webgl', { alpha: false, antialias: false });
     if (!gl) { root.style.backgroundImage = `url(${root.dataset.photo})`; continue; }
 
-    const mk = (t, s) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); return x; };
+    const mk = (t, src) => {
+      const x = gl.createShader(t);
+      gl.shaderSource(x, src); gl.compileShader(x);
+      if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) {
+        console.warn('depth.js shader:', gl.getShaderInfoLog(x)); return null;
+      }
+      return x;
+    };
+    const vs = mk(gl.VERTEX_SHADER, VS), fs = mk(gl.FRAGMENT_SHADER, FS);
+    // a silent link failure draws nothing at all: show the photo instead
+    if (!vs || !fs) { cv.remove(); root.style.backgroundImage = `url(${root.dataset.photo})`; continue; }
     const prog = gl.createProgram();
-    gl.attachShader(prog, mk(gl.VERTEX_SHADER, VS));
-    gl.attachShader(prog, mk(gl.FRAGMENT_SHADER, FS));
-    gl.linkProgram(prog); gl.useProgram(prog);
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      console.warn('depth.js link:', gl.getProgramInfoLog(prog));
+      cv.remove(); root.style.backgroundImage = `url(${root.dataset.photo})`; continue;
+    }
+    gl.useProgram(prog);
     const b = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, b);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);

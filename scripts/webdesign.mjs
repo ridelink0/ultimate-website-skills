@@ -142,6 +142,27 @@ function cmdNew() {
   body = body.replace(/href="#([\w-]+)"/g, (m, id) =>
     anchors.includes(id) || id === 'top' || id === 'main' ? m : `href="#${cta || 'top'}"`);
 
+  // Load only the engines this page actually uses. three.js alone is ~160 KB,
+  // and shipping it to a page with no 3D on it is the kind of thing nobody
+  // notices until the Lighthouse run.
+  const needs = {
+    gradient: /data-gradient|class="[^"]*\bgradient\b/.test(body),
+    depth: /class="[^"]*\bdepth\b|data-depth=/.test(body),
+    exploded: /class="[^"]*\bexploded\b/.test(body),
+  };
+  const engines = [];
+  if (needs.gradient) engines.push('<script src="gradient.js" defer></script>');
+  if (needs.depth) engines.push('<script src="depth.js" defer></script>');
+  if (needs.exploded) {
+    engines.push(
+      '<script type="importmap">\n{"imports":{\n' +
+      '  "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",\n' +
+      '  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"\n' +
+      '}}</script>',
+      '<script type="module" src="exploded.js"></script>',
+    );
+  }
+
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -151,7 +172,7 @@ ${head}
 <main id="main">
 ${body}
 </main>
-${sections.get('foot').body}
+${sections.get('foot').body}${engines.length ? '\n' + engines.join('\n') : ''}
 </body>
 </html>
 `;
@@ -509,9 +530,22 @@ function cmdAudit() {
     if (/grid-template-columns\s*:\s*repeat\(\s*3\s*,\s*1fr\s*\)/.test(h + allCss))
       W('repeat(3, 1fr) - use repeat(auto-fit, minmax(...)) so the row is not locked to three');
 
-    // wiring
+    // wiring: an engine's markup with no engine behind it is a dead section
     if (/data-(px|count|magnetic|tilt|split)=/.test(h) && !/motion\.js/.test(h))
       E(`${n}: uses data-px/count/magnetic/tilt but never loads motion.js`);
+    if (/data-gradient=/.test(h) && !/gradient\.js/.test(h))
+      E(`${n}: has a canvas[data-gradient] but never loads gradient.js`);
+    if (/class=["'][^"']*\bdepth\b/.test(h) && !/depth\.js/.test(h))
+      E(`${n}: has a .depth scene but never loads depth.js`);
+    if (/class=["'][^"']*\bexploded\b/.test(h)) {
+      if (!/exploded\.js/.test(h)) E(`${n}: has an .exploded stack but never loads exploded.js`);
+      else if (!/type=["']importmap["']/.test(h))
+        E(`${n}: exploded.js is a module importing "three" - it needs an importmap`);
+    }
+    // and the reverse: paying for an engine nothing uses
+    for (const [f, sel] of [['gradient.js', /data-gradient=/], ['depth.js', /class=["'][^"']*\bdepth\b/],
+                            ['exploded.js', /class=["'][^"']*\bexploded\b/]])
+      if (h.includes(f) && !sel.test(h)) W(`${n}: loads ${f} but nothing on the page uses it`);
     if (/class=["'][^"']*\bgrain\b/.test(h) === false) W(`${n}: no .grain overlay - the page will look flat`);
     if (!/fonts\.(googleapis|gstatic|bunny|fontshare)/.test(h) && !/@font-face/.test(allCss))
       W(`${n}: no webfont loaded - the whole system depends on the serif`);

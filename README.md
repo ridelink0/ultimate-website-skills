@@ -12,7 +12,22 @@ real optical sizes, warm-neutral and near-black grounds in OKLCH, cinematic
 photography with eased scrims, layered scroll parallax, and exploded technical
 views built from stacked 2D layers rather than a 3D engine.
 
+**No more SVGs.** Hand-drawn vector silhouettes were how this plugin used to
+fake depth, and they read as exactly that. Depth now comes from real WebGL and
+real photography: an animated shader gradient, three parallax planes that blur
+and haze with distance, and three.js for anything taken apart. SVG is kept for
+what it is genuinely best at - line art, blueprints, icons - and nothing else.
+
 It works in **Claude Code** and **Codex**.
+
+## It wires itself
+
+The scaffolder emits only the engines a page actually uses, so a page with no
+3D never downloads three.js, and the audit checks it both ways: an engine's
+markup with no script behind it is an error, and a script nothing uses is a
+warning. `look` now captures console errors and uncaught exceptions too, so a
+failed shader compile or a missing import fails the check instead of quietly
+rendering less than it should.
 
 ## Install
 

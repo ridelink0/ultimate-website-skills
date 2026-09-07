@@ -402,16 +402,8 @@
 <!-- @section foot | scripts, last thing before </body> -->
 <div class="grain" aria-hidden="true"></div>
 <script src="motion.js" defer></script>
-<!-- only what the page uses: gradient.js for a canvas.gradient, depth.js for a
-     .depth scene, and the importmap + exploded.js for a .exploded stack -->
-<script src="gradient.js" defer></script>
-<script src="depth.js" defer></script>
-<script type="importmap">
-{"imports":{
-  "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
-}}</script>
-<script type="module" src="exploded.js"></script>
+<!-- The scaffolder adds gradient.js / depth.js / three.js + exploded.js
+     here, but only when the page actually contains one. -->
 <!-- @end -->
 
 

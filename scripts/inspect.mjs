@@ -353,6 +353,7 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
         width: w, height, deviceScaleFactor: 1, mobile: w < 700,
       });
       session.events.length = 0;
+      await session.send('Log.enable').catch(() => {});
       await session.send('Page.navigate', { url });
       await session.waitForEvent('Page.loadEventFired');
       // let fonts settle and any entrance animation finish
@@ -370,6 +371,40 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
         await sleep(sy ? 700 : 0);
         const probe = await session.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
         const report = JSON.parse(probe.result.value);
+
+        // A thrown exception, a failed shader compile, a 404 on a module - none
+        // of it shows in the DOM. The page just quietly does less than it should.
+        const seen = new Set();
+        report.console = [];
+        for (const e of session.events) {
+          let text = null;
+          if (e.method === 'Runtime.exceptionThrown') {
+            const d = e.params?.exceptionDetails;
+            text = d?.exception?.description || d?.text || 'uncaught exception';
+          } else if (e.method === 'Runtime.consoleAPICalled' && /error|warning|assert/.test(e.params?.type)) {
+            text = (e.params.args || []).map((a) => a.value ?? a.description ?? a.unserializableValue ?? '').join(' ').trim();
+          } else if (e.method === 'Log.entryAdded' && /error|warning/.test(e.params?.entry?.level)) {
+            const en = e.params.entry;
+            text = `${en.text}${en.url ? ' <- ' + en.url.split('/').pop() : ''}`;
+          }
+          if (!text) continue;
+          text = String(text).split('\n')[0].slice(0, 180);
+          // favicon 404s and third-party noise are not the page's bugs
+          // favicon 404s, aborted third-party requests, and the ANGLE precision
+          // note three.js emits on every Windows machine are not page bugs
+          if (/favicon|net::ERR_(BLOCKED|ABORTED)|cannot be represented accurately in double precision/i.test(text)) continue;
+          const key = text.slice(0, 90);
+          if (seen.has(key)) continue;
+          seen.add(key);
+          report.console.push({
+            level: e.method === 'Runtime.exceptionThrown' ? 'error'
+              : (e.params?.type || e.params?.entry?.level || 'warning'),
+            text,
+          });
+        }
+        // consume them, or every later scroll position re-reports the same
+        // load-time errors
+        session.events.length = 0;
 
         let file = null;
         if (out) {
@@ -408,6 +443,10 @@ export function formatReport(results) {
     for (const o of r.overflow) { errors++; lines.push(`  ERROR ${o.what} runs ${o.by}px past the right edge`); }
     for (const c of r.collapsed) { errors++; lines.push(`  ERROR collapsed to zero size but has text: ${c}`); }
     for (const b of r.broken) { errors++; lines.push(`  ERROR image failed to load: ${b}`); }
+    for (const c of (r.console || [])) {
+      if (c.level === 'error') { errors++; lines.push(`  ERROR console: ${c.text}`); }
+      else { warns++; lines.push(`  warn  console: ${c.text}`); }
+    }
     for (const c of r.contrast) { warns++; lines.push(`  warn  contrast ${c.ratio}:1 (needs ${c.need}) at ${c.size}px: ${c.el}`); }
     for (const t of r.tiny) { warns++; lines.push(`  warn  tap target ${t.w}x${t.h}px (needs 24): ${t.el}`); }
   }
