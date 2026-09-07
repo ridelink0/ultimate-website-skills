@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "atelier",
+  "description": "Editorial website craft for Claude Code and Codex",
+  "owner": {
+    "name": "Gerald",
+    "email": "app.ridelink@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "atelier",
+      "description": "Build websites that look like a design studio made them: editorial serif typography, warm-neutral and near-black grounds, cinematic photography, layered scroll parallax and exploded technical views. Ships a copy-in CSS chassis, a motion runtime, a section library, a scaffolder and an audit that fails the build on the usual tells.",
+      "author": { "name": "Gerald" },
+      "category": "design",
+      "source": "./",
+      "homepage": "https://github.com/ridelink0/atelier"
+    }
+  ]
+}
