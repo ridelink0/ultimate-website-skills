@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""atelier cut - turn a photograph into parallax planes.
+"""webdesign cut - turn a photograph into parallax planes.
 
     python cut.py <photo> [--out DIR] [--name base] [--model u2net|isnet-general-use]
 
@@ -27,13 +27,13 @@ def main():
         from rembg import remove, new_session
         from PIL import Image, ImageFilter
     except ImportError:
-        sys.stderr.write('atelier cut: rembg is not installed.\n'
+        sys.stderr.write('webdesign cut: rembg is not installed.\n'
                          '  python -m pip install "rembg[cpu]"\n')
         sys.exit(2)
 
     src = a.photo
     if not os.path.exists(src):
-        sys.stderr.write(f'atelier cut: no such file: {src}\n'); sys.exit(2)
+        sys.stderr.write(f'webdesign cut: no such file: {src}\n'); sys.exit(2)
     out = a.out or os.path.dirname(os.path.abspath(src))
     base = a.name or os.path.splitext(os.path.basename(src))[0]
     os.makedirs(out, exist_ok=True)
@@ -75,7 +75,7 @@ def main():
                'almost nothing found' if cov <= 8 else
                'subject is cropped by the frame edge, so the cut-out has a straight side')
         sys.stderr.write(
-            f'atelier cut: {why}.\n'
+            f'webdesign cut: {why}.\n'
             '  This photo has no usable subject. Pick one with clear sky or wall\n'
             '  around it, or use the photograph whole. Files written for inspection.\n')
     print(f'  fg   {fg_path}')

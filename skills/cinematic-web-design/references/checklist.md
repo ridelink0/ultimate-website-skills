@@ -1,6 +1,6 @@
 # Before you ship
 
-Run `atelier.mjs audit <dir>` first - it catches the mechanical failures. This
+Run `webdesign.mjs audit <dir>` first - it catches the mechanical failures. This
 list is what the audit cannot see.
 
 ## Content
@@ -70,7 +70,7 @@ list is what the audit cannot see.
 
 ## Then look at it
 
-`node scripts/atelier.mjs look <dir>` renders the page at 1440 and 390 in a real
+`node scripts/webdesign.mjs look <dir>` renders the page at 1440 and 390 in a real
 browser, reports what only a rendered page can show - text over text, content
 past the viewport, contrast against the actually-painted background, collapsed
 elements, broken images - and writes a PNG at each width. **Read the PNGs.**

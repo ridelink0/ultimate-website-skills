@@ -1,11 +1,11 @@
-# atelier
+# cinematic-web-design
 
 This repo is a plugin for Claude Code and Codex. It teaches a coding agent one
 art direction for websites and ships the code that produces it.
 
 ## If you are building a website
 
-Read `skills/atelier/SKILL.md` and follow it. That is the whole entry point.
+Read `skills/cinematic-web-design/SKILL.md` and follow it. That is the whole entry point.
 It is written for agents that do not load skills automatically, so it stands on
 its own.
 
@@ -25,14 +25,14 @@ Layout:
 .claude-plugin/plugin.json      Claude Code manifest
 .claude-plugin/marketplace.json Claude Code catalogue (Codex reads this too)
 .codex-plugin/plugin.json       Codex manifest
-skills/atelier/SKILL.md         the doctrine
-skills/atelier/assets/          core.css, motion.js, sections.html
-skills/atelier/references/      loaded on demand
-scripts/atelier.mjs             new / sections / add / audit / look / serve
+skills/cinematic-web-design/SKILL.md         the doctrine
+skills/cinematic-web-design/assets/          core.css, motion.js, sections.html
+skills/cinematic-web-design/references/      loaded on demand
+scripts/webdesign.mjs             new / sections / add / audit / look / serve
 scripts/inspect.mjs             headless-browser render check, over CDP
 scripts/cut.py                  photograph -> parallax planes via rembg
 scripts/install.mjs             registers with both CLIs
-commands/atelier.md             the /atelier slash command
+commands/cinematic-web-design.md             the /cinematic-web-design slash command
 hooks/                          UserPromptSubmit nudge
 ```
 
@@ -45,9 +45,9 @@ Constraints:
 - `inspect.mjs` talks to Chrome/Edge/Chromium over the DevTools protocol using
   Node 22's built-in `WebSocket` and `fetch`. Do not add puppeteer.
 - Every change to `assets/` or `scripts/` must keep
-  `node scripts/atelier.mjs audit` passing on a fresh scaffold:
+  `node scripts/webdesign.mjs audit` passing on a fresh scaffold:
   ```
-  node scripts/atelier.mjs new /tmp/t --name "T" && node scripts/atelier.mjs audit /tmp/t
+  node scripts/webdesign.mjs new /tmp/t --name "T" && node scripts/webdesign.mjs audit /tmp/t
   ```
   A fresh scaffold is *expected* to fail on scaffold copy and the example email
   address - that is the audit doing its job. Everything else must be clean.

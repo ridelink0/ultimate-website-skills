@@ -1,9 +1,9 @@
 ---
-name: atelier
+name: cinematic-web-design
 description: Use whenever a website, landing page, marketing site, portfolio, microsite, homepage, or any public-facing web page is being built, redesigned, restyled, or made to "look better" - including plain HTML/CSS pages, Next/React/Astro sites, and single-file pages. Supplies the house style (editorial serif typography, warm-neutral and near-black grounds, cinematic imagery, layered scroll parallax, exploded technical views) plus a copy-in CSS chassis, a motion runtime, a section library, a scaffolder, and an audit.
 ---
 
-# atelier
+# Cinematic Web Design
 
 The studio's house style, and the code that produces it. This is a pinned art
 direction, not a menu: build in it unless the person names a different one.
@@ -31,7 +31,7 @@ not say what the subject is, ask one question. Otherwise decide and go.
 ## Build
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" new <dir> \
+node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" new <dir> \
   --preset bone --name "Subject Name" \
   --sections nav,hero-photo,manifesto,services,stats,faq,contact,footer
 ```
@@ -47,9 +47,9 @@ Then, in order:
 3. **Add the signature** - one element this page is remembered by, drawn from the
    subject's own world. One. Everything else stays quiet.
 4. **Audit the source**:
-   `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" audit <dir>` - must exit 0.
+   `node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" audit <dir>` - must exit 0.
 5. **Then render it and look**:
-   `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" look <dir>`
+   `node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" look <dir>`
    This is not optional. It opens the page in a real headless browser at 1440
    and 390, reports text overlapping text, content past the viewport, contrast
    against the actual painted background, collapsed elements and broken images -
@@ -170,7 +170,7 @@ Then cut the photograph into planes. That is the whole trick of the bridge
 video - one scene, several depths:
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" cut img/house.jpg --out img
+node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" cut img/house.jpg --out img
 # -> house-fg.png (subject, transparent), house-bg.jpg (hole dissolved), house-mask.png
 ```
 
@@ -251,15 +251,15 @@ render exists - each of those is the low-effort version.
 
 | Need | Reach for |
 |---|---|
-| To see what a site you are imitating actually does | `atelier.mjs look <url>` - real render, two scroll positions, PNGs. Study the reference as an image, not as a description of one |
-| Visual research on a style, a palette, a font in the wild | `atelier.mjs study --list editorial\|object\|cinema\|product` renders a curated batch into contact sheets; the `imagesearch` skill, if installed, for anything it does not cover |
+| To see what a site you are imitating actually does | `webdesign.mjs look <url>` - real render, two scroll positions, PNGs. Study the reference as an image, not as a description of one |
+| Visual research on a style, a palette, a font in the wild | `webdesign.mjs study --list editorial\|object\|cinema\|product` renders a curated batch into contact sheets; the `imagesearch` skill, if installed, for anything it does not cover |
 | Photographs | Unsplash, Pexels, Wikimedia, museum IIIF - `references/imagery.md` has the URL formats and licences. Verify every hotlink with a HEAD request |
-| Depth from one photograph | `atelier.mjs cut` (rembg, local) |
+| Depth from one photograph | `webdesign.mjs cut` (rembg, local) |
 | Pinning, scrubbing, sequenced choreography | GSAP 3.15 + ScrollTrigger from cdnjs, free for everything now. `gsap.matchMedia()` for the reduced-motion and narrow-screen branches |
 | A real 3D object the visitor must turn | three.js from jsDelivr, or `<model-viewer>` for hotspots with near-zero code |
 | Whole-page inertia as a brand decision | Lenis 1.3.26+, never ScrollSmoother alongside CSS scroll timelines |
 | A design that exists in Figma | the Figma MCP tools, when attached: `get_design_context`, `get_screenshot` |
-| To know whether it looks right | `atelier.mjs look`, then your own eyes on the PNGs. Nothing else counts |
+| To know whether it looks right | `webdesign.mjs look`, then your own eyes on the PNGs. Nothing else counts |
 
 ## References
 

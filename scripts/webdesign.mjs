@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-/* atelier - scaffold and audit editorial websites.
-   node atelier.mjs new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
-   node atelier.mjs sections                     list section ids
-   node atelier.mjs add <id> [--to <file>]       print a section, or append it to a file
-   node atelier.mjs audit <dir|file>             quality + bug check, exits 1 on error
-   node atelier.mjs serve <dir> [--port 4321]    local preview
+/* cinematic-web-design - scaffold and audit editorial websites.
+   node webdesign.mjs new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
+   node webdesign.mjs sections                     list section ids
+   node webdesign.mjs add <id> [--to <file>]       print a section, or append it to a file
+   node webdesign.mjs audit <dir|file>             quality + bug check, exits 1 on error
+   node webdesign.mjs serve <dir> [--port 4321]    local preview
    No dependencies. Node 18+. */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -15,7 +15,7 @@ import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ASSETS = resolve(HERE, '..', 'skills', 'atelier', 'assets');
+const ASSETS = resolve(HERE, '..', 'skills', 'cinematic-web-design', 'assets');
 
 const argv = process.argv.slice(2);
 const cmd = argv[0];
@@ -27,7 +27,7 @@ const flag = (name, def = null) => {
   return v === undefined || v.startsWith('--') ? true : v;
 };
 
-const die = (msg, code = 1) => { console.error('atelier: ' + msg); process.exit(code); };
+const die = (msg, code = 1) => { console.error('cinematic-web-design: ' + msg); process.exit(code); };
 const ok = (s) => `  ok    ${s}`;
 const warn = (s) => `  warn  ${s}`;
 const err = (s) => `  ERROR ${s}`;
@@ -78,7 +78,7 @@ function cmdNew() {
 
   const sections = loadSections();
   const missing = wanted.filter((s) => !sections.has(s));
-  if (missing.length) die(`unknown section(s): ${missing.join(', ')}\nRun "atelier.mjs sections" for the list.`);
+  if (missing.length) die(`unknown section(s): ${missing.join(', ')}\nRun "webdesign.mjs sections" for the list.`);
   const heroes = wanted.filter((s) => s.startsWith('hero-'));
   if (heroes.length > 1)
     die(`pick one hero, not ${heroes.length} (${heroes.join(', ')}). A page has one opening statement.`);
@@ -172,10 +172,10 @@ ${preset.css}
     Cache-Control = "public, max-age=0, must-revalidate"
 `, 'utf8');
 
-  console.log(`atelier: ${relative(process.cwd(), dir) || '.'} (${presetName})`);
+  console.log(`cinematic-web-design: ${relative(process.cwd(), dir) || '.'} (${presetName})`);
   console.log(`  index.html  ${wanted.join(', ')}`);
   console.log(`  core.css motion.js site.css netlify.toml`);
-  console.log(`\nNext: replace every word of placeholder copy, then "node atelier.mjs audit ${dir}".`);
+  console.log(`\nNext: replace every word of placeholder copy, then "node webdesign.mjs audit ${dir}".`);
 }
 
 /* ----------------------------------------------------------------- list -- */
@@ -201,7 +201,7 @@ function cmdAdd() {
     ? cur.replace('</main>', `\n${block}\n</main>`)
     : cur + '\n' + block + '\n';
   writeFileSync(p, out, 'utf8');
-  console.log(`atelier: added "${id}" to ${relative(process.cwd(), p)}`);
+  console.log(`cinematic-web-design: added "${id}" to ${relative(process.cwd(), p)}`);
 }
 
 /* ---------------------------------------------------------------- audit -- */
@@ -371,7 +371,7 @@ function cmdAudit() {
   const allText = [...htmls, ...csss, ...jss].map((f) => readFileSync(f, 'utf8')).join('\n');
 
   /* --- project-wide ---------------------------------------------------- */
-  console.log(`\natelier audit  ${relative(process.cwd(), target) || '.'}`);
+  console.log(`\nwebdesign audit  ${relative(process.cwd(), target) || '.'}`);
   console.log(`  ${htmls.length} html, ${csss.length} css, ${jss.length} js\n`);
 
   if (EMOJI.test(allText)) {
@@ -555,7 +555,7 @@ function cmdServe() {
   const port = parseInt(String(flag('port', '4321')), 10) || 4321;
   const srv = startServer(dir, port);
   srv.ref();
-  console.log(`atelier: http://localhost:${port}  (${dir})`);
+  console.log(`cinematic-web-design: http://localhost:${port}  (${dir})`);
 }
 
 /* ----------------------------------------------------------------- look -- */
@@ -564,7 +564,7 @@ function cmdServe() {
    collapsed elements, broken images. Static analysis cannot see any of it. */
 async function cmdLook() {
   const target = positional[0] || '.';
-  const out = String(flag('out', join(process.env.CLAUDE_SCRATCHPAD || tmpdir(), 'atelier-shots')));
+  const out = String(flag('out', join(process.env.CLAUDE_SCRATCHPAD || tmpdir(), 'webdesign-shots')));
   const widths = String(flag('widths', '1440,390')).split(',').map((s) => parseInt(s, 10)).filter(Boolean);
   // Default probes the top AND one screen down: that is where parallax layers
   // drift into the headline, and where a top-only check said everything was fine.
@@ -585,14 +585,14 @@ async function cmdLook() {
     const { inspect, formatReport } = await import('./inspect.mjs');
     const results = await inspect(url, { widths, out: noShot ? null : out, scrolls });
     const { text, errors, warns } = formatReport(results);
-    console.log(`\natelier look  ${target}`);
+    console.log(`\nwebdesign look  ${target}`);
     console.log(text);
     console.log(`\n  ${errors} error(s), ${warns} warning(s)`);
     if (!noShot) console.log(`\n  Read the PNGs. The report cannot tell you whether it looks good.`);
     process.exitCode = errors ? 1 : 0;
   } catch (e) {
     if (e && e.code === 'no-browser') {
-      console.error('atelier look: ' + e.message);
+      console.error('webdesign look: ' + e.message);
       process.exitCode = 2;
     } else throw e;
   } finally {
@@ -635,7 +635,7 @@ async function cmdStudy() {
     urls = urls.concat(l);
   }
   if (!urls.length) die('study needs URLs, or --list editorial|object|cinema|product');
-  const out = resolve(String(flag('out', join(process.env.CLAUDE_SCRATCHPAD || tmpdir(), 'atelier-study', listName || 'custom'))));
+  const out = resolve(String(flag('out', join(process.env.CLAUDE_SCRATCHPAD || tmpdir(), 'webdesign-study', listName || 'custom'))));
   const scrolls = String(flag('scroll', '0,900')).split(',').map((s) => parseInt(s, 10)).filter((n) => !isNaN(n));
   mkdirSync(out, { recursive: true });
   const { inspect } = await import('./inspect.mjs');
@@ -677,7 +677,7 @@ async function cmdStudy() {
       if (r.status === 0) sheets.push({ sheet, urls: chunk.map((f) => basename(dirname(f)) + '/' + basename(f)) });
     }
   }
-  console.log(`\natelier study  ${urls.length} site(s), ${tiles.length} render(s) -> ${out}`);
+  console.log(`\nwebdesign study  ${urls.length} site(s), ${tiles.length} render(s) -> ${out}`);
   if (sheets.length) {
     console.log('  Read these, left to right, top to bottom:');
     for (const s of sheets) console.log(`  ${s.sheet}\n    ${s.urls.join('  ')}`);
@@ -715,7 +715,7 @@ switch (cmd) {
   case 'study': await cmdStudy(); break;
   case 'serve': cmdServe(); break;
   default:
-    console.log(`atelier
+    console.log(`cinematic-web-design
 
   new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
   sections                        list section ids and presets

@@ -1,6 +1,6 @@
 # What gives a generated page away
 
-`atelier.mjs audit` mechanically checks the ones that can be checked, so you do
+`webdesign.mjs audit` mechanically checks the ones that can be checked, so you do
 not have to hold this in your head. Read this file when the audit flags
 something you want to understand, when you are working outside the chassis, or
 when you are judging a page you did not build.

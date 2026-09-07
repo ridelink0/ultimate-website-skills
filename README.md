@@ -1,4 +1,4 @@
-# atelier
+# cinematic-web-design
 
 A pinned art direction for websites, plus the code that produces it.
 
@@ -7,7 +7,7 @@ gradient, three feature cards with icon circles, everything centred, 16px radius
 on everything, and copy about unleashing your potential. It is recognisable
 enough that people have built scanners for it.
 
-atelier replaces that default with a different one: editorial serif typography at
+cinematic-web-design replaces that default with a different one: editorial serif typography at
 real optical sizes, warm-neutral and near-black grounds in OKLCH, cinematic
 photography with eased scrims, layered scroll parallax, and exploded technical
 views built from stacked 2D layers rather than a 3D engine.
@@ -17,25 +17,25 @@ It works in **Claude Code** and **Codex**.
 ## Install
 
 ```bash
-git clone https://github.com/ridelink0/atelier
-node atelier/scripts/install.mjs
+git clone https://github.com/ridelink0/cinematic-web-design
+node cinematic-web-design/scripts/install.mjs
 ```
 
 That registers the plugin with both CLIs. Or do it by hand:
 
 ```bash
 # Claude Code
-claude plugin marketplace add ridelink0/atelier
-claude plugin install atelier@atelier
+claude plugin marketplace add ridelink0/cinematic-web-design
+claude plugin install cinematic-web-design@cinematic-web-design
 ```
 
 ```toml
 # Codex - ~/.codex/config.toml
-[marketplaces.atelier]
+[marketplaces.cinematic-web-design]
 source_type = "git"
-source = "https://github.com/ridelink0/atelier.git"
+source = "https://github.com/ridelink0/cinematic-web-design.git"
 
-[plugins."atelier@atelier"]
+[plugins."cinematic-web-design@cinematic-web-design"]
 enabled = true
 ```
 
@@ -48,13 +48,13 @@ Ask for a website. The skill triggers on its own:
 Or drive it directly:
 
 ```
-/atelier a microsite for the Old Bridge at Mostar
-/atelier audit ./my-site
+/webdesign a microsite for the Old Bridge at Mostar
+/webdesign audit ./my-site
 ```
 
 ## What is in it
 
-**`skills/atelier/SKILL.md`** - the doctrine. Short, because the code carries the
+**`skills/cinematic-web-design/SKILL.md`** - the doctrine. Short, because the code carries the
 design rather than the prose describing it.
 
 **`assets/core.css`** - the chassis, copied into the project verbatim. Tokens,
@@ -70,17 +70,17 @@ per-word headline reveal, nav shrink, scroll progress.
 
 **`assets/sections.html`** - eighteen section archetypes.
 
-**`scripts/atelier.mjs`** - the tool.
+**`scripts/webdesign.mjs`** - the tool.
 
 ```
-atelier.mjs new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
-atelier.mjs sections                 list the library and the presets
-atelier.mjs add <id> [--to <file>]   insert one section
-atelier.mjs audit <dir>              source check: copy, semantics, the tells
-atelier.mjs look <dir|url>           RENDER it at two scroll positions: overlap, overflow, contrast, PNGs
-atelier.mjs cut <photo>              one photograph into parallax planes (rembg, local)
-atelier.mjs study --list editorial   render a batch of reference sites into contact sheets
-atelier.mjs serve <dir>              local preview
+webdesign.mjs new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
+webdesign.mjs sections                 list the library and the presets
+webdesign.mjs add <id> [--to <file>]   insert one section
+webdesign.mjs audit <dir>              source check: copy, semantics, the tells
+webdesign.mjs look <dir|url>           RENDER it at two scroll positions: overlap, overflow, contrast, PNGs
+webdesign.mjs cut <photo>              one photograph into parallax planes (rembg, local)
+webdesign.mjs study --list editorial   render a batch of reference sites into contact sheets
+webdesign.mjs serve <dir>              local preview
 ```
 
 **`references/`** - typography, motion, imagery, composition, and the pre-ship
@@ -88,7 +88,7 @@ checklist. Loaded only when needed, so they cost nothing the rest of the time.
 
 ## Looking, not just reading
 
-`atelier.mjs look` is the half that matters. It drives a real headless browser
+`webdesign.mjs look` is the half that matters. It drives a real headless browser
 over CDP - no dependencies, using Node's built-in fetch and WebSocket - loads
 the page at 1440 and 390, and reports the bugs that only exist once something is
 painted: **text overlapping text**, content past the viewport, contrast measured
@@ -102,7 +102,7 @@ This is how you catch it.
 
 ## The audit
 
-`atelier.mjs audit` is the part that keeps the output honest. It fails the build
+`webdesign.mjs audit` is the part that keeps the output honest. It fails the build
 on placeholder copy, emoji, missing `alt`, missing image dimensions, pure black
 or white, undefined custom properties, absent `prefers-reduced-motion` handling,
 duplicate ids, dead `href="#"` links, anchors pointing at ids that do not exist,

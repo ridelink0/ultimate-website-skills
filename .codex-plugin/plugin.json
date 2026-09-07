@@ -1,28 +1,40 @@
 {
-  "name": "atelier",
-  "version": "1.5.0",
-  "description": "Build websites that look like a design studio made them: editorial serif typography, warm-neutral and near-black grounds, cinematic photography, layered scroll parallax and exploded technical views. Ships a copy-in CSS chassis, a motion runtime, a section library, a scaffolder and an audit that fails on the usual generated-site tells.",
+  "name": "cinematic-web-design",
+  "version": "2.0.0",
+  "description": "Build cinematic, editorial websites the way an award-winning studio does: WebGL mesh gradients, three-plane parallax with real depth, three.js exploded product views, GSAP and anime.js scroll choreography, and a typographic system that does not read as AI-generated. Ships a copy-in CSS chassis, motion and WebGL runtimes, a section library, a scaffolder, a headless render check and a reference-site study tool.",
   "author": {
     "name": "Ridelink",
     "url": "https://github.com/ridelink0"
   },
-  "homepage": "https://github.com/ridelink0/atelier",
-  "repository": "https://github.com/ridelink0/atelier",
+  "homepage": "https://github.com/ridelink0/cinematic-web-design",
+  "repository": "https://github.com/ridelink0/cinematic-web-design",
   "license": "MIT",
   "keywords": [
     "web design",
     "website",
     "landing page",
+    "web development",
+    "frontend",
     "css",
+    "animation",
     "parallax",
+    "scroll animation",
+    "three.js",
+    "webgl",
+    "gsap",
+    "anime.js",
+    "3d website",
+    "gradient",
     "typography",
     "editorial",
-    "frontend"
+    "design system",
+    "ui design",
+    "cinematic"
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Atelier",
-    "shortDescription": "Websites that look designed, not generated",
+    "displayName": "Cinematic Web Design",
+    "shortDescription": "Websites that look like a studio made them, not a model",
     "longDescription": "A pinned art direction plus the code that produces it. Editorial serif typography at real optical sizes, warm-neutral and near-black grounds in OKLCH, cinematic photography with eased scrims, layered scroll parallax, and exploded technical views built from stacked 2D layers rather than a 3D engine. Ships a copy-in CSS chassis, a dependency-free motion runtime, a library of section archetypes, a scaffolder, and an audit that fails the build on placeholder copy, missing image dimensions, pure black and white, absent reduced-motion handling, and the other marks of a generated page.",
     "developerName": "Ridelink",
     "category": "Developer Tools",
@@ -30,11 +42,11 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/ridelink0/atelier",
+    "websiteURL": "https://github.com/ridelink0/cinematic-web-design",
     "defaultPrompt": [
       "Build me a landing page for a roofing company in Houston",
-      "Make this page look like it was designed rather than generated",
-      "Add a scroll parallax hero to this site"
+      "Give this page a WebGL gradient hero and real parallax",
+      "Make this site look like it was designed, not generated"
     ],
     "brandColor": "#16140f"
   }

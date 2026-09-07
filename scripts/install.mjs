@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* atelier installer - registers the plugin with Claude Code and with Codex.
+/* cinematic-web-design installer - registers the plugin with Claude Code and with Codex.
    node scripts/install.mjs [--source <git-url-or-path>] [--uninstall] [--dry-run]
 
    Claude Code goes through its own CLI. Codex has no CLI on every platform, so
@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, '..');
-const NAME = 'atelier';
+const NAME = 'cinematic-web-design';
 
 const argv = process.argv.slice(2);
 const has = (f) => argv.includes('--' + f);
@@ -119,11 +119,11 @@ function doCodex() {
 
 /* ------------------------------------------------------------------- main -- */
 
-log(`atelier ${UNINSTALL ? 'uninstall' : 'install'}${DRY ? ' (dry run)' : ''}`);
+log(`cinematic-web-design ${UNINSTALL ? 'uninstall' : 'install'}${DRY ? ' (dry run)' : ''}`);
 log(`  source: ${SOURCE}`);
 const a = doClaude();
 const b = doCodex();
 step(a || b ? 'Done.' : 'Nothing was changed.');
 if (!UNINSTALL && (a || b)) {
-  log('Try it with:  /atelier a landing page for <subject>');
+  log('Try it with:  /webdesign a landing page for <subject>');
 }

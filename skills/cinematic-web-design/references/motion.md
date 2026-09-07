@@ -133,7 +133,7 @@ start, or it is hidden behind the thing it is meant to backlight. And at equal
 near silhouette - being cropped by the subject is the effect.
 
 Verify it by rendering, never by reading the CSS:
-`node scripts/atelier.mjs look <dir>` and read the PNGs.
+`node scripts/webdesign.mjs look <dir>` and read the PNGs.
 
 **The foreground layer does not need an image.** A hand-written SVG silhouette -
 a roofline, an arch, a treeline, a skyline - is sharper, weighs nothing, and

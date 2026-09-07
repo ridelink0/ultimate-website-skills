@@ -45,7 +45,7 @@ Art Institute of Chicago is the best of these:
 
 ## One photograph into several planes
 
-`atelier.mjs cut <photo> [--out DIR] [--model isnet-general-use|u2net] [--alpha-matting]`
+`webdesign.mjs cut <photo> [--out DIR] [--model isnet-general-use|u2net] [--alpha-matting]`
 
 Runs rembg locally (ISNet by default, cleaner edges than u2net; `--alpha-matting`
 for hair and foliage, slower). Writes the subject as a transparent PNG, the

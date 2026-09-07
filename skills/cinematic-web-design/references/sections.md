@@ -102,7 +102,7 @@ narrow.
 
 ## Seen in the wild
 
-Rendered with `atelier.mjs study` on 7 Sept 2026. What is specific, not what
+Rendered with `webdesign.mjs study` on 7 Sept 2026. What is specific, not what
 is generic.
 
 - **Publications table** (Anthropic Research): DATE / CATEGORY / TITLE columns,

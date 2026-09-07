@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* atelier UserPromptSubmit hook.
+/* cinematic-web-design UserPromptSubmit hook.
    Prints one line, and only when the prompt is clearly about building or
    restyling a web page. Silent otherwise, so it costs nothing on every other
    turn. Reads stdin, never blocks, never fails the prompt. */
@@ -28,7 +28,7 @@ process.stdin.on('end', () => {
   if (!intent) return;
 
   process.stdout.write(
-    'Use the atelier skill for this. It is the house art direction plus a ' +
+    'Use the cinematic-web-design skill for this. It is the house art direction plus a ' +
       'copy-in CSS chassis, motion runtime, section library, scaffolder and audit. ' +
       'Follow its rule zero: build the files, keep every word of design reasoning ' +
       'out of the reply.\n',

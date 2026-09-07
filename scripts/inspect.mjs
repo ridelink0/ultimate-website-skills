@@ -1,4 +1,4 @@
-/* atelier/inspect - render a page in a real headless browser, screenshot it,
+/* cinematic-web-design/inspect - render a page in a real headless browser, screenshot it,
    and report what is actually wrong with the LAYOUT rather than the source.
 
    Static analysis cannot see an overlap. This can: it walks the rendered box
@@ -40,7 +40,7 @@ export function findBrowser() {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function launch(bin) {
-  const udd = mkdtempSync(join(tmpdir(), 'atelier-cdp-'));
+  const udd = mkdtempSync(join(tmpdir(), 'webdesign-cdp-'));
   const proc = spawn(bin, [
     '--headless=new', '--disable-gpu', '--hide-scrollbars', '--mute-audio',
     '--no-first-run', '--no-default-browser-check', '--disable-extensions',

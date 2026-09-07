@@ -2,14 +2,14 @@
 description: Build a website in the studio house style, or audit one that already exists
 ---
 
-Use the `atelier` skill for everything below. Follow its rule zero: build the
+Use the `cinematic-web-design` skill for everything below. Follow its rule zero: build the
 files and keep design reasoning out of your reply.
 
 The user's brief is: $ARGUMENTS
 
 If the brief names a directory that already contains HTML, treat this as an audit
 and upgrade: run
-`node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" audit <dir>`, fix every error
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" audit <dir>`, fix every error
 and every warning worth fixing, then walk `references/checklist.md`.
 
 Otherwise build a new site:
@@ -19,12 +19,12 @@ Otherwise build a new site:
    genuinely unknown.
 2. Pick the preset and the sections from the register table in the skill, then
    scaffold:
-   `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" new <dir> --preset <bone|ink|cinema> --name "<Name>" --sections <ids>`
+   `node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" new <dir> --preset <bone|ink|cinema> --name "<Name>" --sections <ids>`
 3. Rewrite every word. Set the hero image and `--accent-h`. Add one signature
    element drawn from the subject's own world.
-4. `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" audit <dir>` must exit 0.
+4. `node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" audit <dir>` must exit 0.
 5. Render it and look:
-   `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" look <dir>` - it must report
+   `node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" look <dir>` - it must report
    no overlap and no overflow, and you must read the PNGs it writes.
 
 Then report in two sentences with the file paths, and nothing else.
