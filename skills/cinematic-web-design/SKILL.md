@@ -296,6 +296,7 @@ Read one only when you need it. Each is self-contained.
 
 | File | When |
 |---|---|
+| `references/fable.md` | The launch page torn down from its shipped bundles: the WebGL hero, the barycentric palette blend, the post chain, what it wastes |
 | `references/stack.md` | Which library for which job; GSAP, three.js and anime.js v4 recipes |
 | `references/typography.md` | Faces, the fluid scale, tracking and line-height tables, the OKLCH palette, deriving the accent, hairline alphas |
 | `references/motion.md` | Scroll-driven CSS, layered parallax, the exploded view, three.js and annotation callouts, canvas sequences, GSAP and Lenis, the motion scale |
