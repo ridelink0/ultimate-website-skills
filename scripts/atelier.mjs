@@ -600,6 +600,87 @@ async function cmdLook() {
   }
 }
 
+/* ---------------------------------------------------------------- study -- */
+/* Visual research as images. Renders a batch of sites at the top and one
+   screen down, then tiles them into contact sheets so a dozen references are
+   one picture to read. Curated lists cover the registers the skill builds in;
+   pass your own URLs to study anything else. */
+const STUDY_LISTS = {
+  editorial: [
+    'https://www.anthropic.com/claude-fable-and-mythos-5-1', 'https://www.anthropic.com/research',
+    'https://www.are.na', 'https://readymag.com', 'https://www.kinfolk.com', 'https://www.aesop.com',
+    'https://www.hodinkee.com', 'https://www.cartier.com',
+  ],
+  object: [
+    'https://www.apple.com/airpods-pro/', 'https://www.apple.com/watch/', 'https://www.apple.com/iphone/',
+    'https://www.teenage.engineering', 'https://www.leica-camera.com', 'https://www.bang-olufsen.com',
+    'https://www.rolex.com', 'https://www.dyson.com',
+  ],
+  cinema: [
+    'https://lusion.co', 'https://igloo.inc', 'https://www.igloo.inc', 'https://rauno.me',
+    'https://www.awwwards.com/websites/parallax/', 'https://tympanus.net/codrops/',
+    'https://www.nationalgeographic.com', 'https://www.patagonia.com',
+  ],
+  product: [
+    'https://linear.app', 'https://stripe.com', 'https://vercel.com', 'https://resend.com',
+    'https://www.framer.com', 'https://arc.net', 'https://www.raycast.com', 'https://cursor.com',
+  ],
+};
+
+async function cmdStudy() {
+  const listName = String(flag('list', ''));
+  let urls = positional.filter((u) => /^https?:\/\//.test(u));
+  if (listName) {
+    const l = STUDY_LISTS[listName] || die(`unknown list "${listName}". Try: ${Object.keys(STUDY_LISTS).join(', ')}`);
+    urls = urls.concat(l);
+  }
+  if (!urls.length) die('study needs URLs, or --list editorial|object|cinema|product');
+  const out = resolve(String(flag('out', join(process.env.CLAUDE_SCRATCHPAD || tmpdir(), 'atelier-study', listName || 'custom'))));
+  const scrolls = String(flag('scroll', '0,900')).split(',').map((s) => parseInt(s, 10)).filter((n) => !isNaN(n));
+  mkdirSync(out, { recursive: true });
+  const { inspect } = await import('./inspect.mjs');
+
+  const tiles = [];
+  for (const [i, url] of urls.entries()) {
+    const dir = join(out, `s${String(i + 1).padStart(2, '0')}`);
+    try {
+      const r = await inspect(url, { widths: [1440], out: dir, scrolls, wait: 2600 });
+      for (const shot of r) if (shot.file) tiles.push(shot.file);
+      console.log(`  ok    ${url}`);
+    } catch (e) {
+      console.log(`  skip  ${url}  (${(e && e.message) || e})`);
+    }
+  }
+  if (!tiles.length) die('nothing rendered');
+
+  // Tile with ffmpeg when it is around; otherwise the PNGs are the result.
+  const ff = ['ffmpeg', join(process.env.LOCALAPPDATA || '', 'Microsoft', 'WinGet', 'Packages')]
+    .flatMap((p) => p === 'ffmpeg' ? [p] : (existsSync(p) ? readdirSync(p).filter((d) => /ffmpeg/i.test(d))
+      .flatMap((d) => readdirSync(join(p, d)).filter((s) => /ffmpeg/i.test(s)).map((s) => join(p, d, s, 'bin', 'ffmpeg.exe'))) : []))
+    .find((c) => c === 'ffmpeg' ? spawnSync('ffmpeg', ['-version'], { shell: process.platform === 'win32' }).status === 0 : existsSync(c));
+
+  const sheets = [];
+  if (ff) {
+    const per = 8; // 4 x 2 per sheet, each tile 640px wide - readable in one look
+    for (let s = 0; s * per < tiles.length; s++) {
+      const chunk = tiles.slice(s * per, s * per + per);
+      const seq = join(out, `_seq${s}`);
+      mkdirSync(seq, { recursive: true });
+      chunk.forEach((f, k) => writeFileSync(join(seq, `t${String(k + 1).padStart(2, '0')}.png`), readFileSync(f)));
+      const sheet = join(out, `sheet${s + 1}.jpg`);
+      const r = spawnSync(ff, ['-hide_banner', '-loglevel', 'error', '-i', join(seq, 't%02d.png'),
+        '-vf', 'scale=640:-2,tile=4x2:margin=4:padding=4:color=0x111111', '-frames:v', '1', '-q:v', '3', '-y', sheet]);
+      if (r.status === 0) sheets.push({ sheet, urls: chunk.map((f) => basename(dirname(f)) + '/' + basename(f)) });
+    }
+  }
+  console.log(`\natelier study  ${urls.length} site(s), ${tiles.length} render(s) -> ${out}`);
+  if (sheets.length) {
+    console.log('  Read these, left to right, top to bottom:');
+    for (const s of sheets) console.log(`  ${s.sheet}\n    ${s.urls.join('  ')}`);
+  } else console.log('  no ffmpeg: read the PNGs under ' + out);
+  console.log('\n  Each site: top of page, then one screen down. Write down what is specific, not what is generic.');
+}
+
 /* ------------------------------------------------------------------ cut -- */
 /* A photograph into parallax planes: subject cut out, background with the
    hole dissolved, and the mask. This is how the reference sites get a bridge
@@ -627,6 +708,7 @@ switch (cmd) {
   case 'audit': case 'check': cmdAudit(); break;
   case 'look': case 'shot': await cmdLook(); break;
   case 'cut': cmdCut(); break;
+  case 'study': await cmdStudy(); break;
   case 'serve': cmdServe(); break;
   default:
     console.log(`atelier
@@ -639,6 +721,8 @@ switch (cmd) {
                                   RENDER it: overlap, overflow, contrast, PNGs
   cut <photo> [--out DIR] [--name base] [--model isnet-general-use|u2net] [--alpha-matting]
                                   one photograph into parallax planes (rembg, local)
+  study <url...> | --list editorial|object|cinema|product [--scroll 0,900] [--out DIR]
+                                  render a batch of reference sites into contact sheets
   serve <dir> [--port 4321]       local preview
 `);
     process.exit(cmd ? 1 : 0);
