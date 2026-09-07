@@ -77,7 +77,8 @@ atelier.mjs new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
 atelier.mjs sections                 list the library and the presets
 atelier.mjs add <id> [--to <file>]   insert one section
 atelier.mjs audit <dir>              source check: copy, semantics, the tells
-atelier.mjs look <dir|url>           RENDER it: overlap, overflow, contrast, PNGs
+atelier.mjs look <dir|url>           RENDER it at two scroll positions: overlap, overflow, contrast, PNGs
+atelier.mjs cut <photo>              one photograph into parallax planes (rembg, local)
 atelier.mjs serve <dir>              local preview
 ```
 
@@ -109,7 +110,7 @@ unlabelled form controls, more than one `<h1>`, skipped heading levels, and
 a missing grain layer, no negative letter-spacing, and no display line-height
 under 1.
 
-Zero dependencies. Node 18+.
+Zero Node dependencies. Node 18+. `cut` needs Python with `rembg[cpu]`.
 
 ## Why it looks the way it does
 

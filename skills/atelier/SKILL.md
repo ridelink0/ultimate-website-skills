@@ -145,6 +145,29 @@ Choose by register, not by taste:
 | A service | `hero-photo` | `services`, `steps`, `stats`, `faq` | `contact` |
 | An argument | `hero-photo` + `index` | `manifesto`, `quote` | `footer` |
 
+## The page is a photograph
+
+The reference sites are photographic: a night sky, a stone bridge, a rendered
+watch. Not one of them is a drawing. **Default to photography.** Flat SVG
+silhouettes read as low-effort next to a photograph, however carefully they are
+shaded, so hand-drawn SVG is for line-art (the blueprint), small occluders, and
+nothing else.
+
+Then cut the photograph into planes. That is the whole trick of the bridge
+video - one scene, several depths:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" cut img/house.jpg --out img
+# -> house-fg.png (subject, transparent), house-bg.jpg (hole dissolved), house-mask.png
+```
+
+`cut` runs rembg, local AI background removal - no service, no key
+(`python -m pip install "rembg[cpu]"` once). A sky photograph as the back plane,
+one or two cut-out subjects resting on the bottom edge at different rates, a
+colour grade between them so several photographs read as one evening, and the
+type as ordinary content at page speed. `references/imagery.md` has the
+sourcing, the verified-licence sources, and the grade recipes.
+
 ## Depth without a 3D engine
 
 The exploded view and the layered hero are the same trick: stack elements in one

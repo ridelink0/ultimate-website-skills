@@ -305,7 +305,7 @@ const PROBE = `(() => {
 
 /* ------------------------------------------------------------- the API ---- */
 
-export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800 } = {}) {
+export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800, scrolls = [0] } = {}) {
   const bin = findBrowser();
   if (!bin) {
     const err = new Error(
@@ -340,19 +340,25 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
       }).catch(() => {});
       await sleep(wait);
 
-      const probe = await session.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
-      const report = JSON.parse(probe.result.value);
-
-      let file = null;
-      if (out) {
-        mkdirSync(out, { recursive: true });
-        const shot = await session.send('Page.captureScreenshot', {
-          format: 'png', captureBeyondViewport: full, ...(full ? {} : {}),
+      // A parallax layer that is fine at the top of the page can be sitting on
+      // the headline 400px later. Probe at every requested scroll position.
+      for (const sy of scrolls) {
+        await session.send('Runtime.evaluate', {
+          expression: `window.scrollTo({top:${sy},behavior:'instant'}); window.dispatchEvent(new Event('scroll'));`,
         });
-        file = join(out, `w${w}.png`);
-        writeFileSync(file, Buffer.from(shot.data, 'base64'));
+        await sleep(sy ? 700 : 0);
+        const probe = await session.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
+        const report = JSON.parse(probe.result.value);
+
+        let file = null;
+        if (out) {
+          mkdirSync(out, { recursive: true });
+          const shot = await session.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: full });
+          file = join(out, `w${w}${sy ? '-y' + sy : ''}.png`);
+          writeFileSync(file, Buffer.from(shot.data, 'base64'));
+        }
+        results.push({ width: w, scroll: sy, file, ...report });
       }
-      results.push({ width: w, file, ...report });
     }
   } finally {
     if (session) session.close();
@@ -366,7 +372,7 @@ export function formatReport(results) {
   const lines = [];
   let errors = 0, warns = 0;
   for (const r of results) {
-    lines.push(`\n  ${r.width}px  (${r.stats.textElements} text elements, page ${r.stats.scrollHeight}px tall)`);
+    lines.push(`\n  ${r.width}px${r.scroll ? ' scrolled ' + r.scroll + 'px' : ''}  (${r.stats.textElements} text elements, page ${r.stats.scrollHeight}px tall)`);
     if (r.file) lines.push(`  shot: ${r.file}`);
 
     if (r.overlaps.length) {

@@ -43,6 +43,37 @@ Art Institute of Chicago is the best of these:
 `https://www.artic.edu/iiif/2/{id}/full/1686,/0/default.jpg`, CORS `*`,
 60 req/min.
 
+## One photograph into several planes
+
+`atelier.mjs cut <photo> [--out DIR] [--model isnet-general-use|u2net] [--alpha-matting]`
+
+Runs rembg locally (ISNet by default, cleaner edges than u2net; `--alpha-matting`
+for hair and foliage, slower). Writes the subject as a transparent PNG, the
+background with the subject's hole dissolved into a blur so the cut-out can move
+over it without a ghost, and the mask. The report says what share of the frame
+the subject covers: **under 10% or over 90% means it found nothing usable** - a
+photo that is all foreground (a field of grass, a wall of trees) has no subject
+to cut, so pick another.
+
+Composing the planes, the rules that matter:
+
+- **Cut-outs rest on the bottom edge** (`align-self: end`, a small negative
+  `margin-bottom`). A subject floating mid-frame with no ground under it reads
+  as a collage, not a scene.
+- **The sky lags, the subjects lead, the type sits between at page speed.**
+  Positive `data-px` on anything behind the type, so it can only fall away;
+  never a positive rate on something that starts below the headline.
+- **One grade over all of them**: a warm floor, a cool ceiling, matched
+  `brightness`/`saturate` on each plane so four photographs read as one hour of
+  one evening.
+- Sizes: a far subject small and dim (`width: 58%; brightness(.42)`), a near one
+  large and warm (`width: 70%; brightness(.66)`), overlapping.
+
+Pick photographs with a clean subject-to-sky edge for cutting: a house against
+sky, a bridge against a valley, a figure against a wall. Verify every hotlink
+with a HEAD request before it ships; the audit's `look` reports the ones that
+fail to load.
+
 ## Grading in pure CSS
 
 Put `filter` on the `<img>`, the tint on the wrapper's pseudo-element, and

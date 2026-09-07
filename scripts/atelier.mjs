@@ -12,6 +12,7 @@ import { join, dirname, resolve, extname, basename, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
+import { spawnSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ASSETS = resolve(HERE, '..', 'skills', 'atelier', 'assets');
@@ -565,6 +566,9 @@ async function cmdLook() {
   const target = positional[0] || '.';
   const out = String(flag('out', join(process.env.CLAUDE_SCRATCHPAD || tmpdir(), 'atelier-shots')));
   const widths = String(flag('widths', '1440,390')).split(',').map((s) => parseInt(s, 10)).filter(Boolean);
+  // Default probes the top AND one screen down: that is where parallax layers
+  // drift into the headline, and where a top-only check said everything was fine.
+  const scrolls = String(flag('scroll', '0,600')).split(',').map((s) => parseInt(s, 10)).filter((n) => !isNaN(n));
   const noShot = argv.includes('--no-shot');
 
   let url = target;
@@ -579,7 +583,7 @@ async function cmdLook() {
 
   try {
     const { inspect, formatReport } = await import('./inspect.mjs');
-    const results = await inspect(url, { widths, out: noShot ? null : out });
+    const results = await inspect(url, { widths, out: noShot ? null : out, scrolls });
     const { text, errors, warns } = formatReport(results);
     console.log(`\natelier look  ${target}`);
     console.log(text);
@@ -596,6 +600,25 @@ async function cmdLook() {
   }
 }
 
+/* ------------------------------------------------------------------ cut -- */
+/* A photograph into parallax planes: subject cut out, background with the
+   hole dissolved, and the mask. This is how the reference sites get a bridge
+   in front of a valley - one picture, several depths. Shells out to cut.py,
+   which uses rembg (local AI background removal, no service, no key). */
+function cmdCut() {
+  const photo = positional[0] || die('cut needs a photo');
+  const args = [join(HERE, 'cut.py'), resolve(photo)];
+  for (const f of ['out', 'name', 'model']) { const v = flag(f); if (v && v !== true) args.push('--' + f, String(v)); }
+  if (argv.includes('--alpha-matting')) args.push('--alpha-matting');
+  for (const py of ['python', 'python3', 'py']) {
+    const r = spawnSync(py, args, { stdio: 'inherit', shell: process.platform === 'win32' });
+    if (r.status !== null && r.status !== 9009 && !(r.error && r.error.code === 'ENOENT')) {
+      process.exit(r.status || 0);
+    }
+  }
+  die('python not found. Install Python 3.10+ then: python -m pip install "rembg[cpu]"');
+}
+
 /* ------------------------------------------------------------------ main -- */
 switch (cmd) {
   case 'new': cmdNew(); break;
@@ -603,6 +626,7 @@ switch (cmd) {
   case 'add': cmdAdd(); break;
   case 'audit': case 'check': cmdAudit(); break;
   case 'look': case 'shot': await cmdLook(); break;
+  case 'cut': cmdCut(); break;
   case 'serve': cmdServe(); break;
   default:
     console.log(`atelier

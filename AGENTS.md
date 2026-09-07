@@ -30,6 +30,7 @@ skills/atelier/assets/          core.css, motion.js, sections.html
 skills/atelier/references/      loaded on demand
 scripts/atelier.mjs             new / sections / add / audit / look / serve
 scripts/inspect.mjs             headless-browser render check, over CDP
+scripts/cut.py                  photograph -> parallax planes via rembg
 scripts/install.mjs             registers with both CLIs
 commands/atelier.md             the /atelier slash command
 hooks/                          UserPromptSubmit nudge
