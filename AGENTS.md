@@ -45,7 +45,7 @@ Constraints:
   ```
   node scripts/atelier.mjs new /tmp/t --name "T" && node scripts/atelier.mjs audit /tmp/t
   ```
-  The one expected failure on a fresh scaffold is the placeholder-copy error -
-  that is the audit doing its job.
+  A fresh scaffold is *expected* to fail on scaffold copy and the example email
+  address - that is the audit doing its job. Everything else must be clean.
 - Keep `SKILL.md` short. Depth belongs in `references/`, which is only read when
   needed. Frontmatter is loaded into every session; the body is not.

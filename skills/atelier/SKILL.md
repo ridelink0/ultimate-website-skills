@@ -69,18 +69,43 @@ globally and translate the section markup to components - keep the class names.
    creates the negative space. A one-line hero cannot look expensive.
 4. **Never `#fff`, never `#000`, never a zero-chroma grey.** Every neutral sits in
    hue 60-95. One accent, visible on at most three elements in the whole page.
-5. **Leave real air.** `--section-y` is the floor, not the target. If a section
-   feels roomy in the editor it is about right in the browser.
+5. **Leave real air, and vary it.** A template pads every section to 40px; this
+   one starts at 80 and runs to 160. But the tell is not the amount, it is the
+   sameness - a page where every section has identical padding reads as
+   generated. Give a dense table less and the section after a full-bleed image
+   more. `--section-y` is the floor and `.section--tight` exists for this.
 6. **Grain is always on.** `<div class="grain">` before `</body>`. If you can see
    it, it is too strong.
-7. **Motion earns its place.** Four defaults and nothing else unless the subject
-   asks: reveal on enter (`.r`), one parallax relationship, nav shrink, and the
-   page's single orchestrated moment. Scattered effects read as generated.
-8. **Copy is design material.** Write the words before you fine-tune the spacing.
-9. **Quality floor, unannounced.** One `<h1>`, visible keyboard focus, `alt` on
-   every image, `width`/`height` on every image, reduced motion respected,
-   readable at 360px.
-10. **Spend boldness once.** Chanel's rule: before shipping, remove one thing.
+7. **Depth comes from layers, not effects.** One parallax relationship in the
+   hero and, where the subject is a made thing, one exploded view. Both are the
+   same mechanism: stack elements in one grid cell, give each a different
+   `data-px`, let scroll pull them apart. No 3D engine, no library.
+8. **Motion earns its place.** Reveal on enter (`.r`), the one parallax, nav
+   shrink, and the page's single orchestrated moment. Nothing else unless the
+   subject asks for it - scattered effects read as generated.
+9. **One italic accent phrase per page.** `Descent is gravity. *Ascent* is
+   arithmetic.` is the house voice and also the most imitated headline device
+   on the web right now. One is a voice. Four is a costume, and the audit fails
+   the build at two.
+10. **Never invent a specific.** No made-up customer count, uptime figure,
+   review score, licence number, years-in-business, testimonial or client logo.
+   If the real number is not available, cut the element or mark it plainly as a
+   placeholder. This is the fastest tell there is, and it is dishonest as well.
+11. **Copy is design material.** Write the words before you fine-tune the
+   spacing. If the copy would fit five hundred other products verbatim, it is
+   not copy yet.
+12. **Quality floor, unannounced.** One `<h1>`, visible keyboard focus, `alt` on
+   every image, `width`/`height` on every image, content visible with JS off,
+   reduced motion respected, readable at 360px.
+13. **Spend boldness once.** Chanel's rule: before shipping, remove one thing.
+
+**The preset is a choice, not a default.** Warm off-white plus a serif is now
+itself a recognised machine-made look. What separates this from that is
+everything around it - real optical sizes, the asymmetric grid, varied section
+rhythm, hairlines derived from the ink, an accent taken from the photograph. If
+the subject suits night or photography, use `ink` or `cinema` instead. Shipping
+`bone` because it is first in the list is how you build the thing you were
+avoiding. `references/tells.md` has the full catalogue and the current data.
 
 ## What is in the box
 
@@ -127,11 +152,15 @@ Read one only when you need it. Each is self-contained.
 
 | File | When |
 |---|---|
-| `references/typography.md` | Choosing or pairing faces, scale, italics, small caps |
-| `references/motion.md` | Any scroll animation beyond the four defaults, 3D, pinning |
-| `references/imagery.md` | Sourcing, grading, deriving the accent, zero-asset backdrops |
-| `references/sections.md` | Composing a section the library does not have |
+| `references/typography.md` | Faces, the fluid scale, tracking and line-height tables, the OKLCH palette, deriving the accent, hairline alphas |
+| `references/motion.md` | Scroll-driven CSS, layered parallax, the exploded view, three.js and annotation callouts, canvas sequences, GSAP and Lenis, the motion scale |
+| `references/imagery.md` | Sourcing and licensing, CSS colour grading, duotone, scrims, gradient-mesh skies with no photograph, film grain, SVG technical drawing |
+| `references/sections.md` | The grid, spacing numbers, dot leaders, glass, forms, and section archetypes the library does not have |
+| `references/tells.md` | What gives a generated page away, and what to do instead |
 | `references/checklist.md` | The pre-ship pass, and what the audit cannot see |
+
+The audit enforces mechanically most of what is in `tells.md`, so you do not
+have to carry it in your head - build, then run it.
 
 ## Before you call it done
 

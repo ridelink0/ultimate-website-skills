@@ -1,6 +1,10 @@
 <!-- atelier section library. Blocks are delimited by "@section <id> | <note>".
      Copy a block, then replace every word of the placeholder copy with the real
-     subject. Placeholder copy left in a shipped page is a bug. -->
+     subject. Placeholder copy left in a shipped page is a bug.
+
+     The italic accent phrase appears once, in hero-split, on purpose. It is the
+     house voice and also the most imitated headline device on the web, so it is
+     rationed to ONE per page and the audit fails the build at two. -->
 
 <!-- @section head | <head> contents: meta, fonts, stylesheets -->
 <meta charset="utf-8">
@@ -116,7 +120,7 @@
       <p class="eyebrow">The method</p>
     </div>
     <div style="grid-column:span 7 / content-end" class="stack r r-2">
-      <h2>Drawn before <em class="it">it was made.</em></h2>
+      <h2>Drawn before it was made.</h2>
       <p class="prose">
         Two short paragraphs. Say the thing that is actually true about how the work is done,
         including the part a competitor would leave out. Specifics beat adjectives every time.
@@ -135,7 +139,7 @@
   <div class="wrap grid" style="align-items:center;row-gap:var(--s-7)">
     <div style="grid-column:content-start / span 4" class="stack r">
       <p class="eyebrow">Construction</p>
-      <h2>Every line <em class="it">has a reason.</em></h2>
+      <h2>Every line has a reason.</h2>
       <p class="prose">Describe the geometry, the tolerance, the material. Numbers here read as proof.</p>
     </div>
     <figure style="grid-column:span 7 / content-end" class="r r-2">
@@ -174,7 +178,7 @@
   <div class="wrap grid" style="align-items:center;row-gap:var(--s-8)">
     <div style="grid-column:content-start / span 4" class="stack r">
       <p class="eyebrow">Inside</p>
-      <h2>Nine parts. <em class="it">Nothing decorative.</em></h2>
+      <h2>Nine parts. Nothing decorative.</h2>
       <p class="prose">Each one is here because the thing does not work without it.</p>
     </div>
 
@@ -222,7 +226,7 @@
   <div class="hero__scrim"></div>
   <div class="wrap on-media" style="position:relative">
     <p class="eyebrow">Nearby</p>
-    <h2 style="margin-top:var(--s-3)">Four streets, <em class="it">one afternoon.</em></h2>
+    <h2 style="margin-top:var(--s-3)">Four streets, one afternoon.</h2>
     <ul class="cards cards--rail" style="margin-top:var(--s-7)">
       <li class="card card--glass">
         <p class="eyebrow" style="color:rgb(255 255 255 / .72)">Bazaar street</p>
@@ -354,7 +358,7 @@
   <div class="wrap grid" style="row-gap:var(--s-8)">
     <div style="grid-column:content-start / span 4" class="stack">
       <p class="eyebrow">Get in touch</p>
-      <h2>Tell us <em class="it">what you need.</em></h2>
+      <h2>Tell us what you need.</h2>
       <p class="prose">A phone number, an address, and hours. Real ones.</p>
     </div>
     <form style="grid-column:span 7 / content-end" class="stack" name="contact" method="POST"
@@ -374,7 +378,7 @@
 <!-- @section cta | closing band, one action only -->
 <section class="section" data-tone="dark">
   <div class="wrap wrap--text center stack">
-    <h2>One last sentence <em class="it">worth acting on.</em></h2>
+    <h2>One last sentence worth acting on.</h2>
     <p><a class="btn" href="#contact" data-magnetic="0.2">The single action</a></p>
   </div>
 </section>
@@ -389,7 +393,6 @@
     <p class="caption">&copy; 2026 Brand Name</p>
     <ul style="display:flex;gap:var(--s-5);list-style:none;padding:0" class="caption">
       <li><a class="link" href="#top">Back to top</a></li>
-      <li><a class="link" href="mailto:hello@example.com">hello@example.com</a></li>
     </ul>
   </div>
 </footer>

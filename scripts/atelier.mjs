@@ -77,6 +77,9 @@ function cmdNew() {
   const sections = loadSections();
   const missing = wanted.filter((s) => !sections.has(s));
   if (missing.length) die(`unknown section(s): ${missing.join(', ')}\nRun "atelier.mjs sections" for the list.`);
+  const heroes = wanted.filter((s) => s.startsWith('hero-'));
+  if (heroes.length > 1)
+    die(`pick one hero, not ${heroes.length} (${heroes.join(', ')}). A page has one opening statement.`);
 
   mkdirSync(dir, { recursive: true });
   mkdirSync(join(dir, 'img'), { recursive: true });
@@ -91,6 +94,16 @@ function cmdNew() {
     .filter((s) => s !== 'head' && s !== 'foot')
     .map((s) => sections.get(s).body.replace(/Brand Name/g, name))
     .join('\n\n');
+
+  // Two sections can legitimately carry the same id (every hero is #top).
+  // Whichever comes first keeps it; the rest lose the attribute so the page is
+  // never scaffolded with a duplicate.
+  const seen = new Set();
+  body = body.replace(/\sid=(["'])([\w-]+)\1/g, (m, q, id) => {
+    if (seen.has(id)) return '';
+    seen.add(id);
+    return m;
+  });
 
   // Point the nav at the sections that actually exist, so the scaffold never
   // ships a link to an anchor that is not there.
@@ -191,13 +204,143 @@ function cmdAdd() {
 
 /* ---------------------------------------------------------------- audit -- */
 const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/u;
+// Copy that shipped from the scaffold and was never replaced. Deliberately
+// specific: the bare word "placeholder" is a legitimate thing to write in prose.
 const PLACEHOLDERS = [
-  'lorem ipsum', 'site name', 'brand name', 'placeholder', 'your text here',
+  'lorem ipsum', 'site name', 'brand name', 'your text here', 'placeholder text',
   'first half of the claim', 'one sentence under the headline', 'two short paragraphs',
-  'the line that reframes', 'coming soon', 'tbd', 'xxx', 'foo bar',
+  'the line that reframes', 'coming soon', 'foo bar',
   'describe the geometry', 'a sentence someone actually said', 'one last sentence',
   'the question a real person asks', 'say the grade, not the adjective',
+  'the single action', 'one or two lines', 'name, role',
 ];
+
+// Invented specifics. A generated page reaches for these instead of leaving a
+// field empty, and they are the fastest way to spot one.
+const FAKE_DATA = [
+  [/via\.placeholder\.com|placehold\.(it|co)|picsum\.photos|dummyimage\.com/i, 'placeholder image service'],
+  [/\b[\w.+-]+@(example|test|domain|yoursite|yourcompany)\.(com|org|net)\b/i, 'example.com email address'],
+  [/\b\(?555\)?[\s.-]?\d{3}[\s.-]?\d{4}\b/, 'a 555 phone number'],
+  [/\b123 (main|any) (st|street)\b/i, 'a fake street address'],
+  [/\b(your ?company|company name|acme|your ?brand|business name)\b/i, 'an unfilled company name'],
+  [/\b(john|jane) (doe|smith)\b/i, 'a placeholder person'],
+];
+
+// Marketing language that reads as machine-written.
+const SLOP_COPY = [
+  "in today's fast-paced", 'fast-paced world', 'unleash the power', 'unlock the power',
+  'take it to the next level', 'elevate your', 'seamlessly integrat', 'revolutioniz',
+  'cutting-edge solution', 'empower your team', 'game-changer', 'game changing',
+  'best-in-class', 'world-class solution', 'transform your business', 'delve into',
+  'in the ever-evolving', 'look no further', "we've got you covered", 'the future of',
+];
+
+/* The marks of a generated page. Weighted the way the public scanners weight
+   them: the default font stack and the purple accent score highest, then the
+   reflexive cream ground and sub-AA grey text, then the decorative devices. */
+
+// Faces that now read as "nobody chose a typeface". Fraunces and Instrument
+// Serif were the 2025 escape route and have since become the new default.
+const SLOP_FONTS = [
+  'Inter', 'Instrument Serif', 'Space Grotesk', 'Geist', 'Syne', 'Cal Sans',
+  'DM Sans', 'Poppins', 'Roboto', 'Playfair Display', 'Montserrat', 'Fraunces',
+];
+// "VibeCode purple" plus the Tailwind blues.
+const SLOP_HEX = /#(6366f1|4f46e5|818cf8|8b5cf6|7c3aed|a855f7|c084fc|2563eb|3b82f6|60a5fa|ec4899|f472b6)\b/gi;
+const DIM_GREY = /#(888888|888|999999|999|9ca3af|a0aec0|aaaaaa|aaa|cccccc|ccc)\b/gi;
+const BUILDERS = /(gpteng\.co|lovable-tagger|lovable-uploads|\.lovable\.app|\.bolt\.host|@base44\/sdk|\.base44\.app|Built with v0|\.repl\.co|\.replit\.app)/i;
+
+function slopChecks(hRaw, css, n, E, W) {
+  // Comments and data: URIs both carry markup and hex colours that are not the
+  // rendered page. Neither should be able to fail a build.
+  const h = hRaw
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/(?:href|src|content)="data:[^"]*"/gi, 'href="data:"')
+    .replace(/(?:href|src|content)='data:[^']*'/gi, "href='data:'");
+  const blob = h + '\n' + css;
+
+  // 1. the display face
+  const fontHit = SLOP_FONTS.filter(
+    (f) => new RegExp(`font-family[^;{}]*["']?${f.replace(/ /g, '[+ ]')}["']?`, 'i').test(blob) ||
+           new RegExp(`family=${f.replace(/ /g, '\\+')}`, 'i').test(h),
+  );
+  if (fontHit.length)
+    W(`${n}: ${fontHit.join(', ')} - currently the most-generated face(s) on the web. See references/typography.md.`);
+
+  // 2. the purple/blue accent
+  const purple = [...new Set((blob.match(SLOP_HEX) || []).map((s) => s.toLowerCase()))];
+  if (purple.length) E(`${n}: ${purple.join(', ')} - the single most recognisable generated-page colour`);
+
+  // 3. gradient text
+  if (/background-clip\s*:\s*text/i.test(blob) && /color\s*:\s*transparent/i.test(blob))
+    W(`${n}: gradient text (background-clip:text) - a top-weighted tell`);
+
+  // 4. aurora / blob backdrops. backdrop-filter on a card is not this, so the
+  //    blur has to be a plain filter and the blobs have to be numerous.
+  if ((blob.match(/radial-gradient/gi) || []).length >= 6 && /(^|[^-])filter\s*:\s*blur\(\s*\d{2,}/im.test(blob))
+    W(`${n}: blurred multi-blob backdrop - the "aurora" tell`);
+
+  // 5. transition: all
+  if (/transition\s*:\s*all\b/i.test(css))
+    W(`${n}: "transition: all" - name the properties you actually animate`);
+
+  // 6. the eyebrow pill above the headline
+  if (/border-radius\s*:\s*(999|9999)px[^}]*}[^<]*<[^>]*>[^<]{1,40}<\/[^>]+>\s*<h1/is.test(blob) ||
+      /<(span|div|p)[^>]+class=["'][^"']*\b(badge|pill|chip|tag)\b[^"']*["'][^>]*>[\s\S]{0,60}?<\/\1>\s*<h1/i.test(h))
+    W(`${n}: pill badge directly above the <h1> - the "Now in beta" reflex`);
+
+  // 7. sub-AA grey body text
+  const dim = [...new Set((css.match(DIM_GREY) || []).map((s) => s.toLowerCase()))];
+  if (dim.length) W(`${n}: ${dim.join(', ')} - washed-out grey, almost certainly under 4.5:1`);
+
+  // 8. the italic accent word, rationed. Count elements, not attributes: an
+  //    <em class="it"> is one phrase, not two.
+  const ems = (h.match(/<(?:em|i)\b/gi) || []).length +
+    (h.match(/<(?!em\b|i\b)[a-z]+\b[^>]*class=["'][^"']*\bit\b/gi) || []).length;
+  if (ems > 1) E(`${n}: ${ems} italic accent phrases - one per page. It is a known tell, so overusing it is the tell.`);
+
+  // 9. centred everything
+  const centred = (h.match(/\bcenter\b|text-align\s*:\s*center/g) || []).length;
+  const sections = (h.match(/<section\b/g) || []).length || 1;
+  if (centred > sections * 2)
+    W(`${n}: ${centred} centring declarations across ${sections} sections - establish an alignment axis instead`);
+
+  // 10. builder fingerprints
+  const b = h.match(BUILDERS);
+  if (b) W(`${n}: "${b[1]}" left in the source`);
+
+  // 11. negative parallelism
+  const np = (h.match(/not just [^.<]{1,50}?,? (it['’]s|but|it is)\b/gi) || []).length;
+  if (np) W(`${n}: "not just X, it's Y" x${np} - now roughly three times its 2023 rate on the open web`);
+
+  // 12. em dash density
+  const words = (h.replace(/<[^>]+>/g, ' ').match(/\S+/g) || []).length || 1;
+  const dashes = (h.match(/—/g) || []).length;
+  if (words > 200 && (dashes / words) * 1000 > 20)
+    W(`${n}: ${((dashes / words) * 1000).toFixed(1)} em dashes per 1000 words (over 20 reads as machine-written)`);
+
+  // 13. semantics
+  if (!/<(main|section|article)\b/i.test(h)) E(`${n}: no <main>, <section> or <article> - div soup`);
+  if (/<div[^>]+onclick/i.test(h)) E(`${n}: <div onclick> - use a <button> or an <a>`);
+
+  // 14. every <svg> is either decoration (aria-hidden) or content (role +
+  //     accessible name). Inheriting from an ancestor works, but saying it on
+  //     the element is unambiguous and survives the markup being moved.
+  const bare = (h.match(/<svg\b[^>]*>/gi) || [])
+    .filter((s) => !/aria-hidden|role=|aria-label/i.test(s)).length;
+  if (bare) W(`${n}: ${bare} <svg> with neither aria-hidden nor an accessible name`);
+
+  // 15. one radius for everything
+  const radii = [...css.matchAll(/border-radius\s*:\s*([^;}]+)/gi)].map((m) => m[1].trim());
+  const tally = radii.reduce((a, r) => ((a[r] = (a[r] || 0) + 1), a), {});
+  const top = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
+  if (top && top[1] >= 8 && radii.length && top[1] / radii.length > 0.6)
+    W(`${n}: border-radius ${top[0]} on ${top[1]} rules - tier the radius by role`);
+
+  // 16. headings that will not balance
+  if (/<h1\b/i.test(h) && !/text-wrap\s*:\s*balance/i.test(css))
+    W(`${n}: no text-wrap: balance on headings`);
+}
 
 function walk(dir, out = []) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -331,10 +474,24 @@ function cmdAudit() {
       if (!labelled) E(`${n}: ${m[1]} without a label`);
     }
 
-    // placeholder copy
+    // copy that was never written
     const low = h.toLowerCase();
     const left = PLACEHOLDERS.filter((p) => low.includes(p));
-    if (left.length) E(`${n}: placeholder copy still present: "${left[0]}"${left.length > 1 ? ` (+${left.length - 1} more)` : ''}`);
+    if (left.length) E(`${n}: scaffold copy still present: "${left[0]}"${left.length > 1 ? ` (+${left.length - 1} more)` : ''}`);
+
+    for (const [re, what] of FAKE_DATA) if (re.test(h)) E(`${n}: ${what}`);
+
+    const slop = SLOP_COPY.filter((s) => low.includes(s));
+    if (slop.length) W(`${n}: marketing filler: "${slop[0]}"${slop.length > 1 ? ` (+${slop.length - 1} more)` : ''} - say the specific thing instead`);
+
+    // a copyright year that has drifted
+    const yr = new Date().getFullYear();
+    for (const m of h.matchAll(/(?:&copy;|©|copyright)\s*(\d{4})/gi))
+      if (+m[1] < yr) W(`${n}: copyright says ${m[1]}, this year is ${yr}`);
+
+    // the three-equal-cards reflex
+    if (/grid-template-columns\s*:\s*repeat\(\s*3\s*,\s*1fr\s*\)/.test(h + allCss))
+      W('repeat(3, 1fr) - use repeat(auto-fit, minmax(...)) so the row is not locked to three');
 
     // wiring
     if (/data-(px|count|magnetic|tilt|split)=/.test(h) && !/motion\.js/.test(h))
@@ -350,6 +507,8 @@ function cmdAudit() {
     // inline style volume
     const inline = (h.match(/\sstyle=["'][^"']+["']/g) || []).length;
     if (inline > 60) W(`${n}: ${inline} inline style attributes - move the repeated ones into site.css`);
+
+    slopChecks(h, allCss, n, E, W);
   }
 
   /* --- css sanity ------------------------------------------------------- */
