@@ -26,6 +26,13 @@ free, CDN-loadable, and needs no build step.
 | Generative/creative sketch work | **p5** | ~350 KB, lazy-load only |
 | 3D text in a three.js scene | **troika-three-text** | ~40 KB gz |
 | Noise for any of the above | **simplex-noise** | ~1 KB |
+| WebGL displacement on a DOM image (hover/scroll morph) | **curtainsjs** or **hover-effect** | 30 / 4 KB gz |
+| A carousel that is not a JS reimplementation of scroll-snap | **embla-carousel** | ~6 KB gz |
+| Page transitions on a multi-page static site | **@unseenco/taxi** or **@barba/core** | 5 / 9 KB gz |
+| Tiny WAAPI-based animation, no timeline | **motion** (the standalone one) | ~5 KB gz |
+| Matrix/vector maths for hand-written WebGL | **gl-matrix** | ~9 KB gz |
+| Text splitting without GSAP | **splitting** | ~3 KB gz |
+| Flat-shaded pseudo-3D from a few primitives | **zdog** | ~10 KB gz |
 
 ## Exact specifiers, verified
 
@@ -35,6 +42,9 @@ ogl@1.0.11           pixi.js@8.20.1       postprocessing@6.39.4
 lottie-web@5.13.0    @rive-app/canvas@2.42.0                 matter-js@0.20.0
 split-type@0.3.4     p5@2.3.2             simplex-noise@4.0.3
 troika-three-text@0.52.5                  meshline@3.3.1
+curtainsjs@8.1.6     embla-carousel@8.6.0 @unseenco/taxi@1.9.1  @barba/core@2.10.3
+motion@13.2.0        gl-matrix@3.4.4      splitting@1.1.0       hover-effect@1.2.1
+zdog@1.1.3
 ```
 
 ```html
@@ -138,6 +148,25 @@ points behind the camera come back as mirrored garbage.
 Budget: a marketing scene is 1-3 draw calls of geometry, no shadow maps
 (use a baked contact shadow plane), `powerPreference: 'high-performance'`, and
 `renderer.setAnimationLoop` only while the section is on screen.
+
+## Image displacement, the effect that reads as expensive
+
+A photograph that liquefies into the next one on hover or scroll is a WebGL
+displacement between two textures driven by a greyscale noise map. `curtainsjs`
+binds a shader to an actual `<img>` in the DOM, so the image stays real content
+with real alt text and real SEO, and the shader only takes over the paint.
+
+```js
+import { Curtains, Plane } from 'curtainsjs'
+const curtains = new Curtains({ container: 'canvas', pixelRatio: Math.min(devicePixelRatio, 1.5) })
+new Plane(curtains, document.querySelector('.morph'), {
+  vertexShader, fragmentShader,          // sample tex2 offset by displacement * uProgress
+  uniforms: { progress: { name: 'uProgress', type: '1f', value: 0 } },
+})
+```
+
+Keep the displacement under ~0.06 of the frame or it stops reading as a
+material and starts reading as a glitch filter.
 
 ## The rule
 

@@ -68,7 +68,18 @@ degrades to a fully visible page. `.r` reveals, `data-px` parallax, `data-tilt`
 pointer parallax, `data-count` counters, `data-magnetic` buttons, `data-split`
 per-word headline reveal, nav shrink, scroll progress.
 
-**`assets/sections.html`** - eighteen section archetypes.
+**`assets/gradient.js`** - an animated WebGL mesh gradient. Layered simplex
+noise with domain warping, mixed in linear space, dithered against banding,
+paused off-screen, one static frame under reduced motion, CSS mesh fallback.
+
+**`assets/depth.js`** - real three-plane parallax. A signed `data-depth` sets
+each plane's rate against scroll AND pointer, and drives blur and haze from the
+same number. Also single-photo 3D from a depth map.
+
+**`assets/exploded.js`** - any made thing taken apart in three.js, reading its
+layers from an `<ol>` so the semantic list is the no-JS fallback.
+
+**`assets/sections.html`** - twenty-three section archetypes.
 
 **`scripts/webdesign.mjs`** - the tool.
 
@@ -83,8 +94,12 @@ webdesign.mjs study --list editorial   render a batch of reference sites into co
 webdesign.mjs serve <dir>              local preview
 ```
 
-**`references/`** - typography, motion, imagery, composition, and the pre-ship
-checklist. Loaded only when needed, so they cost nothing the rest of the time.
+**`references/stack.md`** - which library for which job, with specifiers
+verified against the registry and CDN URLs that resolve. anime.js v4 gets its
+own section because every tutorial online is v3.
+
+**`references/`** - typography, motion, imagery, composition, tells, and the
+pre-ship checklist. Loaded only when needed, so they cost nothing the rest of the time.
 
 ## Looking, not just reading
 
