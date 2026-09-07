@@ -635,8 +635,10 @@ switch (cmd) {
   sections                        list section ids and presets
   add <id> [--to <file>]          print a section, or insert it before </main>
   audit <dir|file>                source check: copy, semantics, the tells
-  look <dir|url> [--widths 1440,390] [--out DIR] [--no-shot]
+  look <dir|url> [--widths 1440,390] [--scroll 0,600] [--out DIR] [--no-shot]
                                   RENDER it: overlap, overflow, contrast, PNGs
+  cut <photo> [--out DIR] [--name base] [--model isnet-general-use|u2net] [--alpha-matting]
+                                  one photograph into parallax planes (rembg, local)
   serve <dir> [--port 4321]       local preview
 `);
     process.exit(cmd ? 1 : 0);
