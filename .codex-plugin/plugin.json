@@ -1,6 +1,6 @@
 {
   "name": "atelier",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Build websites that look like a design studio made them: editorial serif typography, warm-neutral and near-black grounds, cinematic photography, layered scroll parallax and exploded technical views. Ships a copy-in CSS chassis, a motion runtime, a section library, a scaffolder and an audit that fails on the usual generated-site tells.",
   "author": {
     "name": "Ridelink",

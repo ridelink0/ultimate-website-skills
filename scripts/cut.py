@@ -62,11 +62,27 @@ def main():
     cov = 0
     if bbox:
         cov = round(100 * (bbox[2]-bbox[0]) * (bbox[3]-bbox[1]) / (w*h))
+    # A cut that fills the frame, or one whose box runs off an edge, is not a
+    # cut-out - it is the original rectangle, and compositing it produces a
+    # collage with a hard straight edge. Refuse it here rather than let it ship.
+    edge = bbox and (bbox[0] <= 2 or bbox[1] <= 2 or bbox[2] >= w - 2 or bbox[3] >= h - 2)
+    bad = (not bbox) or cov >= 90 or cov <= 8 or edge
     print(f'{base}: {w}x{h}, subject covers ~{cov}% of the frame'
           + (f', bbox {bbox}' if bbox else ', NO SUBJECT FOUND'))
+    if bad:
+        why = ('no subject' if not bbox else
+               'fills the frame - nothing to cut away' if cov >= 90 else
+               'almost nothing found' if cov <= 8 else
+               'subject is cropped by the frame edge, so the cut-out has a straight side')
+        sys.stderr.write(
+            f'atelier cut: {why}.\n'
+            '  This photo has no usable subject. Pick one with clear sky or wall\n'
+            '  around it, or use the photograph whole. Files written for inspection.\n')
     print(f'  fg   {fg_path}')
     print(f'  bg   {bg_path}')
     print(f'  mask {mk_path}')
+    if bad:
+        sys.exit(3)
 
 if __name__ == '__main__':
     main()

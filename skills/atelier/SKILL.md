@@ -153,6 +153,19 @@ silhouettes read as low-effort next to a photograph, however carefully they are
 shaded, so hand-drawn SVG is for line-art (the blueprint), small occluders, and
 nothing else.
 
+**One photographic moment per page.** The reference pages use a single
+photograph, full-bleed, and put the craft into the type on top of it; every
+other section is a plain ground. Two photographs butted against each other is
+a seam, and a stock photo behind body copy is texture fighting the words. If a
+second section needs a picture, frame it as a figure, do not bleed it.
+
+**Never composite a cut-out that `cut` refused.** It exits 3 and says why -
+subject fills the frame, or its box touches an edge, so the "cut-out" is the
+original rectangle and will show a hard straight side. A house floating in a
+sky with a razor edge under it is a collage, and no amount of grading hides
+it. Pick a photo with sky or wall around the subject, or use the photograph
+whole.
+
 Then cut the photograph into planes. That is the whole trick of the bridge
 video - one scene, several depths:
 
@@ -219,8 +232,15 @@ Rates that work, back to front: sky `-18`, far ridge `-34`, mid silhouette
 `-58`, wordmark `+104` (positive, so it swims against the rest), near plane
 `-14`. Depth comes from the differences between them, not from any one value.
 
-Reach for three.js only when the subject is genuinely a 3D object the visitor
-must turn - `references/motion.md` has that path and the annotation-callout
+**When the subject is a made thing being taken apart, use real 3D.** Flat SVG
+diamonds cannot do the one thing that sells an exploded view - the layers
+moving against each other while the camera holds still. six slabs in
+`three.js` with `RoomEnvironment` lighting, scroll driving separation and a
+slow turn, HTML callouts projected onto the real world positions, and a plain
+numbered list as the fallback. `references/motion.md` has the projection math.
+
+Reach for three.js beyond that only when the subject is genuinely a 3D object
+the visitor must turn - `references/motion.md` has that path and the annotation-callout
 projection math.
 
 ## Reach for tools before hand-rolling
