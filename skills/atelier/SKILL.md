@@ -168,6 +168,27 @@ colour grade between them so several photographs read as one evening, and the
 type as ordinary content at page speed. `references/imagery.md` has the
 sourcing, the verified-licence sources, and the grade recipes.
 
+## The launch page, measured
+
+Rendered from the reference itself at 1440px, so these are numbers, not
+impressions:
+
+- A **solid cream header bar, 68px**, wordmark left, nav right, one dark pill
+  button. The photograph starts *under* it, not behind it.
+- Hero **~87vh**, one photograph: sky, a moon top-right, warm cloud at the
+  edges, and **soft-blurred branches in the corners** - the nearest plane is
+  out of focus. Depth of field is what makes a cut-out read as a camera and
+  not a collage: `filter: blur(3px)` on the nearest plane, sharp in the middle
+  distance, slightly hazed at the back.
+- Eyebrow **13px, uppercase, +0.16em**, centred. Display **~76px serif, two
+  lines, the second pushed right ~150px**. Dot-leader contents **15px**,
+  `[n]` numerals left, labels right, five rows. All white with a soft shadow.
+- Three small dots bottom-left switch the photograph (day / night / warm).
+  "Made with ..." credit bottom-right, 12px.
+- Then a **warm off-white article**: a serif lede at **~28px on a 640px
+  column**, body serif **18px / 1.55**, bold run-in labels (`**Price.**`),
+  and a thin vertical progress rail of tick marks at the far left.
+
 ## Depth without a 3D engine
 
 The exploded view and the layered hero are the same trick: stack elements in one
@@ -201,6 +222,24 @@ Rates that work, back to front: sky `-18`, far ridge `-34`, mid silhouette
 Reach for three.js only when the subject is genuinely a 3D object the visitor
 must turn - `references/motion.md` has that path and the annotation-callout
 projection math.
+
+## Reach for tools before hand-rolling
+
+The tools are friends, not competitors. Hand-drawn SVG where a photograph
+exists, a bespoke scroll engine where GSAP exists, a guessed layout where a
+render exists - each of those is the low-effort version.
+
+| Need | Reach for |
+|---|---|
+| To see what a site you are imitating actually does | `atelier.mjs look <url>` - real render, two scroll positions, PNGs. Study the reference as an image, not as a description of one |
+| Visual research on a style, a palette, a font in the wild | the `imagesearch` skill if it is installed (search, fetch, download, read the images), else `look` on the sites it names |
+| Photographs | Unsplash, Pexels, Wikimedia, museum IIIF - `references/imagery.md` has the URL formats and licences. Verify every hotlink with a HEAD request |
+| Depth from one photograph | `atelier.mjs cut` (rembg, local) |
+| Pinning, scrubbing, sequenced choreography | GSAP 3.15 + ScrollTrigger from cdnjs, free for everything now. `gsap.matchMedia()` for the reduced-motion and narrow-screen branches |
+| A real 3D object the visitor must turn | three.js from jsDelivr, or `<model-viewer>` for hotspots with near-zero code |
+| Whole-page inertia as a brand decision | Lenis 1.3.26+, never ScrollSmoother alongside CSS scroll timelines |
+| A design that exists in Figma | the Figma MCP tools, when attached: `get_design_context`, `get_screenshot` |
+| To know whether it looks right | `atelier.mjs look`, then your own eyes on the PNGs. Nothing else counts |
 
 ## References
 
