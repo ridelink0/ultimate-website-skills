@@ -402,4 +402,71 @@
 <!-- @section foot | scripts, last thing before </body> -->
 <div class="grain" aria-hidden="true"></div>
 <script src="motion.js" defer></script>
+<!-- only what the page uses: gradient.js for a canvas.gradient, depth.js for a
+     .depth scene, and the importmap + exploded.js for a .exploded stack -->
+<script src="gradient.js" defer></script>
+<script src="depth.js" defer></script>
+<script type="importmap">
+{"imports":{
+  "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+}}</script>
+<script type="module" src="exploded.js"></script>
+<!-- @end -->
+
+
+<!-- @section hero-gradient | animated WebGL colour field behind the type; no photograph needed -->
+<header class="hero" id="top">
+  <canvas class="gradient" data-gradient="#0b1226,#2c3a56,#a5735a,#e8ac66"
+          data-speed="0.10" data-scale="1.5" aria-hidden="true"></canvas>
+  <div class="hero__scrim"></div>
+  <div class="hero__inner wrap center on-media">
+    <p class="eyebrow r">Eyebrow, in small caps</p>
+    <h1 class="r r-2" style="margin-top:var(--s-5)">
+      First half of the claim<span class="display__b">and the turn.</span>
+    </h1>
+    <p class="lead center r r-3" style="margin-top:var(--s-6)">
+      One sentence that adds a fact rather than repeating the headline.
+    </p>
+  </div>
+</header>
+<!-- @end -->
+
+
+<!-- @section hero-depth | three photographic planes: background lags, middle at page speed, foreground leads -->
+<header class="hero" id="top">
+  <div class="depth" style="position:absolute;inset:0;z-index:-2" aria-hidden="true">
+    <img class="plane" data-depth="-0.55" src="img/bg.jpg"  width="2400" height="1600" alt="" fetchpriority="high">
+    <img class="plane" data-depth="0.15"  src="img/mid.png" width="1800" height="1200" alt="">
+    <img class="plane" data-depth="0.85"  src="img/fg.png"  width="2000" height="1333" alt="">
+  </div>
+  <div class="hero__scrim"></div>
+  <div class="hero__inner wrap center on-media">
+    <p class="eyebrow r">Place, or date</p>
+    <h1 class="r r-2" style="margin-top:var(--s-5)">The line that reframes it.</h1>
+  </div>
+</header>
+<!-- @end -->
+
+
+<!-- @section exploded-3d | a made thing taken apart in three.js; the list is the fallback -->
+<section class="section" data-tone="dark" id="inside" data-explode-track>
+  <div class="wrap grid" style="align-items:center;row-gap:var(--s-9)">
+    <div style="grid-column:content-start / span 4" class="stack r">
+      <p class="eyebrow eyebrow--ruled">Inside</p>
+      <h2>Six parts, and four of them are invisible once it is finished.</h2>
+      <p class="prose">Scroll and they come apart. Say what each one is for.</p>
+    </div>
+    <div style="grid-column:span 7 / content-end" class="exploded" data-spread="0.62">
+      <ol class="exploded__list">
+        <li data-color="#9aa0a8" data-metal=".85" data-rough=".34" data-t=".030">Top layer</li>
+        <li data-color="#4a423a" data-rough=".90" data-t=".046" data-lines="5">Second layer</li>
+        <li data-color="#2a2724" data-rough=".86" data-t=".026">Third layer</li>
+        <li data-color="#3d4652" data-rough=".78" data-t=".020">Fourth layer</li>
+        <li data-color="#23262b" data-rough=".55" data-t=".022">Fifth layer</li>
+        <li data-color="#8a6a42" data-rough=".92" data-t=".075" data-lines="3">The base it is all fixed to</li>
+      </ol>
+    </div>
+  </div>
+</section>
 <!-- @end -->

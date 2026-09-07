@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* cinematic-web-design - scaffold and audit editorial websites.
-   node webdesign.mjs new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
+   node webdesign.mjs new <dir> [--preset fable|bone|ink|cinema] [--name "X"] [--sections a,b,c]
    node webdesign.mjs sections                     list section ids
    node webdesign.mjs add <id> [--to <file>]       print a section, or append it to a file
    node webdesign.mjs audit <dir|file>             quality + bug check, exits 1 on error
@@ -45,6 +45,17 @@ function loadSections() {
 /* -------------------------------------------------------------- presets -- */
 // Each preset is only a token override. The chassis never changes.
 const PRESETS = {
+  fable: {
+    label: 'fable - the launch-page look: one photograph under a solid cream header, staggered serif title, dot-leader contents.',
+    css: `:root{--accent-h:44;--nav-h:68px}
+/* the photograph sits UNDER a solid bar, not behind a transparent one */
+body{--bg:oklch(96.4% .008 88);--fg:oklch(22% .018 62);--fg-muted:oklch(44% .022 66)}
+.nav{position:sticky;background:oklch(96.4% .008 88);color:oklch(22% .018 62);min-height:68px}
+.nav .btn--ghost{background:oklch(22% .018 62);color:oklch(96.4% .008 88);border-color:transparent}
+.hero{min-height:87svh}`,
+    tone: '',
+    themeColor: '#f7f5ef',
+  },
   bone: {
     label: 'bone - warm paper ground, near-black type. The default.',
     css: `:root{--accent-h:62;--bg:var(--bone-100);--fg:var(--ink-800)}`,
@@ -86,7 +97,7 @@ function cmdNew() {
   mkdirSync(dir, { recursive: true });
   mkdirSync(join(dir, 'img'), { recursive: true });
 
-  for (const f of ['core.css', 'motion.js']) writeFileSync(join(dir, f), readFileSync(join(ASSETS, f)));
+  for (const f of ['core.css', 'motion.js', 'gradient.js', 'depth.js', 'exploded.js']) writeFileSync(join(dir, f), readFileSync(join(ASSETS, f)));
 
   const head = sections.get('head').body
     .replace(/SITE NAME/g, name)
@@ -109,8 +120,11 @@ function cmdNew() {
 
   // Point the nav at the sections that actually exist, so the scaffold never
   // ships a link to an anchor that is not there.
-  const anchors = [...new Set([...body.matchAll(/\sid=["']([\w-]+)["']/g)].map((m) => m[1]))]
-    .filter((id) => id !== 'top' && id !== 'main');
+  // Only landmark ids belong in the nav. Matching every id in the document
+  // put a form field's "f-name" in there as "F Name".
+  const anchors = [...new Set(
+    [...body.matchAll(/<(?:section|header|article|aside|footer)[^>]*?\sid=["']([\w-]+)["']/g)].map((m) => m[1]),
+  )].filter((id) => id !== 'top' && id !== 'main');
   const label = (id) => id.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   body = body.replace(
     /<ul class="nav__links">[\s\S]*?<\/ul>/,
@@ -174,7 +188,7 @@ ${preset.css}
 
   console.log(`cinematic-web-design: ${relative(process.cwd(), dir) || '.'} (${presetName})`);
   console.log(`  index.html  ${wanted.join(', ')}`);
-  console.log(`  core.css motion.js site.css netlify.toml`);
+  console.log(`  core.css motion.js gradient.js depth.js exploded.js site.css netlify.toml`);
   console.log(`\nNext: replace every word of placeholder copy, then "node webdesign.mjs audit ${dir}".`);
 }
 
@@ -717,7 +731,7 @@ switch (cmd) {
   default:
     console.log(`cinematic-web-design
 
-  new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
+  new <dir> [--preset fable|bone|ink|cinema] [--name "X"] [--sections a,b,c]
   sections                        list section ids and presets
   add <id> [--to <file>]          print a section, or insert it before </main>
   audit <dir|file>                source check: copy, semantics, the tells

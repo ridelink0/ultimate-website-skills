@@ -105,7 +105,11 @@ globally and translate the section markup to components - keep the class names.
 12. **Quality floor, unannounced.** One `<h1>`, visible keyboard focus, `alt` on
    every image, `width`/`height` on every image, content visible with JS off,
    reduced motion respected, readable at 360px.
-13. **Spend boldness once.** Chanel's rule: before shipping, remove one thing.
+13. **Use the library.** A hand-rolled gradient, scroll engine or exploded
+   view is the low-effort version of all three, and it looks it. `gradient.js`,
+   `depth.js` and `exploded.js` ship here; GSAP, three.js and anime.js v4 are
+   one script tag away. `references/stack.md` says which, for what.
+14. **Spend boldness once.** Chanel's rule: before shipping, remove one thing.
 
 **The preset is a choice, not a default.** Warm off-white plus a serif is now
 itself a recognised machine-made look. What separates this from that is
@@ -129,7 +133,9 @@ counters, `data-magnetic` buttons, `data-split` per-word headline reveal, nav
 shrink, scroll progress. It respects `prefers-reduced-motion` and uses one rAF
 loop for every scroll effect.
 
-Presets (token overrides only): `bone` warm paper, `ink` near-black throughout,
+Presets (token overrides only): `fable` the launch-page look - one photograph
+under a solid cream header, staggered serif title, dot-leader contents;
+`bone` warm paper, `ink` near-black throughout,
 `cinema` photography carries the page.
 
 Sections: `nav`, `hero-photo`, `hero-split`, `hero-layered`, `index`,
@@ -243,6 +249,28 @@ Reach for three.js beyond that only when the subject is genuinely a 3D object
 the visitor must turn - `references/motion.md` has that path and the annotation-callout
 projection math.
 
+## The engines that ship here
+
+Three runtimes beyond `motion.js`, all zero-dependency, all copied in by the
+scaffolder. Use them before reaching for anything heavier.
+
+- **`gradient.js`** - an animated WebGL mesh gradient. Layered simplex noise
+  with domain warping, mixed in linear space, dithered against banding.
+  `<canvas class="gradient" data-gradient="#0b1226,#2c3a56,#a5735a,#e8ac66">`.
+  This is the colour field the reference pages have and a CSS radial stack
+  never gets to. Falls back to a static CSS mesh, renders one frame under
+  reduced motion, and stops entirely when off screen.
+- **`depth.js`** - real three-plane parallax. Signed `data-depth` on each plane
+  sets its rate against *both* scroll and pointer, and drives blur and haze
+  from the same number, so a far plane is automatically hazier and a near one
+  softer. Negative is behind and lags, positive is in front and leads. Also
+  does single-photo 3D from a depth map (`data-photo` + `data-depthmap`,
+  generate with Depth Anything V2).
+- **`exploded.js`** - any made thing taken apart, in three.js. Reads its
+  layers from a `<ol>` in the markup, so the semantic list is also the no-JS
+  fallback. Callouts project onto each slab's real position and track it
+  through the turn.
+
 ## Reach for tools before hand-rolling
 
 The tools are friends, not competitors. Hand-drawn SVG where a photograph
@@ -251,6 +279,7 @@ render exists - each of those is the low-effort version.
 
 | Need | Reach for |
 |---|---|
+| Anything beyond the three engines above | `references/stack.md` - the table of which library for which job, with verified specifiers and CDN URLs |
 | To see what a site you are imitating actually does | `webdesign.mjs look <url>` - real render, two scroll positions, PNGs. Study the reference as an image, not as a description of one |
 | Visual research on a style, a palette, a font in the wild | `webdesign.mjs study --list editorial\|object\|cinema\|product` renders a curated batch into contact sheets; the `imagesearch` skill, if installed, for anything it does not cover |
 | Photographs | Unsplash, Pexels, Wikimedia, museum IIIF - `references/imagery.md` has the URL formats and licences. Verify every hotlink with a HEAD request |
@@ -267,6 +296,7 @@ Read one only when you need it. Each is self-contained.
 
 | File | When |
 |---|---|
+| `references/stack.md` | Which library for which job; GSAP, three.js and anime.js v4 recipes |
 | `references/typography.md` | Faces, the fluid scale, tracking and line-height tables, the OKLCH palette, deriving the accent, hairline alphas |
 | `references/motion.md` | Scroll-driven CSS, layered parallax, the exploded view, three.js and annotation callouts, canvas sequences, GSAP and Lenis, the motion scale |
 | `references/imagery.md` | Sourcing and licensing, CSS colour grading, duotone, scrims, gradient-mesh skies with no photograph, film grain, SVG technical drawing |

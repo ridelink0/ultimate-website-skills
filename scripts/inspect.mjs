@@ -129,6 +129,13 @@ const PROBE = `(() => {
     if (!el.offsetParent && cs.position !== 'fixed' && el !== document.body) return false;
     if (el.closest('details:not([open])') && !el.closest('summary')) return false;
     if (el.closest('[hidden]')) return false;
+    // Opacity and visibility are inherited visually but NOT in computed style:
+    // a span inside an opacity:0 parent computes to opacity 1 and paints
+    // nothing. Without walking up, every hidden label reads as an overlap.
+    for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+      const acs = getComputedStyle(a);
+      if (+acs.opacity === 0 || acs.visibility === 'hidden' || acs.display === 'none') return false;
+    }
     return true;
   };
   const label = (el) => {
