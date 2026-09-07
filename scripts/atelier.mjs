@@ -11,6 +11,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSy
 import { join, dirname, resolve, extname, basename, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
+import { tmpdir } from 'node:os';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ASSETS = resolve(HERE, '..', 'skills', 'atelier', 'assets');
@@ -526,14 +527,13 @@ function cmdAudit() {
 }
 
 /* ---------------------------------------------------------------- serve -- */
-function cmdServe() {
-  const dir = resolve(positional[0] || '.');
-  const port = parseInt(String(flag('port', '4321')), 10) || 4321;
-  const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
-    '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json',
-    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp',
-    '.avif': 'image/avif', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
-  createServer((req, res) => {
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json',
+  '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp',
+  '.avif': 'image/avif', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
+
+function startServer(dir, port) {
+  const srv = createServer((req, res) => {
     let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     if (p.endsWith('/')) p += 'index.html';
     const file = join(dir, p);
@@ -543,7 +543,57 @@ function cmdServe() {
     res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream',
                          'cache-control': 'no-store' });
     res.end(readFileSync(file));
-  }).listen(port, () => console.log(`atelier: http://localhost:${port}  (${dir})`));
+  });
+  srv.listen(port);
+  srv.unref();
+  return srv;
+}
+
+function cmdServe() {
+  const dir = resolve(positional[0] || '.');
+  const port = parseInt(String(flag('port', '4321')), 10) || 4321;
+  const srv = startServer(dir, port);
+  srv.ref();
+  console.log(`atelier: http://localhost:${port}  (${dir})`);
+}
+
+/* ----------------------------------------------------------------- look -- */
+/* Renders the page in a real browser and reports what only a rendered page can
+   show: text overlapping text, content past the viewport, unreadable contrast,
+   collapsed elements, broken images. Static analysis cannot see any of it. */
+async function cmdLook() {
+  const target = positional[0] || '.';
+  const out = String(flag('out', join(process.env.CLAUDE_SCRATCHPAD || tmpdir(), 'atelier-shots')));
+  const widths = String(flag('widths', '1440,390')).split(',').map((s) => parseInt(s, 10)).filter(Boolean);
+  const noShot = argv.includes('--no-shot');
+
+  let url = target;
+  let server = null;
+  if (!/^https?:\/\//.test(target)) {
+    const dir = resolve(target);
+    if (!existsSync(dir)) die(`no such path: ${dir}`);
+    const port = 4400 + Math.floor(Math.random() * 900);
+    server = startServer(dir, port);
+    url = `http://127.0.0.1:${port}/`;
+  }
+
+  try {
+    const { inspect, formatReport } = await import('./inspect.mjs');
+    const results = await inspect(url, { widths, out: noShot ? null : out });
+    const { text, errors, warns } = formatReport(results);
+    console.log(`\natelier look  ${target}`);
+    console.log(text);
+    console.log(`\n  ${errors} error(s), ${warns} warning(s)`);
+    if (!noShot) console.log(`\n  Read the PNGs. The report cannot tell you whether it looks good.`);
+    process.exitCode = errors ? 1 : 0;
+  } catch (e) {
+    if (e && e.code === 'no-browser') {
+      console.error('atelier look: ' + e.message);
+      process.exitCode = 2;
+    } else throw e;
+  } finally {
+    if (server) server.close();
+  }
 }
 
 /* ------------------------------------------------------------------ main -- */
@@ -552,6 +602,7 @@ switch (cmd) {
   case 'sections': case 'list': cmdSections(); break;
   case 'add': cmdAdd(); break;
   case 'audit': case 'check': cmdAudit(); break;
+  case 'look': case 'shot': await cmdLook(); break;
   case 'serve': cmdServe(); break;
   default:
     console.log(`atelier
@@ -559,7 +610,9 @@ switch (cmd) {
   new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
   sections                        list section ids and presets
   add <id> [--to <file>]          print a section, or insert it before </main>
-  audit <dir|file>                quality + bug check (exit 1 on error)
+  audit <dir|file>                source check: copy, semantics, the tells
+  look <dir|url> [--widths 1440,390] [--out DIR] [--no-shot]
+                                  RENDER it: overlap, overflow, contrast, PNGs
   serve <dir> [--port 4321]       local preview
 `);
     process.exit(cmd ? 1 : 0);

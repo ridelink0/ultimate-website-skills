@@ -23,7 +23,8 @@ Otherwise build a new site:
 3. Rewrite every word. Set the hero image and `--accent-h`. Add one signature
    element drawn from the subject's own world.
 4. `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" audit <dir>` must exit 0.
-5. Preview it: `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" serve <dir>`,
-   and look at it at 360px and 1600px if you can drive a browser.
+5. Render it and look:
+   `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" look <dir>` - it must report
+   no overlap and no overflow, and you must read the PNGs it writes.
 
 Then report in two sentences with the file paths, and nothing else.

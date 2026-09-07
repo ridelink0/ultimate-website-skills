@@ -28,7 +28,8 @@ Layout:
 skills/atelier/SKILL.md         the doctrine
 skills/atelier/assets/          core.css, motion.js, sections.html
 skills/atelier/references/      loaded on demand
-scripts/atelier.mjs             new / sections / add / audit / serve
+scripts/atelier.mjs             new / sections / add / audit / look / serve
+scripts/inspect.mjs             headless-browser render check, over CDP
 scripts/install.mjs             registers with both CLIs
 commands/atelier.md             the /atelier slash command
 hooks/                          UserPromptSubmit nudge
@@ -40,6 +41,8 @@ Constraints:
   dependency block.
 - `core.css` and `motion.js` are copied verbatim into user projects. A change
   there lands in every site built afterwards, so treat them as public API.
+- `inspect.mjs` talks to Chrome/Edge/Chromium over the DevTools protocol using
+  Node 22's built-in `WebSocket` and `fetch`. Do not add puppeteer.
 - Every change to `assets/` or `scripts/` must keep
   `node scripts/atelier.mjs audit` passing on a fresh scaffold:
   ```

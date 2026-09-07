@@ -62,12 +62,22 @@ list is what the audit cannot see.
 - [ ] Every form control has a real label.
 - [ ] Readable at 360px wide, and at 200% browser zoom.
 - [ ] No horizontal scrollbar at any width.
+- [ ] `look` reports no overlap and no overflow at 1440 and 390.
 - [ ] `<title>`, meta description, favicon and Open Graph tags are all set and
       specific.
 - [ ] Anchors clear the fixed header (`--nav-h` is being published by
       `motion.js`, or you set `scroll-margin-top` yourself).
 
 ## Then look at it
+
+`node scripts/atelier.mjs look <dir>` renders the page at 1440 and 390 in a real
+browser, reports what only a rendered page can show - text over text, content
+past the viewport, contrast against the actually-painted background, collapsed
+elements, broken images - and writes a PNG at each width. **Read the PNGs.**
+
+Nothing static catches a layer covering half the composition, a headline sitting
+on a wordmark, or a colour that turned to mud once painted. All of those pass a
+source audit cleanly. Looking is the check.
 
 Open it. Not the code - the page. At 360px and at 1600px. If you can drive a
 browser, drive it and take a screenshot.

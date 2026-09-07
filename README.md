@@ -76,12 +76,27 @@ per-word headline reveal, nav shrink, scroll progress.
 atelier.mjs new <dir> [--preset bone|ink|cinema] [--name "X"] [--sections a,b,c]
 atelier.mjs sections                 list the library and the presets
 atelier.mjs add <id> [--to <file>]   insert one section
-atelier.mjs audit <dir>              quality + bug check, exit 1 on error
+atelier.mjs audit <dir>              source check: copy, semantics, the tells
+atelier.mjs look <dir|url>           RENDER it: overlap, overflow, contrast, PNGs
 atelier.mjs serve <dir>              local preview
 ```
 
 **`references/`** - typography, motion, imagery, composition, and the pre-ship
 checklist. Loaded only when needed, so they cost nothing the rest of the time.
+
+## Looking, not just reading
+
+`atelier.mjs look` is the half that matters. It drives a real headless browser
+over CDP - no dependencies, using Node's built-in fetch and WebSocket - loads
+the page at 1440 and 390, and reports the bugs that only exist once something is
+painted: **text overlapping text**, content past the viewport, contrast measured
+against the background actually behind an element (including `oklch()` and
+`color-mix()`, which every naive checker gets wrong), elements collapsed to zero,
+images that failed to load, and tap targets under 24px. It writes a PNG at each
+width so the agent can look at what it built.
+
+A layer covering half the composition passes every static check ever written.
+This is how you catch it.
 
 ## The audit
 

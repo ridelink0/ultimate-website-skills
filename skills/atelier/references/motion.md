@@ -119,6 +119,22 @@ Rules: `isolation: isolate` on the section so the stack does not leak; overscan
 any translating layer by at least its travel (`inset: -15% 0`); put a
 `drop-shadow(0 30px 60px rgb(0 0 0 / .45))` on the subject so it separates.
 
+**The geometry matters more than the rates.** Every plane except the sky is a
+*band*: an explicit `height` plus `align-self: end`, and a `margin-bottom` that
+lifts it clear of the plane in front. Skip that and the foreground - drawn at
+100% height by default - covers the whole hero, every other layer is invisible,
+and the page still passes every static check. Sizes that work for a five-plane
+hero: haze `height: 30%; margin-bottom: 25%`, mid silhouette
+`height: 24%; margin-bottom: 17%`, near plane `height: 22%`.
+
+Two more: put the bright band of the sky gradient *above* where the silhouettes
+start, or it is hidden behind the thing it is meant to backlight. And at equal
+`z-index` DOM order decides occlusion, so the wordmark is written *before* the
+near silhouette - being cropped by the subject is the effect.
+
+Verify it by rendering, never by reading the CSS:
+`node scripts/atelier.mjs look <dir>` and read the PNGs.
+
 **The foreground layer does not need an image.** A hand-written SVG silhouette -
 a roofline, an arch, a treeline, a skyline - is sharper, weighs nothing, and
 takes `currentColor`. Use it by default; reach for a cut-out PNG only for a

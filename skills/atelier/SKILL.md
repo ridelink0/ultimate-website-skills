@@ -46,8 +46,16 @@ Then, in order:
    subject's own material in that image (see `references/imagery.md`).
 3. **Add the signature** - one element this page is remembered by, drawn from the
    subject's own world. One. Everything else stays quiet.
-4. **Audit**: `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" audit <dir>` -
-   must exit 0.
+4. **Audit the source**:
+   `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" audit <dir>` - must exit 0.
+5. **Then render it and look**:
+   `node "${CLAUDE_PLUGIN_ROOT}/scripts/atelier.mjs" look <dir>`
+   This is not optional. It opens the page in a real headless browser at 1440
+   and 390, reports text overlapping text, content past the viewport, contrast
+   against the actual painted background, collapsed elements and broken images -
+   none of which the source can tell you - and writes a PNG at each width.
+   **Read the PNGs.** A layer covering half the composition passes every static
+   check ever written. The only way to know a page looks right is to look at it.
 
 Other commands: `sections` lists the library, `add <id> --to <file>` inserts one,
 `serve <dir>` previews at localhost.
@@ -142,9 +150,34 @@ Choose by register, not by taste:
 The exploded view and the layered hero are the same trick: stack elements in one
 grid cell (`.layers` / `.exploded`), give each a different `data-px`, and they
 separate as the page scrolls. Foreground silhouettes can be hand-written SVG, so
-a convincing layered hero needs no image asset at all. Reach for three.js only
-when the subject is genuinely a 3D object the visitor must turn -
-`references/motion.md` has that path and the annotation-callout projection math.
+a convincing layered hero needs no image asset at all.
+
+Five things decide whether a layered hero reads as depth or as one flat shape.
+Get any of them wrong and it is the second one:
+
+1. **Bands, not full-height planes.** Every layer except the sky gets an explicit
+   `height` (say 30% / 24% / 22%) and `align-self: end`. A foreground drawn at
+   full height covers the entire composition and nothing behind it is ever seen.
+2. **Lift each band clear of the one in front** with `margin-bottom`, or the near
+   plane simply hides the middle one. The offsets *are* the composition.
+3. **Aerial perspective.** Each further plane sits closer to the sky's own colour
+   and loses contrast. This, not size, is what reads as distance.
+4. **Two faces per object.** A lit slope and a slope in shadow. A single flat
+   fill reads as a sticker; the fold is what makes it a thing.
+5. **Put the bright band of the sky where it will still be visible** - above the
+   silhouettes, not behind them.
+
+At equal `z-index`, DOM order decides who occludes whom. The giant wordmark goes
+*before* the near silhouette in the markup, so the subject crops it. That
+occlusion is the whole effect.
+
+Rates that work, back to front: sky `-18`, far ridge `-34`, mid silhouette
+`-58`, wordmark `+104` (positive, so it swims against the rest), near plane
+`-14`. Depth comes from the differences between them, not from any one value.
+
+Reach for three.js only when the subject is genuinely a 3D object the visitor
+must turn - `references/motion.md` has that path and the annotation-callout
+projection math.
 
 ## References
 
