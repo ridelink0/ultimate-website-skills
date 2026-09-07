@@ -7,7 +7,7 @@
    node webdesign.mjs serve <dir> [--port 4321]    local preview
    No dependencies. Node 18+. */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch } from 'node:fs';
 import { join, dirname, resolve, extname, basename, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
@@ -542,10 +542,13 @@ function cmdAudit() {
       else if (!/type=["']importmap["']/.test(h))
         E(`${n}: exploded.js is a module importing "three" - it needs an importmap`);
     }
-    // and the reverse: paying for an engine nothing uses
+    // and the reverse: paying for an engine nothing uses. Match the script tag,
+    // not the filename anywhere in the file - a comment mentioning gradient.js
+    // is not a page that loads it.
     for (const [f, sel] of [['gradient.js', /data-gradient=/], ['depth.js', /class=["'][^"']*\bdepth\b/],
                             ['exploded.js', /class=["'][^"']*\bexploded\b/]])
-      if (h.includes(f) && !sel.test(h)) W(`${n}: loads ${f} but nothing on the page uses it`);
+      if (new RegExp(`<script[^>]+src=["'][^"']*${f.replace('.', '\\.')}["']`).test(h) && !sel.test(h))
+        W(`${n}: loads ${f} but nothing on the page uses it`);
     if (/class=["'][^"']*\bgrain\b/.test(h) === false) W(`${n}: no .grain overlay - the page will look flat`);
     if (!/fonts\.(googleapis|gstatic|bunny|fontshare)/.test(h) && !/@font-face/.test(allCss))
       W(`${n}: no webfont loaded - the whole system depends on the serif`);
@@ -752,6 +755,62 @@ function cmdCut() {
   die('python not found. Install Python 3.10+ then: python -m pip install "rembg[cpu]"');
 }
 
+/* ------------------------------------------------------------------ dev -- */
+/* Serve, watch, and re-check on every save: source audit plus a real render
+   with console errors, and a fresh PNG to look at. The whole debug loop in one
+   command, so testing a page is never a reason not to. */
+async function cmdDev() {
+  const dir = resolve(positional[0] || '.');
+  if (!existsSync(dir)) die(`no such path: ${dir}`);
+  const port = parseInt(String(flag('port', '4321')), 10) || 4321;
+  const widths = String(flag('widths', '1440')).split(',').map(Number).filter(Boolean);
+  const scrolls = String(flag('scroll', '0,900')).split(',').map(Number).filter((n) => !isNaN(n));
+  const shots = resolve(String(flag('out', join(dir, '.shots'))));
+
+  const srv = startServer(dir, port);
+  srv.ref();
+  const url = `http://127.0.0.1:${port}/`;
+  console.log(`cinematic-web-design dev\n  ${url}\n  watching ${dir}\n  shots -> ${shots}\n`);
+
+  const { inspect, formatReport } = await import('./inspect.mjs');
+  let busy = false, again = false;
+  const check = async (why) => {
+    if (busy) { again = true; return; }
+    busy = true;
+    console.log(`\n─── ${why} ───`);
+    try {
+      // source first: it is instant, and half the bugs never need a browser
+      const a = spawnSync(process.execPath, [fileURLToPath(import.meta.url), 'audit', dir], { encoding: 'utf8' });
+      const src = (a.stdout || '').split('\n').filter((l) => /ERROR|warn/.test(l));
+      console.log(src.length ? src.join('\n') : '  source ok');
+      const res = await inspect(url, { widths, out: shots, scrolls });
+      const { text, errors, warns } = formatReport(res);
+      console.log(text);
+      console.log(`  ${errors} error(s), ${warns} warning(s)`);
+    } catch (e) {
+      console.error('  ' + ((e && e.message) || e));
+    }
+    busy = false;
+    if (again) { again = false; check('queued change'); }
+  };
+
+  let timer = null;
+  const watchers = [];
+  for (const d of [dir, join(dir, 'img')]) {
+    if (!existsSync(d)) continue;
+    try {
+      watchers.push(watch(d, { persistent: true }, (_e, f) => {
+        if (!f || /^\.|\.shots|~$/.test(f)) return;
+        clearTimeout(timer);
+        timer = setTimeout(() => check(`changed: ${f}`), 220);   // debounce the editor's two writes
+      }));
+    } catch {}
+  }
+  process.on('SIGINT', () => { watchers.forEach((w) => w.close()); srv.close(); process.exit(0); });
+  await check('first run');
+  console.log('\n  Save a file to re-check. Ctrl+C to stop.');
+}
+
 /* ------------------------------------------------------------------ main -- */
 switch (cmd) {
   case 'new': cmdNew(); break;
@@ -761,6 +820,7 @@ switch (cmd) {
   case 'look': case 'shot': await cmdLook(); break;
   case 'cut': cmdCut(); break;
   case 'study': await cmdStudy(); break;
+  case 'dev': await cmdDev(); break;
   case 'serve': cmdServe(); break;
   default:
     console.log(`cinematic-web-design
@@ -775,6 +835,8 @@ switch (cmd) {
                                   one photograph into parallax planes (rembg, local)
   study <url...> | --list editorial|object|cinema|product [--scroll 0,900] [--out DIR]
                                   render a batch of reference sites into contact sheets
+  dev <dir> [--port 4321] [--widths 1440] [--scroll 0,900]
+                                  serve + watch: re-audits and re-renders on every save
   serve <dir> [--port 4321]       local preview
 `);
     process.exit(cmd ? 1 : 0);
