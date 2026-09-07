@@ -1,0 +1,23 @@
+
+-- cold build --
+  ok   builds from nothing
+  ok   produces an executable
+  ok   binary is content-addressed
+
+-- idempotence --
+  ok   second call does not rebuild
+  ok   second call returns the same binary
+  ok   exactly one binary on disk
+
+-- concurrent builds --
+  ok   all parallel builds succeed
+  ok   all agree on one binary
+  ok   no stray temp files left
+  ok   only one binary survives
+
+-- forced rebuild --
+  ok   force rebuilds
+  ok   force keeps the same content address
+  ok   old binaries are pruned
+
+13 passed, 0 failed

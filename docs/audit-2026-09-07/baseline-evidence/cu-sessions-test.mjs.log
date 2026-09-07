@@ -1,0 +1,80 @@
+
+-- registration and slots --
+  ok   first session takes slot 0
+  ok   first session is called session 1
+  ok   it can see no peers
+  ok   second session takes slot 1
+  ok   second session is called session 2
+  ok   each session sees the other
+  ok   a session never lists itself
+
+-- two sessions starting at the same instant --
+  ok   an ordinary new session takes the next free slot
+  ok   a session that claimed a taken slot moves off it
+  ok   no two live sessions share a slot
+  ok   and its label follows its slot
+
+-- a session that died is pruned, not believed --
+  ok   a dead pid is dropped from peers
+  ok   its registration file is removed
+
+-- a quiet session is idle, not gone --
+  ok   a fresh live session is seen
+  ok   a live session that has gone quiet keeps its registration
+  ok   and is reported as idle rather than active
+  ok   its slot is not handed to a new session
+  ok   a heartbeat clears idle
+
+-- but a pid quiet for half an hour has been reused, and is let go --
+  ok   the abandoned record is dropped
+  ok   the one still breathing is kept
+
+-- the input lease is exclusive --
+  ok   the holder runs
+  ok   the other session is refused while it is held
+  ok   the refusal carries a code the model can branch on
+  ok   the other session never ran its action
+  ok   it waited for the whole budget first
+
+-- and it is released afterwards --
+  ok   the next session gets the lease once it is free
+  ok   no lease file is left behind
+
+-- a lease held by a session that died is taken, not waited on --
+  ok   a dead holder loses the lease
+
+-- and one held impossibly long expires --
+  ok   a lease older than any real action expires
+
+-- releasing never drops a lease that is not ours --
+  ok   another session's live lease survives our release
+
+-- two calls from ONE session queue instead of racing --
+  ok   one session never interleaves its own actions
+
+-- a failing action still gives the lease back --
+  ok   a thrown action releases the lease
+  ok   the next session is not locked out by it
+
+-- a registry it cannot write to never blocks the machine --
+  ok   the action still runs
+  ok   and it does not sit out the wait budget first
+  ok   the loss of serialisation is admitted, not hidden
+  ok   and it does not claim phantom peers
+
+-- what the model is told --
+  ok   a peer is named
+  ok   what it last did is named
+  ok   the same window is called out as a conflict
+  ok   a different window is not
+  ok   with no peers there is nothing to say
+  ok   status names this session
+  ok   status names the other one
+  ok   status says grants are not shared
+
+-- leaving --
+  ok   closing deregisters
+  ok   the last session sees an empty machine
+  ok   a session starting alone reclaims slot 0
+
+48 passed, 0 failed

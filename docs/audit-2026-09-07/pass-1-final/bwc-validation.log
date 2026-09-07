@@ -1,0 +1,651 @@
+
+[1m[34m========================================[0m
+[1m[34m  BuildWithClaude Validation Suite[0m
+[1m[34m========================================[0m
+
+[36m▶ Running Subagents & Commands validation...[0m
+
+
+[34mValidating 294 subagent files...[0m
+
+[90mChecking plugins\all-agents\agents\wordpress-developer.md...[0m
+[90mChecking plugins\all-agents\agents\visual-analysis-ocr.md...[0m
+[90mChecking plugins\all-agents\agents\url-link-extractor.md...[0m
+[90mChecking plugins\all-agents\agents\url-context-validator.md...[0m
+[90mChecking plugins\all-agents\agents\ui-ux-designer.md...[0m
+[90mChecking plugins\all-agents\agents\typescript-expert.md...[0m
+[90mChecking plugins\all-agents\agents\twitter-ai-influencer-manager.md...[0m
+[90mChecking plugins\all-agents\agents\timestamp-precision-specialist.md...[0m
+[90mChecking plugins\all-agents\agents\text-comparison-validator.md...[0m
+[90mChecking plugins\all-agents\agents\test-automator.md...[0m
+[90mChecking plugins\all-agents\agents\terraform-specialist.md...[0m
+[90mChecking plugins\all-agents\agents\technical-researcher.md...[0m
+[90mChecking plugins\all-agents\agents\task-decomposition-expert.md...[0m
+[90mChecking plugins\all-agents\agents\tag-agent.md...[0m
+[90mChecking plugins\all-agents\agents\sql-expert.md...[0m
+[90mChecking plugins\all-agents\agents\social-media-copywriter.md...[0m
+[90mChecking plugins\all-agents\agents\social-media-clip-creator.md...[0m
+[90mChecking plugins\all-agents\agents\seo-podcast-optimizer.md...[0m
+[90mChecking plugins\all-agents\agents\security-auditor.md...[0m
+[90mChecking plugins\all-agents\agents\search-specialist.md...[0m
+[90mChecking plugins\all-agents\agents\sales-automator.md...[0m
+[90mChecking plugins\all-agents\agents\rust-expert.md...[0m
+[90mChecking plugins\all-agents\agents\ruby-expert.md...[0m
+[90mChecking plugins\all-agents\agents\risk-manager.md...[0m
+[90mChecking plugins\all-agents\agents\review-agent.md...[0m
+[90mChecking plugins\all-agents\agents\research-synthesizer.md...[0m
+[90mChecking plugins\all-agents\agents\research-orchestrator.md...[0m
+[90mChecking plugins\all-agents\agents\research-coordinator.md...[0m
+[90mChecking plugins\all-agents\agents\research-brief-generator.md...[0m
+[90mChecking plugins\all-agents\agents\report-generator.md...[0m
+[90mChecking plugins\all-agents\agents\react-performance-optimization.md...[0m
+[90mChecking plugins\all-agents\agents\rails-expert.md...[0m
+[90mChecking plugins\all-agents\agents\query-clarifier.md...[0m
+[90mChecking plugins\all-agents\agents\quant-analyst.md...[0m
+[90mChecking plugins\all-agents\agents\python-expert.md...[0m
+[90mChecking plugins\all-agents\agents\prompt-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\project-supervisor-orchestrator.md...[0m
+[90mChecking plugins\all-agents\agents\podcast-trend-scout.md...[0m
+[90mChecking plugins\all-agents\agents\podcast-transcriber.md...[0m
+[90mChecking plugins\all-agents\agents\podcast-metadata-specialist.md...[0m
+[90mChecking plugins\all-agents\agents\podcast-content-analyzer.md...[0m
+[90mChecking plugins\all-agents\agents\php-developer.md...[0m
+[90mChecking plugins\all-agents\agents\performance-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\payment-integration.md...[0m
+[90mChecking plugins\all-agents\agents\ocr-quality-assurance.md...[0m
+[90mChecking plugins\all-agents\agents\ocr-grammar-fixer.md...[0m
+[90mChecking plugins\all-agents\agents\nextjs-app-router-developer.md...[0m
+[90mChecking plugins\all-agents\agents\network-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\moc-agent.md...[0m
+[90mChecking plugins\all-agents\agents\mobile-developer.md...[0m
+[90mChecking plugins\all-agents\agents\mlops-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\ml-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\metadata-agent.md...[0m
+[90mChecking plugins\all-agents\agents\mcp-testing-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\mcp-server-architect.md...[0m
+[90mChecking plugins\all-agents\agents\mcp-security-auditor.md...[0m
+[90mChecking plugins\all-agents\agents\mcp-registry-navigator.md...[0m
+[90mChecking plugins\all-agents\agents\mcp-expert.md...[0m
+[90mChecking plugins\all-agents\agents\mcp-deployment-orchestrator.md...[0m
+[90mChecking plugins\all-agents\agents\market-research-analyst.md...[0m
+[90mChecking plugins\all-agents\agents\markdown-syntax-formatter.md...[0m
+[90mChecking plugins\all-agents\agents\llms-maintainer.md...[0m
+[90mChecking plugins\all-agents\agents\legal-advisor.md...[0m
+[90mChecking plugins\all-agents\agents\legacy-modernizer.md...[0m
+[90mChecking plugins\all-agents\agents\laravel-vue-developer.md...[0m
+[90mChecking plugins\all-agents\agents\javascript-developer.md...[0m
+[90mChecking plugins\all-agents\agents\java-developer.md...[0m
+[90mChecking plugins\all-agents\agents\ios-developer.md...[0m
+[90mChecking plugins\all-agents\agents\incident-responder.md...[0m
+[90mChecking plugins\all-agents\agents\hyperledger-fabric-developer.md...[0m
+[90mChecking plugins\all-agents\agents\hackathon-ai-strategist.md...[0m
+[90mChecking plugins\all-agents\agents\graphql-architect.md...[0m
+[90mChecking plugins\all-agents\agents\golang-expert.md...[0m
+[90mChecking plugins\all-agents\agents\game-developer.md...[0m
+[90mChecking plugins\all-agents\agents\frontend-developer.md...[0m
+[90mChecking plugins\all-agents\agents\error-detective.md...[0m
+[90mChecking plugins\all-agents\agents\episode-orchestrator.md...[0m
+[90mChecking plugins\all-agents\agents\dx-optimizer.md...[0m
+[90mChecking plugins\all-agents\agents\drupal-developer.md...[0m
+[90mChecking plugins\all-agents\agents\docusaurus-expert.md...[0m
+[90mChecking plugins\all-agents\agents\directus-developer.md...[0m
+[90mChecking plugins\all-agents\agents\devops-troubleshooter.md...[0m
+[90mChecking plugins\all-agents\agents\deployment-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\defi-strategist.md...[0m
+[90mChecking plugins\all-agents\agents\debugger.md...[0m
+[90mChecking plugins\all-agents\agents\database-optimizer.md...[0m
+[90mChecking plugins\all-agents\agents\database-optimization.md...[0m
+[90mChecking plugins\all-agents\agents\database-admin.md...[0m
+[90mChecking plugins\all-agents\agents\data-scientist.md...[0m
+[90mChecking plugins\all-agents\agents\data-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\data-analyst.md...[0m
+[90mChecking plugins\all-agents\agents\customer-support.md...[0m
+[90mChecking plugins\all-agents\agents\crypto-trader.md...[0m
+[90mChecking plugins\all-agents\agents\crypto-risk-manager.md...[0m
+[90mChecking plugins\all-agents\agents\crypto-analyst.md...[0m
+[90mChecking plugins\all-agents\agents\cpp-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\context-manager.md...[0m
+[90mChecking plugins\all-agents\agents\content-marketer.md...[0m
+[90mChecking plugins\all-agents\agents\connection-agent.md...[0m
+[90mChecking plugins\all-agents\agents\comprehensive-researcher.md...[0m
+[90mChecking plugins\all-agents\agents\command-expert.md...[0m
+[90mChecking plugins\all-agents\agents\code-reviewer.md...[0m
+[90mChecking plugins\all-agents\agents\cloud-architect.md...[0m
+[90mChecking plugins\all-agents\agents\c-developer.md...[0m
+[90mChecking plugins\all-agents\agents\business-analyst.md...[0m
+[90mChecking plugins\all-agents\agents\blockchain-developer.md...[0m
+[90mChecking plugins\all-agents\agents\backend-architect.md...[0m
+[90mChecking plugins\all-agents\agents\audio-quality-controller.md...[0m
+[90mChecking plugins\all-agents\agents\architect-review.md...[0m
+[90mChecking plugins\all-agents\agents\arbitrage-bot.md...[0m
+[90mChecking plugins\all-agents\agents\api-security-audit.md...[0m
+[90mChecking plugins\all-agents\agents\api-documenter.md...[0m
+[90mChecking plugins\all-agents\agents\ai-engineer.md...[0m
+[90mChecking plugins\all-agents\agents\agent-expert.md...[0m
+[90mChecking plugins\all-agents\agents\accessibility-specialist.md...[0m
+[90mChecking plugins\all-agents\agents\academic-researcher.md...[0m
+[90mChecking plugins\all-agents\agents\academic-research-synthesizer.md...[0m
+[90mChecking plugins\all-commands\commands\write-tests.md...[0m
+[90mChecking plugins\all-commands\commands\use-stepper.md...[0m
+[90mChecking plugins\all-commands\commands\update-docs.md...[0m
+[90mChecking plugins\all-commands\commands\update-branch-name.md...[0m
+[90mChecking plugins\all-commands\commands\unity-project-setup.md...[0m
+[90mChecking plugins\all-commands\commands\ultra-think.md...[0m
+[90mChecking plugins\all-commands\commands\troubleshooting-guide.md...[0m
+[90mChecking plugins\all-commands\commands\todo.md...[0m
+[90mChecking plugins\all-commands\commands\timeline-compressor.md...[0m
+[90mChecking plugins\all-commands\commands\testing_plan_integration.md...[0m
+[90mChecking plugins\all-commands\commands\test-coverage.md...[0m
+[90mChecking plugins\all-commands\commands\test-changelog-automation.md...[0m
+[90mChecking plugins\all-commands\commands\team-workload-balancer.md...[0m
+[90mChecking plugins\all-commands\commands\tdd.md...[0m
+[90mChecking plugins\all-commands\commands\task-from-pr.md...[0m
+[90mChecking plugins\all-commands\commands\system-behavior-simulator.md...[0m
+[90mChecking plugins\all-commands\commands\sync.md...[0m
+[90mChecking plugins\all-commands\commands\sync-status.md...[0m
+[90mChecking plugins\all-commands\commands\sync-pr-to-task.md...[0m
+[90mChecking plugins\all-commands\commands\sync-linear-to-issues.md...[0m
+[90mChecking plugins\all-commands\commands\sync-issues-to-linear.md...[0m
+[90mChecking plugins\all-commands\commands\sync-conflict-resolver.md...[0m
+[90mChecking plugins\all-commands\commands\sync-automation-setup.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-test.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-test-setup.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-test-fix.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-test-coverage.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-storybook.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-storybook-troubleshoot.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-storybook-story.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-storybook-setup.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-storybook-mock.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-storybook-migrate.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-scaffold.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-optimize.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-migrate.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-debug.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-component.md...[0m
+[90mChecking plugins\all-commands\commands\svelte-a11y.md...[0m
+[90mChecking plugins\all-commands\commands\status.md...[0m
+[90mChecking plugins\all-commands\commands\start.md...[0m
+[90mChecking plugins\all-commands\commands\standup-report.md...[0m
+[90mChecking plugins\all-commands\commands\sprint-planning.md...[0m
+[90mChecking plugins\all-commands\commands\simulation-calibrator.md...[0m
+[90mChecking plugins\all-commands\commands\share-your-story.md...[0m
+[90mChecking plugins\all-commands\commands\setup-visual-testing.md...[0m
+[90mChecking plugins\all-commands\commands\setup-rate-limiting.md...[0m
+[90mChecking plugins\all-commands\commands\setup-monorepo.md...[0m
+[90mChecking plugins\all-commands\commands\setup-monitoring-observability.md...[0m
+[90mChecking plugins\all-commands\commands\setup-load-testing.md...[0m
+[90mChecking plugins\all-commands\commands\setup-linting.md...[0m
+[90mChecking plugins\all-commands\commands\setup-kubernetes-deployment.md...[0m
+[90mChecking plugins\all-commands\commands\setup-formatting.md...[0m
+[90mChecking plugins\all-commands\commands\setup-development-environment.md...[0m
+[90mChecking plugins\all-commands\commands\setup-comprehensive-testing.md...[0m
+[90mChecking plugins\all-commands\commands\setup-cdn-optimization.md...[0m
+[90mChecking plugins\all-commands\commands\setup-automated-releases.md...[0m
+[90mChecking plugins\all-commands\commands\session-learning-capture.md...[0m
+[90mChecking plugins\all-commands\commands\security-hardening.md...[0m
+[90mChecking plugins\all-commands\commands\security-audit.md...[0m
+[90mChecking plugins\all-commands\commands\run-ci.md...[0m
+[90mChecking plugins\all-commands\commands\rsi.md...[0m
+[90mChecking plugins\all-commands\commands\rollback-deploy.md...[0m
+[90mChecking plugins\all-commands\commands\retrospective-analyzer.md...[0m
+[90mChecking plugins\all-commands\commands\resume.md...[0m
+[90mChecking plugins\all-commands\commands\repro-issue.md...[0m
+[90mChecking plugins\all-commands\commands\report.md...[0m
+[90mChecking plugins\all-commands\commands\remove.md...[0m
+[90mChecking plugins\all-commands\commands\release.md...[0m
+[90mChecking plugins\all-commands\commands\refactor-code.md...[0m
+[90mChecking plugins\all-commands\commands\project-to-linear.md...[0m
+[90mChecking plugins\all-commands\commands\project-timeline-simulator.md...[0m
+[90mChecking plugins\all-commands\commands\project-health-check.md...[0m
+[90mChecking plugins\all-commands\commands\prime.md...[0m
+[90mChecking plugins\all-commands\commands\prepare-release.md...[0m
+[90mChecking plugins\all-commands\commands\pr-review.md...[0m
+[90mChecking plugins\all-commands\commands\performance-audit.md...[0m
+[90mChecking plugins\all-commands\commands\pac-validate.md...[0m
+[90mChecking plugins\all-commands\commands\pac-update-status.md...[0m
+[90mChecking plugins\all-commands\commands\pac-create-ticket.md...[0m
+[90mChecking plugins\all-commands\commands\pac-create-epic.md...[0m
+[90mChecking plugins\all-commands\commands\pac-configure.md...[0m
+[90mChecking plugins\all-commands\commands\optimize.md...[0m
+[90mChecking plugins\all-commands\commands\optimize-database-performance.md...[0m
+[90mChecking plugins\all-commands\commands\optimize-bundle-size.md...[0m
+[90mChecking plugins\all-commands\commands\optimize-build.md...[0m
+[90mChecking plugins\all-commands\commands\move.md...[0m
+[90mChecking plugins\all-commands\commands\modernize-deps.md...[0m
+[90mChecking plugins\all-commands\commands\milestone-tracker.md...[0m
+[90mChecking plugins\all-commands\commands\migration-guide.md...[0m
+[90mChecking plugins\all-commands\commands\migration-assistant.md...[0m
+[90mChecking plugins\all-commands\commands\migrate-to-typescript.md...[0m
+[90mChecking plugins\all-commands\commands\mermaid.md...[0m
+[90mChecking plugins\all-commands\commands\memory-spring-cleaning.md...[0m
+[90mChecking plugins\all-commands\commands\market-response-modeler.md...[0m
+[90mChecking plugins\all-commands\commands\log.md...[0m
+[90mChecking plugins\all-commands\commands\load-llms-txt.md...[0m
+[90mChecking plugins\all-commands\commands\linear-task-to-issue.md...[0m
+[90mChecking plugins\all-commands\commands\issue-triage.md...[0m
+[90mChecking plugins\all-commands\commands\issue-to-linear-task.md...[0m
+[90mChecking plugins\all-commands\commands\initref.md...[0m
+[90mChecking plugins\all-commands\commands\init-project.md...[0m
+[90mChecking plugins\all-commands\commands\implement-graphql-api.md...[0m
+[90mChecking plugins\all-commands\commands\implement-caching-strategy.md...[0m
+[90mChecking plugins\all-commands\commands\husky.md...[0m
+[90mChecking plugins\all-commands\commands\hotfix-deploy.md...[0m
+[90mChecking plugins\all-commands\commands\git-status.md...[0m
+[90mChecking plugins\all-commands\commands\generate-tests.md...[0m
+[90mChecking plugins\all-commands\commands\generate-test-cases.md...[0m
+[90mChecking plugins\all-commands\commands\generate-linear-worklog.md...[0m
+[90mChecking plugins\all-commands\commands\generate-api-documentation.md...[0m
+[90mChecking plugins\all-commands\commands\future-scenario-generator.md...[0m
+[90mChecking plugins\all-commands\commands\fix-pr.md...[0m
+[90mChecking plugins\all-commands\commands\fix-issue.md...[0m
+[90mChecking plugins\all-commands\commands\fix-github-issue.md...[0m
+[90mChecking plugins\all-commands\commands\five.md...[0m
+[90mChecking plugins\all-commands\commands\find.md...[0m
+[90mChecking plugins\all-commands\commands\explain-issue-fix.md...[0m
+[90mChecking plugins\all-commands\commands\explain-code.md...[0m
+[90mChecking plugins\all-commands\commands\estimate-assistant.md...[0m
+[90mChecking plugins\all-commands\commands\e2e-setup.md...[0m
+[90mChecking plugins\all-commands\commands\docs.md...[0m
+[90mChecking plugins\all-commands\commands\doc-api.md...[0m
+[90mChecking plugins\all-commands\commands\directory-deep-dive.md...[0m
+[90mChecking plugins\all-commands\commands\digital-twin-creator.md...[0m
+[90mChecking plugins\all-commands\commands\design-rest-api.md...[0m
+[90mChecking plugins\all-commands\commands\design-database-schema.md...[0m
+[90mChecking plugins\all-commands\commands\dependency-mapper.md...[0m
+[90mChecking plugins\all-commands\commands\dependency-audit.md...[0m
+[90mChecking plugins\all-commands\commands\decision-tree-explorer.md...[0m
+[90mChecking plugins\all-commands\commands\decision-quality-analyzer.md...[0m
+[90mChecking plugins\all-commands\commands\debug-error.md...[0m
+[90mChecking plugins\all-commands\commands\cross-reference-manager.md...[0m
+[90mChecking plugins\all-commands\commands\create-worktrees.md...[0m
+[90mChecking plugins\all-commands\commands\create-pull-request.md...[0m
+[90mChecking plugins\all-commands\commands\create-prp.md...[0m
+[90mChecking plugins\all-commands\commands\create-prd.md...[0m
+[90mChecking plugins\all-commands\commands\create-pr.md...[0m
+[90mChecking plugins\all-commands\commands\create-onboarding-guide.md...[0m
+[90mChecking plugins\all-commands\commands\create-jtbd.md...[0m
+[90mChecking plugins\all-commands\commands\create-feature.md...[0m
+[90mChecking plugins\all-commands\commands\create-docs.md...[0m
+[90mChecking plugins\all-commands\commands\create-database-migrations.md...[0m
+[90mChecking plugins\all-commands\commands\create-command.md...[0m
+[90mChecking plugins\all-commands\commands\create-architecture-documentation.md...[0m
+[90mChecking plugins\all-commands\commands\context-prime.md...[0m
+[90mChecking plugins\all-commands\commands\containerize-application.md...[0m
+[90mChecking plugins\all-commands\commands\constraint-modeler.md...[0m
+[90mChecking plugins\all-commands\commands\commit.md...[0m
+[90mChecking plugins\all-commands\commands\commit-fast.md...[0m
+[90mChecking plugins\all-commands\commands\code_analysis.md...[0m
+[90mChecking plugins\all-commands\commands\code-to-task.md...[0m
+[90mChecking plugins\all-commands\commands\code-review.md...[0m
+[90mChecking plugins\all-commands\commands\code-permutation-tester.md...[0m
+[90mChecking plugins\all-commands\commands\clean.md...[0m
+[90mChecking plugins\all-commands\commands\clean-branches.md...[0m
+[90mChecking plugins\all-commands\commands\ci-setup.md...[0m
+[90mChecking plugins\all-commands\commands\check.md...[0m
+[90mChecking plugins\all-commands\commands\check-file.md...[0m
+[90mChecking plugins\all-commands\commands\changelog-demo-command.md...[0m
+[90mChecking plugins\all-commands\commands\business-scenario-explorer.md...[0m
+[90mChecking plugins\all-commands\commands\bulk-import-issues.md...[0m
+[90mChecking plugins\all-commands\commands\bug-fix.md...[0m
+[90mChecking plugins\all-commands\commands\big-features-interview.md...[0m
+[90mChecking plugins\all-commands\commands\bidirectional-sync.md...[0m
+[90mChecking plugins\all-commands\commands\architecture-scenario-explorer.md...[0m
+[90mChecking plugins\all-commands\commands\architecture-review.md...[0m
+[90mChecking plugins\all-commands\commands\all-tools.md...[0m
+[90mChecking plugins\all-commands\commands\agent-preflight.md...[0m
+[90mChecking plugins\all-commands\commands\add-to-changelog.md...[0m
+[90mChecking plugins\all-commands\commands\add-property-based-testing.md...[0m
+[90mChecking plugins\all-commands\commands\add-performance-monitoring.md...[0m
+[90mChecking plugins\all-commands\commands\add-package.md...[0m
+[90mChecking plugins\all-commands\commands\add-mutation-testing.md...[0m
+[90mChecking plugins\all-commands\commands\add-changelog.md...[0m
+[90mChecking plugins\all-commands\commands\add-authentication-system.md...[0m
+[90mChecking plugins\all-commands\commands\act.md...[0m
+
+[1mValidation Report[0m
+==================================================
+[33m
+⚠️  Warnings (105):[0m
+[33m  - plugins\all-agents\agents\hyperledger-fabric-developer.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\write-tests.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\unity-project-setup.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\ultra-think.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\troubleshooting-guide.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\todo.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\timeline-compressor.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\test-coverage.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\team-workload-balancer.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\task-from-pr.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\system-behavior-simulator.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sync.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sync-status.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sync-pr-to-task.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sync-linear-to-issues.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sync-issues-to-linear.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sync-conflict-resolver.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sync-automation-setup.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-test.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-test-setup.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-test-fix.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-test-coverage.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-storybook-troubleshoot.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-storybook-story.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-storybook-setup.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-storybook-mock.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-storybook-migrate.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-scaffold.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-optimize.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-migrate.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-component.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\svelte-a11y.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\status.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\start.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\standup-report.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\sprint-planning.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\simulation-calibrator.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\share-your-story.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\setup-rate-limiting.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\setup-linting.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\setup-formatting.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\setup-cdn-optimization.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\rollback-deploy.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\retrospective-analyzer.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\resume.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\report.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\remove.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\project-to-linear.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\project-timeline-simulator.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\project-health-check.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\prepare-release.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\pac-validate.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\pac-update-status.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\pac-create-ticket.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\pac-create-epic.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\pac-configure.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\optimize-database-performance.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\optimize-bundle-size.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\move.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\modernize-deps.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\milestone-tracker.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\migration-guide.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\migration-assistant.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\mermaid.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\market-response-modeler.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\log.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\linear-task-to-issue.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\issue-triage.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\issue-to-linear-task.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\implement-graphql-api.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\implement-caching-strategy.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\hotfix-deploy.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\generate-linear-worklog.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\future-scenario-generator.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\five.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\find.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\explain-code.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\estimate-assistant.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\e2e-setup.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\doc-api.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\digital-twin-creator.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\design-rest-api.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\design-database-schema.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\dependency-mapper.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\decision-tree-explorer.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\decision-quality-analyzer.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\cross-reference-manager.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\create-worktrees.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\create-pull-request.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\create-database-migrations.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\constraint-modeler.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\commit.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\code-to-task.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\code-permutation-tester.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\clean-branches.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\ci-setup.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\business-scenario-explorer.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\bulk-import-issues.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\bidirectional-sync.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\architecture-scenario-explorer.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\all-tools.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\agent-preflight.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\add-to-changelog.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\add-performance-monitoring.md: Code blocks should specify a language after the backticks[0m
+[33m  - plugins\all-commands\commands\add-changelog.md: Code blocks should specify a language after the backticks[0m
+[32m
+✅ Validation successful![0m
+
+[36m▶ Running Hooks validation...[0m
+
+
+[34mValidating 33 hook files...[0m
+
+[90mChecking plugins\all-hooks\hooks\windows-python-stub-detector.md...[0m
+[90mChecking plugins\all-hooks\hooks\test-runner.md...[0m
+[90mChecking plugins\all-hooks\hooks\telegram-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\telegram-error-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\telegram-detailed-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\sql-bulk-delete-warn.md...[0m
+[90mChecking plugins\all-hooks\hooks\smart-formatting.md...[0m
+[90mChecking plugins\all-hooks\hooks\smart-commit.md...[0m
+[90mChecking plugins\all-hooks\hooks\slack-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\slack-error-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\slack-detailed-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\simple-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\security-scanner.md...[0m
+[90mChecking plugins\all-hooks\hooks\run-tests-after-changes.md...[0m
+[90mChecking plugins\all-hooks\hooks\performance-monitor.md...[0m
+[90mChecking plugins\all-hooks\hooks\openspec-auto-archive.md...[0m
+[90mChecking plugins\all-hooks\hooks\notify-before-bash.md...[0m
+[90mChecking plugins\all-hooks\hooks\no-vibes.md...[0m
+[90mChecking plugins\all-hooks\hooks\lint-on-save.md...[0m
+[90mChecking plugins\all-hooks\hooks\git-add-changes.md...[0m
+[90mChecking plugins\all-hooks\hooks\format-python-files.md...[0m
+[90mChecking plugins\all-hooks\hooks\format-javascript-files.md...[0m
+[90mChecking plugins\all-hooks\hooks\file-protection.md...[0m
+[90mChecking plugins\all-hooks\hooks\file-protection-hook.md...[0m
+[90mChecking plugins\all-hooks\hooks\file-backup.md...[0m
+[90mChecking plugins\all-hooks\hooks\discord-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\discord-error-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\discord-detailed-notifications.md...[0m
+[90mChecking plugins\all-hooks\hooks\dependency-checker.md...[0m
+[90mChecking plugins\all-hooks\hooks\conventional-commits.md...[0m
+[90mChecking plugins\all-hooks\hooks\change-tracker.md...[0m
+[90mChecking plugins\all-hooks\hooks\build-on-change.md...[0m
+[90mChecking plugins\all-hooks\hooks\auto-git-add.md...[0m
+
+[1mHook Validation Report[0m
+==================================================
+[32m
+✅ All hook validations passed![0m
+
+[34mSummary: 33 hooks, 0 errors, 0 warnings[0m
+[32m
+✅ Hook validation successful![0m
+
+[36m▶ Running Skills validation...[0m
+
+strict mode: use allowUnionTypes to allow union type keyword at "#/properties/allowed-tools" (strictTypes)
+
+[34mValidating 161 skill files...[0m
+
+[90mChecking plugins\all-skills\skills\zoom-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\zoho-crm-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\zendesk-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\youtube-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\xlsx\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\x-twitter-scraper\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\x-research\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\wrike-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\whatsapp-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\webflow-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\webapp-testing\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\video-to-text\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\video-downloader\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\vercel-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\tycana\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\twitter-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\twitter-algorithm-optimizer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\tweetclaw\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\tubeify\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\trello-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\tracedocs\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\todoist-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\tiktok-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\theme-factory\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\theboardroom\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\telegram-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\tailored-resume-generator\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\szamlazz-invoicing\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\supabase-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\submit-to-agentlaunch\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\stripe-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\square-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\socialclaw\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\slack-message-formatter\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\slack-gif-creator\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\slack-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\skyvern\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\skill-share\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\skill-creator\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\shopify-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\sequenzy-email-marketing\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\sentry-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\sendgrid-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\segment-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\salesforce-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\routerbase-model-gateway\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\resemble-detect\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\render-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\reddit-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\red-handed-audit\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\rag-evaluation-harness\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\raffle-winner-picker\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\pressreleasesonline\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\pptx\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\postmark-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\posthog-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\pipedrive-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\pdf\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\pagerduty-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\outlook-calendar-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\outlook-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\ontoly-software-graph\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\one-drive-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\oiloil-ui-ux-guide\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\obsidian-rest-api\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\obsidian-markdown\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\obsidian-bases\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\notion-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\nika\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\muapi-media\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\morning-ai\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\monday-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\mixpanel-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\miro-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\microsoft-teams-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\meeting-insights-analyzer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\mcp-builder\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\make-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\mailchimp-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\macos-design\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\lobsterdomains\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\linkedin-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\linear-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\lead-research-assistant\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\klaviyo-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\kavel-image-studio\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\json-canvas\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\jira-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\ios-hig-design-guide\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\invoice-organizer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\internal-comms\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\intercom-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\instagram-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\immich-photo-manager\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\image-enhancer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\hubspot-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\hexanon-x402-apis\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\hermes-tweet\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\helpdesk-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\googlesheets-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\google-drive-upload\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\google-drive-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\google-calendar-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\google-analytics-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\gmail-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\gitlab-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\github-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\gingiris-growth-playbooks\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\freshservice-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\freshdesk-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\file-organizer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\figma-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\envelope-team\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\ecommerce-material-studio\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\dropbox-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\domain-name-brainstormer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\docx\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\docusign-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\doc-ocr\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\dispatch\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\discord-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\dexpaprika-api\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\developer-growth-analysis\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\de-ai-writer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\datadog-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\convertkit-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\content-research-writer\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\confluence-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\competitive-ads-extractor\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\coinpaprika-api\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\cohesivity\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\coding-agent-pm\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\coda-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\close-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\clickup-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\clawring\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\circleci-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\checkpointed-agent-loop\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\changelog-generator\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\cf-proxy\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\canvas-design\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\canva-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\calendly-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\cal-com-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\brevo-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\brand-guidelines\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\box-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\bitbucket-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\basecamp-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\bamboohr-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\aurakit\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\atlas-cloud-media\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\asana-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\artifacts-builder\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\anti-ui-slop\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\amplitude-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\airtable-automation\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\agenttrace-session-audit\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\agent-memory-discipline\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\agent-analytics\SKILL.md...[0m
+[90mChecking plugins\all-skills\skills\activecampaign-automation\SKILL.md...[0m
+
+[1mSkill Validation Report[0m
+==================================================
+[32m
+✅ All validations passed![0m
+[32m
+✅ Skill validation successful![0m
+
+[1m[34m========================================[0m
+[1m[34m  Validation Summary[0m
+[1m[34m========================================[0m
+
+[32m✅[0m Subagents & Commands (840ms)
+[32m✅[0m Hooks (1926ms)
+[32m✅[0m Skills (551ms)
+
+[90mTotal time: 3319ms[0m
+
+[32m[1m✅ All validations passed![0m

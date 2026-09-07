@@ -15,7 +15,8 @@
       },
       "category": "design",
       "source": "./",
-      "homepage": "https://github.com/ridelink0/cinematic-web-design"
+      "homepage": "https://github.com/ridelink0/cinematic-web-design",
+      "version": "3.0.0"
     }
   ]
 }

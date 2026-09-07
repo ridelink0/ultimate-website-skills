@@ -12,6 +12,8 @@ and upgrade: run
 `node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" audit <dir>`, fix every error
 and every warning worth fixing, then walk `references/checklist.md`.
 
+If a Claude Design project or handoff is supplied, follow the skill's Claude Design reference and implement that design before auditing it. The scaffolding sequence below applies only when there is no supplied design.
+
 Otherwise build a new site:
 
 1. Decide the subject, the register (an object, a place, a service, or an

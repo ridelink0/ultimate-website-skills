@@ -1,0 +1,3964 @@
+[
+  {
+    "repo": "atelier",
+    "file": ".claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "atelier",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": ".claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "displayName",
+        "message": "Unknown field 'displayName'. Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "repository",
+        "message": "Unknown field 'repository'. Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "license",
+        "message": "Unknown field 'license'. Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "categories",
+        "message": "Unknown field 'categories' (commonly seen in a VS Code/Cursor extension manifest). Claude Code ignores unrecognized fields at load time, so it's safe to keep.",
+        "code": null
+      },
+      {
+        "path": "plugins[0] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[1] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[2] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[3] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[4] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[5] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[6] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[7] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[8] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[9] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[10] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[11] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[12] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[13] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[14] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[15] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[16] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[17] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[18] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[19] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[20] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[21] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[22] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[23] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[24] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[25] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[26] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[27] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[28] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[29] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[30] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[31] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[32] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[33] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[34] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[35] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[36] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[37] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[38] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[39] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[40] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[41] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[42] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[43] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[44] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[45] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[46] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[47] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[48] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[49] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[50] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[51] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[52] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[53] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[54] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[55] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[56] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[57] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[58] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[59] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[60] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[61] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[62] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[63] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[64] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[65] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[66] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[67] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[68] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[69] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[70] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[71] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[72] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[73] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[74] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[75] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[76] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[77] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[78] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[79] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[80] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[81] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[82] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[83] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[84] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[85] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[86] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[87] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[88] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[89] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[90] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[91] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[92] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[93] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[94] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[95] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[96] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[97] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[98] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[99] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[100] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[101] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[102] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[103] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[104] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[105] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[106] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[107] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[108] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[109] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[110] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[111] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[112] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[113] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[114] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[115] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[116] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[117] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[118] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      },
+      {
+        "path": "plugins[119] plugin.json \u2192 author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/a11y-audit/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/adr-writer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/accessibility-checker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/ai-prompt-lab/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/analytics-reporter/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/android-developer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/api-architect/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/api-benchmarker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/api-reference/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/api-tester/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/azure-helper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/aws-helper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/bug-detective/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/bundle-analyzer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/backend-architect/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/changelog-gen/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/changelog-writer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/code-architect/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/ci-debugger/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/code-explainer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/code-guardian/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/code-review-assistant/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/color-contrast/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/codebase-documenter/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/commit-commands/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/complexity-reducer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/compliance-checker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/content-creator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/context7-docs/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/contract-tester/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/create-worktrees/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/cron-scheduler/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/css-cleaner/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/data-privacy/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/database-optimizer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/dead-code-finder/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/debug-session/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/deploy-pilot/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/dependency-manager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/desktop-app/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/devops-automator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/discuss/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/doc-forge/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/docker-helper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/double-check/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/e2e-runner/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/embedding-manager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/env-manager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/env-sync/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/experiment-tracker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/explore/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/feature-dev/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/finance-tracker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/fix-pr/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/fix-github-issue/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/flutter-mobile/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/frontend-developer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/gcp-helper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/git-flow/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/github-issue-manager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/helm-charts/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/import-organizer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/infrastructure-maintainer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/ios-developer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/k8s-helper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/license-checker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/lighthouse-runner/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/linear-helper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/load-tester/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/memory-profiler/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/migrate-tool/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/migration-generator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/model-context-protocol/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/model-evaluator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/monitoring-setup/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/monorepo-manager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/mutation-tester/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/n8n-workflow/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/onboarding-guide/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/openapi-expert/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/optimize/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/perf-profiler/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/performance-monitor/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/plan/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/pr-reviewer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/product-shipper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/project-scaffold/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/prompt-optimizer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/python-expert/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/query-optimizer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/rag-builder/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/rapid-prototyper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/react-native-dev/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/refactor-engine/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/readme-generator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/regex-builder/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/release-manager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/screen-reader-tester/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/schema-designer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/responsive-designer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/security-guidance/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/seed-generator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/slack-notifier/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/smart-commit/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/sprint-prioritizer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/terraform-helper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/technical-sales/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/test-data-generator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/test-results-analyzer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/tool-evaluator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/test-writer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/type-migrator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/ui-designer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/ultrathink/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/update-branch/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/unit-test-generator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/vision-specialist/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/visual-regression/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/workflow-optimizer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "file": "plugins/web-dev/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "author",
+        "message": "No author information provided. Consider adding author details for plugin attribution",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "plugins[0] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[1] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[2] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[3] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[4] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[5] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[10] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[17] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      },
+      {
+        "path": "plugins[23] plugin.json \u2192 version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "artifacts-builder/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "audit-project/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "agent-sdk-dev/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "backend-architect/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "bug-fix/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "canvas-design/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "changelog-generator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "code-review/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "commit/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "create-pr/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "connect-apps/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "debugger/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "developer-growth-analysis/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "frontend-design/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "documentation-generator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "frontend-developer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "mcp-builder/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "pr-review/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "perf/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "security-guidance/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "ship/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "senior-frontend/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "skill-bus/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "test-writer-fixer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-skills",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "file": "theme-factory/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-skills",
+    "file": "composio-skills/.claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "description",
+        "message": "No marketplace description provided. Adding a description helps users understand what this marketplace offers",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-skills",
+    "file": "connect-apps-plugin/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "version",
+        "message": "No version specified. Consider adding a version following semver (e.g., \"1.0.0\")",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/ag2-agent-builder/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "metadata.homepage",
+        "message": "Unknown field 'homepage'. Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "metadata.repository",
+        "message": "Unknown field 'repository'. Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "metadata.license",
+        "message": "Unknown field 'license'. Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "metadata.keywords",
+        "message": "Unknown field 'keywords'. Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "plugins[2] plugin.json \u2192 icon",
+        "message": "Unknown field 'icon' (commonly seen in a VS Code/Cursor extension manifest). Claude Code ignores unrecognized fields at load time, so it's safe to keep.",
+        "code": null
+      },
+      {
+        "path": "plugins[2] plugin.json \u2192 category",
+        "message": "Field 'category' belongs in the marketplace entry (marketplace.json), not plugin.json. It's harmless here but unused \u2014 Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "plugins[63] plugin.json \u2192 category",
+        "message": "Field 'category' belongs in the marketplace entry (marketplace.json), not plugin.json. It's harmless here but unused \u2014 Claude Code ignores it at load time.",
+        "code": null
+      },
+      {
+        "path": "plugins[64].version",
+        "message": "Entry declares version \"1.8.0\" but plugins\\project-boundary\\.claude-plugin\\plugin.json says \"1.10.0\". At install time, plugin.json wins (calculatePluginVersion precedence) \u2014 the entry version is silently ignored. Update this entry to \"1.10.0\" to match.",
+        "code": null
+      },
+      {
+        "path": "plugins[80] plugin.json \u2192 icon",
+        "message": "Unknown field 'icon' (commonly seen in a VS Code/Cursor extension manifest). Claude Code ignores unrecognized fields at load time, so it's safe to keep.",
+        "code": null
+      },
+      {
+        "path": "plugins[80] plugin.json \u2192 category",
+        "message": "Field 'category' belongs in the marketplace entry (marketplace.json), not plugin.json. It's harmless here but unused \u2014 Claude Code ignores it at load time.",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agent-triforce/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-ai-agents/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-blockchain-web3/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-business-finance/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-data-ai/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-crypto-trading/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-design-experience/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-development-architecture/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-documentation/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-infrastructure-operations/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-language-specialists/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-media-content/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-meta-orchestration/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-quality-security/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-research/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-sales-marketing/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-specialized-domains/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/agents-uc-taskmanager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/aiboarding/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/aigent-os/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/all-agents/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/all-commands/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/all-hooks/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/all-skills/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/archcore/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/budgetclaw/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/cashflow/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/ciagent/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/claude-code-audit-stack/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/claude-hud/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/claude-md-kit/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/claude-ops/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/claude-pager/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/claude-snapshot/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/claude-prompt/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/codex-hud/.claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/codex-hud/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/cohesivity/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-api-development/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-automation-workflow/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-ci-deployment/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-code-analysis-testing/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-context-loading-priming/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-documentation-changelogs/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-database-operations/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-framework-svelte/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-game-development/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-miscellaneous/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-integration-sync/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-performance-optimization/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-monitoring-observability/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-project-setup/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-project-task-management/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-security-audit/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-simulation-modeling/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-typescript-migration/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-team-collaboration/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-utilities-debugging/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-version-control-git/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/commands-workflow-orchestration/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/context-memory/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/drill-me/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/dsh-deepread/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "icon",
+        "message": "Unknown field 'icon' (commonly seen in a VS Code/Cursor extension manifest). Claude Code ignores unrecognized fields at load time, so it's safe to keep.",
+        "code": null
+      },
+      {
+        "path": "category",
+        "message": "Field 'category' belongs in the marketplace entry (marketplace.json), not plugin.json. It's harmless here but unused \u2014 Claude Code ignores it at load time.",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/encode-toolkit/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/envelope-team/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/erne-universal/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "install",
+        "message": "Unknown field 'install'. Claude Code ignores it at load time.",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/fabler-relay/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/fabler-x402-tools/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/feedoracle-compliance/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/foresight-intelligence/.claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/foresight-intelligence/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/give-claude-eyes/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/frontend-design-pro/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hermes-tweet/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/gsd/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-automation/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hookradar-creative-intelligence/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-formatting/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-development/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-git/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-notifications/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-safety/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-performance/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-testing/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/hooks-security/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/interview/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/kegg-mcp-server/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/mcp-servers-creative/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/magic-cc-codex-worker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/mcp-servers-docker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/meeting-bots/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/memstack/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/minimax-music/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/mortgage/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/minimax-video/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-apify-scraper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-apollo/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-cowork-mem/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-cowork-session-fixer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-digital-presence/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-fix-chrome-connection/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-github-health-check/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-gcloud-health-check/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-google-drive-upload/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-kotlin-lsp/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-linkedin-scraper/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-mac-disk-cleaner/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-notion-memory/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-session-backup/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-rtl-chat-fixer/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-sosa-compliance/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-sosa-governor/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-sosa-orchestrator/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-swift-lsp/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-toggl-time-tracker/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-token-efficiency-audit/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-vm-disk-cleanup/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-wordpress/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-whatsapp/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-x-content-intelligence/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-youtube-transcriber/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/nextjs-expert/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/msapps-zoho-mail-health/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/obsidian-skills/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/project-boundary/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/origin/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "category",
+        "message": "Field 'category' belongs in the marketplace entry (marketplace.json), not plugin.json. It's harmless here but unused \u2014 Claude Code ignores it at load time.",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/public-plugin-builder/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/ralph-review-trio/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/runapi-mcp/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/slopmop/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/startup-superpowers/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/superpipelines/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/thumbgate/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/tlsradar/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/travel-agent-skill/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": [
+      {
+        "path": "icon",
+        "message": "Unknown field 'icon' (commonly seen in a VS Code/Cursor extension manifest). Claude Code ignores unrecognized fields at load time, so it's safe to keep.",
+        "code": null
+      },
+      {
+        "path": "category",
+        "message": "Field 'category' belongs in the marketplace entry (marketplace.json), not plugin.json. It's harmless here but unused \u2014 Claude Code ignores it at load time.",
+        "code": null
+      }
+    ]
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/ultracost/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/ultraship/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/venture-capital-intelligence/.claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/venture-capital-intelligence/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/vibe-prospecting/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/vulnetix/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "file": "plugins/youtube-full/.claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "cinematic-web-design",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "cinematic-web-design",
+    "file": ".claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "claude-code-usage-limits",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "claude-code-usage-limits",
+    "file": ".claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "claude-computer-use",
+    "file": ".claude-plugin/marketplace.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  },
+  {
+    "repo": "claude-computer-use",
+    "file": ".claude-plugin/plugin.json",
+    "success": true,
+    "manifestErrors": [],
+    "contentErrors": [],
+    "warnings": []
+  }
+]

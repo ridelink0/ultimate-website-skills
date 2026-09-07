@@ -5,7 +5,7 @@
    Claude Code goes through its own CLI. Codex has no CLI on every platform, so
    its config.toml is edited directly - idempotently, and with a backup. */
 
-import { execFileSync, spawnSync } from 'node:child_process';
+import { findClaude, runClaude, removeTables } from './claude-cli.mjs';
 import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { homedir } from 'node:os';
@@ -32,42 +32,34 @@ const step = (s) => console.log('\n' + s);
 
 /* ------------------------------------------------------------ Claude Code -- */
 
-function claudeCli() {
-  for (const bin of ['claude', 'claude.cmd']) {
-    const r = spawnSync(bin, ['--version'], { encoding: 'utf8', shell: process.platform === 'win32' });
-    if (r.status === 0) return bin;
-  }
-  return null;
-}
-
 function doClaude() {
   step('Claude Code');
-  const cli = claudeCli();
+  const cli = findClaude();
   if (!cli) {
     log('  claude CLI not found. Run these yourself:');
-    log(`    claude plugin marketplace add ${SOURCE}`);
+    log(`    claude plugin marketplace add ${JSON.stringify(SOURCE)}`);
     log(`    claude plugin install ${NAME}@${NAME}`);
     return false;
   }
   const run = (args) => {
     if (DRY) { log(`  [dry-run] claude ${args.join(' ')}`); return true; }
-    const r = spawnSync(cli, args, { encoding: 'utf8', shell: process.platform === 'win32' });
+    const r = runClaude(cli, args);
     const out = ((r.stdout || '') + (r.stderr || '')).trim().split(/\r?\n/).pop();
     log(`  ${out || (r.status === 0 ? 'ok' : 'failed')}`);
     return r.status === 0;
   };
   if (UNINSTALL) {
-    run(['plugin', 'uninstall', `${NAME}@${NAME}`]);
-    run(['plugin', 'marketplace', 'remove', NAME]);
-    return true;
+    const removed = run(['plugin', 'uninstall', `${NAME}@${NAME}`]);
+    const catalog = run(['plugin', 'marketplace', 'remove', NAME]);
+    return removed && catalog;
   }
-  run(['plugin', 'marketplace', 'add', SOURCE]);
+  if (!run(['plugin', 'marketplace', 'add', SOURCE])) return false;
   return run(['plugin', 'install', `${NAME}@${NAME}`]);
 }
 
 /* ------------------------------------------------------------------ Codex -- */
 
-const CODEX_DIR = join(homedir(), '.codex');
+const CODEX_DIR = process.env.CODEX_HOME || join(homedir(), '.codex');
 const CODEX_CFG = join(CODEX_DIR, 'config.toml');
 
 function doCodex() {
@@ -82,10 +74,7 @@ function doCodex() {
 
   if (UNINSTALL) {
     const before = cfg;
-    cfg = cfg
-      .replace(new RegExp(`\\n?\\[marketplaces\\.${NAME}\\][^\\[]*`, 'g'), '\n')
-      .replace(new RegExp(`\\n?\\[plugins\\."${NAME}@${NAME}"\\][^\\[]*`, 'g'), '\n')
-      .replace(/\n{3,}/g, '\n\n');
+    cfg = removeTables(cfg, [mpHeader, plHeader]);
     if (cfg === before) { log('  nothing to remove.'); return true; }
     if (DRY) { log('  [dry-run] would remove both blocks'); return true; }
     copyFileSync(CODEX_CFG, CODEX_CFG + '.bak');
@@ -99,8 +88,8 @@ function doCodex() {
     need.push(
       `\n${mpHeader}\n` +
         (IS_GIT
-          ? `source_type = "git"\nsource = "${SOURCE}"\n`
-          : `source_type = "local"\nsource = ${JSON.stringify(SOURCE.replace(/\\/g, '\\\\'))}\n`),
+          ? `source_type = "git"\nsource = ${JSON.stringify(SOURCE)}\n`
+          : `source_type = "local"\nsource = ${JSON.stringify(SOURCE)}\n`),
     );
   }
   if (!cfg.includes(plHeader)) need.push(`\n${plHeader}\nenabled = true\n`);

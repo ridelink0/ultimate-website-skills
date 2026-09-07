@@ -1,0 +1,44 @@
+policy
+  ok   hand-off: age verification, CAPTCHA, unsafe-site bypass
+  ok   hand-off: not for ordinary controls
+  ok   consequential: the 26.901 additions
+  ok   consequential: social reactions only when the control IS the reaction
+  ok   consequential: still not tripped by harmless names
+  ok   blocked: lock screen, AI desktop apps, authenticators and wallets
+  ok   sensitive: remote desktop clients
+  ok   standard apps unchanged
+  ok   desktopLocked sees LockApp and LogonUI, ignores minimized
+  ok   macOS names: browsers sensitive, terminals shell, login window blocked, .app stripped
+safety monitor
+  ok   probe names the rows that read like instructions
+  ok   probe stays quiet on ordinary pages
+journal
+  ok   append, note, find, recap, file round trip
+  ok   renderRecap of an empty journal says so
+tasks
+  ok   steering: steps appended to a running task run after the current one
+  ok   steering: refused once the task has finished, and confirmed steps are refused
+  ok   turn ended: running tasks stop after the current step and say why
+  ok   orphan guard: a task nobody polls stops on its own
+  ok   orphan guard: polling keeps it alive
+  ok   safety monitor halts a run at the read that tripped it
+  ok   safety monitor is off for a plain run without review
+  ok   finished tasks are handed out exactly once
+  ok   drag is a step kind and validates like the others
+hooks
+  ok   Stop and StopFailure call computer_turn_ended on this server
+  ok   SessionStart recap hook runs on compact and resume only
+  ok   UserPromptSubmit appshot hook is wired
+  ok   appshot hook prints a fresh appshot once, then stays silent
+live server (no host)
+       schema ~2962 tokens
+  ok   initialize and the two new tools are listed
+  ok   turn ended is noted without starting the host
+  ok   the next call carries the turn-ended notice once
+  ok   notes survive and are searchable
+  ok   no appshot yet is a clear error, not a crash
+  ok   API-error turn end reads as such
+  ok   the journal file names the session for the recap hook
+  ok   recap hook prints the journal for its session, nothing for a stranger
+
+astra-test: 35 passed, 0 failed

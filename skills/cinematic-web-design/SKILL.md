@@ -6,7 +6,7 @@ description: Use whenever a website, landing page, marketing site, portfolio, mi
 # Cinematic Web Design
 
 The studio's house style, and the code that produces it. This is a pinned art
-direction, not a menu: build in it unless the person names a different one.
+direction for projects without an existing design. A supplied or selected Claude Design project takes precedence.
 
 ## Rule zero
 
@@ -18,8 +18,7 @@ sentences and give the paths. If they want the reasoning, they will ask for it.
 Never use emoji - not in the page, the copy, the commit, or the reply. Icons are
 inline SVG.
 
-Do not present a design plan for approval first, and do not run a separate
-brainstorming or moodboard pass. The direction is already decided. Build.
+For Claude Design work, first read `references/claude-design.md`. Use the connected service for design iteration and handoff when requested or already available. Keep its chosen direction intact. Otherwise proceed with the local house style without a separate approval pass.
 
 ## Fix three things before you type
 
@@ -29,6 +28,8 @@ an argument), **the hero** (what the first screen shows). If the brief truly doe
 not say what the subject is, ask one question. Otherwise decide and go.
 
 ## Build
+
+If a Claude Design handoff exists, implement it in the current project and use the checks below; do not scaffold over it. The scaffold is for a new site without a supplied design.
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" new <dir> \

@@ -1,0 +1,94 @@
+
+-- blocked: never readable, never actable --
+  ok   keepass is blocked
+  ok   KeePassXC is blocked
+  ok   1password is blocked
+  ok   bitwarden is blocked
+  ok   lastpass is blocked
+  ok   dashlane is blocked
+  ok   keeper is blocked
+  ok   consent (elevation/login) is blocked
+  ok   LogonUI (elevation/login) is blocked
+  ok   CredentialUIBroker (elevation/login) is blocked
+  ok   lsass (elevation/login) is blocked
+  ok   winlogon (elevation/login) is blocked
+  ok   blocked apps are not readable either
+  ok   blocked read names the reason
+
+-- shell: readable, never typeable --
+  ok   WindowsTerminal is shell tier
+  ok   conhost is shell tier
+  ok   Code is shell tier
+  ok   devenv is shell tier
+  ok   idea64 is shell tier
+  ok   cursor is shell tier
+  ok   alacritty is shell tier
+  ok   shell apps are readable
+  ok   shell apps refuse input
+  ok   shell refusal has its own code
+  ok   granting a shell app fails
+  ok   a failed grant is not recorded
+
+-- interpreters are judged by window class, not process name --
+  ok   powershell console is shell
+  ok   powershell hosting a GUI window is not shell
+  ok   cascadia-hosted console is shell
+  ok   node hosting a GUI window is not shell
+
+-- sensitive: grantable, but warned --
+  ok   explorer is sensitive
+  ok   chrome is sensitive
+  ok   msedge is sensitive
+  ok   firefox is sensitive
+  ok   outlook is sensitive
+  ok   slack is sensitive
+  ok   regedit is sensitive
+  ok   taskmgr is sensitive
+  ok   sensitive apps can be granted
+  ok   sensitive grant explains the reach
+  ok   granted sensitive app can act
+
+-- standard flow --
+  ok   unknown apps are standard
+  ok   reading needs no grant
+  ok   acting without a grant is refused
+  ok   refusal code is not_granted
+  ok   refusal names the tool to call
+  ok   acting after a grant is allowed
+  ok   revoke re-locks
+
+-- grants key on the app, not the window --
+  ok   a second window of a granted app is covered
+  ok   a different app is not covered
+
+-- own session is excluded --
+  ok   self window is flagged
+  ok   self window is unreadable
+  ok   self refusal has its own code
+
+-- revokeAll --
+  ok   revokeAll reports the count
+  ok   nothing is granted afterwards
+
+-- the point of no return is asked about first --
+  ok   all 36 point-of-no-return labels are caught
+  ok   none of 37 ordinary labels are
+  ok   an unnamed control cannot be judged, so it is not gated
+  ok   matching ignores case
+
+-- a blocked window in frame stops the camera too --
+  ok   nothing blocked in frame is nothing to report
+  ok   a full-screen capture is refused while any blocked window is up
+  ok   a window capture is refused when a blocked window covers part of it
+  ok   a blocked window nowhere near the target does not block that capture
+  ok   a minimized blocked window is not in frame
+  ok   a window with unknown geometry is treated as covering, not as clear
+  ok   the target never blocks itself
+  ok   our own session window is never the blocker
+  ok   exact edge contact is not an overlap
+
+-- case and extension are normalised --
+  ok   .exe suffix ignored
+  ok   path is used when process name is missing
+
+70 passed, 0 failed

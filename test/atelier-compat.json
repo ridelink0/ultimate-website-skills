@@ -1,0 +1,31 @@
+{
+  "sections": [
+    "blueprint",
+    "cards-rail",
+    "contact",
+    "cta",
+    "exploded",
+    "faq",
+    "foot",
+    "footer",
+    "gallery",
+    "head",
+    "hero-layered",
+    "hero-photo",
+    "hero-split",
+    "index",
+    "manifesto",
+    "nav",
+    "quote",
+    "services",
+    "spec",
+    "stats",
+    "steps"
+  ],
+  "presets": [
+    "bone",
+    "ink",
+    "cinema"
+  ],
+  "copiedFiles": []
+}

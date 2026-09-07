@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: merged library retains all Atelier section IDs and both CLI entry points work
+ok 1 - merged library retains all Atelier section IDs and both CLI entry points work
+  ---
+  duration_ms: 2169.1703
+  type: 'test'
+  ...
+# Subtest: preview confines files and symlinks, survives malformed URLs, and listens only on loopback
+ok 2 - preview confines files and symlinks, survives malformed URLs, and listens only on loopback
+  ---
+  duration_ms: 142.4517
+  type: 'test'
+  ...
+# Subtest: installer sends paths with spaces and shell characters as a single literal argument
+ok 3 - installer sends paths with spaces and shell characters as a single literal argument
+  ---
+  duration_ms: 336.1134
+  type: 'test'
+  ...
+# Subtest: Windows npm native executable is found without invoking a command shell
+ok 4 - Windows npm native executable is found without invoking a command shell
+  ---
+  duration_ms: 0.7206
+  type: 'test'
+  ...
+# Subtest: uninstall does not stop at brackets inside a marketplace source string
+ok 5 - uninstall does not stop at brackets inside a marketplace source string
+  ---
+  duration_ms: 0.5272
+  type: 'test'
+  ...
+# Subtest: flag values do not become paths or study URLs
+ok 6 - flag values do not become paths or study URLs
+  ---
+  duration_ms: 1.2809
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2495.9422

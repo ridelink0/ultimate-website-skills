@@ -1,0 +1,3226 @@
+TAP version 13
+# Subtest: mark records a state per session and read gives it back
+ok 1 - mark records a state per session and read gives it back
+  ---
+  duration_ms: 12.3373
+  type: 'test'
+  ...
+# Subtest: summarise says whether anything is working and whether it is ultracode
+ok 2 - summarise says whether anything is working and whether it is ultracode
+  ---
+  duration_ms: 41.8864
+  type: 'test'
+  ...
+# Subtest: a session that went quiet is not working, whatever it last said
+ok 3 - a session that went quiet is not working, whatever it last said
+  ---
+  duration_ms: 6.3733
+  type: 'test'
+  ...
+# Subtest: idle keeps the ultracode flag the prompt set, so the next prompt decides
+ok 4 - idle keeps the ultracode flag the prompt set, so the next prompt decides
+  ---
+  duration_ms: 13.0615
+  type: 'test'
+  ...
+# Subtest: the file keeps the newest few sessions only
+ok 5 - the file keeps the newest few sessions only
+  ---
+  duration_ms: 112.3845
+  type: 'test'
+  ...
+# Subtest: a corrupt file is an empty one
+ok 6 - a corrupt file is an empty one
+  ---
+  duration_ms: 11.1188
+  type: 'test'
+  ...
+# Subtest: mark never throws, even where it cannot write
+ok 7 - mark never throws, even where it cannot write
+  ---
+  duration_ms: 2.9799
+  type: 'test'
+  ...
+# Subtest: combine lists every Claude heard from lately, and says which are working
+ok 8 - combine lists every Claude heard from lately, and says which are working
+  ---
+  duration_ms: 1.4416
+  type: 'test'
+  ...
+# Subtest: level turns warning at 80 and error at 90, per window
+ok 9 - level turns warning at 80 and error at 90, per window
+  ---
+  duration_ms: 2.3448
+  type: 'test'
+  ...
+# Subtest: the bar fills in proportion and never lies at the ends
+ok 10 - the bar fills in proportion and never lies at the ends
+  ---
+  duration_ms: 0.9961
+  type: 'test'
+  ...
+# Subtest: the bar takes its colour from the level
+ok 11 - the bar takes its colour from the level
+  ---
+  duration_ms: 0.3985
+  type: 'test'
+  ...
+# Subtest: ascii bars use plain characters
+ok 12 - ascii bars use plain characters
+  ---
+  duration_ms: 0.7944
+  type: 'test'
+  ...
+# Subtest: a styled bar paints its filled cells, and only those
+ok 13 - a styled bar paints its filled cells, and only those
+  ---
+  duration_ms: 1.111
+  type: 'test'
+  ...
+# Subtest: colour mode respects NO_COLOR, FORCE_COLOR and the terminal
+ok 14 - colour mode respects NO_COLOR, FORCE_COLOR and the terminal
+  ---
+  duration_ms: 0.4414
+  type: 'test'
+  ...
+# Subtest: none mode paints nothing and 256 mode uses the palette index
+ok 15 - none mode paints nothing and 256 mode uses the palette index
+  ---
+  duration_ms: 0.5865
+  type: 'test'
+  ...
+# Subtest: the spinner plays forward then back, one frame per tick
+ok 16 - the spinner plays forward then back, one frame per tick
+  ---
+  duration_ms: 0.3535
+  type: 'test'
+  ...
+# Subtest: shimmer keeps the text and sweeps a highlight across it
+ok 17 - shimmer keeps the text and sweeps a highlight across it
+  ---
+  duration_ms: 0.745
+  type: 'test'
+  ...
+# Subtest: rainbow paints every character and cycles with the tick
+ok 18 - rainbow paints every character and cycles with the tick
+  ---
+  duration_ms: 1.6695
+  type: 'test'
+  ...
+# Subtest: effort levels take the colours the effort picker uses
+ok 19 - effort levels take the colours the effort picker uses
+  ---
+  duration_ms: 0.9127
+  type: 'test'
+  ...
+# Subtest: stripAnsi and visibleWidth ignore escapes
+ok 20 - stripAnsi and visibleWidth ignore escapes
+  ---
+  duration_ms: 0.2842
+  type: 'test'
+  ...
+# Subtest: formatReset says how long and at what time
+ok 21 - formatReset says how long and at what time
+  ---
+  duration_ms: 0.4932
+  type: 'test'
+  ...
+# Subtest: prettyModel reads like the model picker
+ok 22 - prettyModel reads like the model picker
+  ---
+  duration_ms: 1.085
+  type: 'test'
+  ...
+# Subtest: prettyModel names OpenAI models the way Codex does
+ok 23 - prettyModel names OpenAI models the way Codex does
+  ---
+  duration_ms: 0.3753
+  type: 'test'
+  ...
+# Subtest: the before-prompt line refreshes an aged reading the way /usage would
+ok 24 - the before-prompt line refreshes an aged reading the way /usage would
+  ---
+  duration_ms: 547.1229
+  type: 'test'
+  ...
+# Subtest: the session line says tokens as well as money
+ok 25 - the session line says tokens as well as money
+  ---
+  duration_ms: 3.1366
+  type: 'test'
+  ...
+# Subtest: the last reply and the context ride along when the tally knows them
+ok 26 - the last reply and the context ride along when the tally knows them
+  ---
+  duration_ms: 0.4625
+  type: 'test'
+  ...
+# Subtest: a large context earns one clause of advice, not a lecture
+ok 27 - a large context earns one clause of advice, not a lecture
+  ---
+  duration_ms: 0.3362
+  type: 'test'
+  ...
+# Subtest: a new session is told what the last one cost, once
+ok 28 - a new session is told what the last one cost, once
+  ---
+  duration_ms: 0.5316
+  type: 'test'
+  ...
+# Subtest: the instruction asks for a closing line when the work is done, whatever the pressure
+ok 29 - the instruction asks for a closing line when the work is done, whatever the pressure
+  ---
+  duration_ms: 0.4858
+  type: 'test'
+  ...
+# Subtest: tallyContext reads this session from the tally
+ok 30 - tallyContext reads this session from the tally
+  ---
+  duration_ms: 1.4242
+  type: 'test'
+  ...
+# Subtest: tallyContext points a brand new session at the previous one
+ok 31 - tallyContext points a brand new session at the previous one
+  ---
+  duration_ms: 0.4731
+  type: 'test'
+  ...
+# Subtest: a previous session that never closed is described as still open, not ended
+ok 32 - a previous session that never closed is described as still open, not ended
+  ---
+  duration_ms: 0.3196
+  type: 'test'
+  ...
+# Subtest: tallyContext says nothing at all with no history
+ok 33 - tallyContext says nothing at all with no history
+  ---
+  duration_ms: 0.5617
+  type: 'test'
+  ...
+# Subtest: aheadOfPace measures spending against the clock, not the budget alone
+ok 34 - aheadOfPace measures spending against the clock, not the budget alone
+  ---
+  duration_ms: 3.1852
+  type: 'test'
+  ...
+# Subtest: aheadOfPace gives up rather than guessing
+ok 35 - aheadOfPace gives up rather than guessing
+  ---
+  duration_ms: 0.3767
+  type: 'test'
+  ...
+# Subtest: a window in step with the clock reads roomy
+ok 36 - a window in step with the clock reads roomy
+  ---
+  duration_ms: 0.2977
+  type: 'test'
+  ...
+# Subtest: the wall reads tight regardless of pace
+ok 37 - the wall reads tight regardless of pace
+  ---
+  duration_ms: 0.2018
+  type: 'test'
+  ...
+# Subtest: a budget that is merely well used is not a reason to wind down
+ok 38 - a budget that is merely well used is not a reason to wind down
+  ---
+  duration_ms: 0.3987
+  type: 'test'
+  ...
+# Subtest: being ahead of the clock is reported, not escalated on
+ok 39 - being ahead of the clock is reported, not escalated on
+  ---
+  duration_ms: 0.2183
+  type: 'test'
+  ...
+# Subtest: the verdict overrides the arithmetic
+ok 40 - the verdict overrides the arithmetic
+  ---
+  duration_ms: 0.2995
+  type: 'test'
+  ...
+# Subtest: a stale window is unknown rather than tight
+ok 41 - a stale window is unknown rather than tight
+  ---
+  duration_ms: 0.2225
+  type: 'test'
+  ...
+# Subtest: sessionSpend counts only the session it was asked about
+ok 42 - sessionSpend counts only the session it was asked about
+  ---
+  duration_ms: 1.7848
+  type: 'test'
+  ...
+# Subtest: sessionSpend says nothing rather than zero when it cannot tell
+ok 43 - sessionSpend says nothing rather than zero when it cannot tell
+  ---
+  duration_ms: 0.7064
+  type: 'test'
+  ...
+# Subtest: describeWindow reads a window, and flags one that is rolling
+ok 44 - describeWindow reads a window, and flags one that is rolling
+  ---
+  duration_ms: 0.3943
+  type: 'test'
+  ...
+# Subtest: summariseOthers leaves out the binding window itself
+ok 45 - summariseOthers leaves out the binding window itself
+  ---
+  duration_ms: 0.2931
+  type: 'test'
+  ...
+# Subtest: summariseOthers skips windows with no reading
+ok 46 - summariseOthers skips windows with no reading
+  ---
+  duration_ms: 0.1684
+  type: 'test'
+  ...
+# Subtest: the line names the binding window and hangs its numbers off it
+ok 47 - the line names the binding window and hangs its numbers off it
+  ---
+  duration_ms: 1.6376
+  type: 'test'
+  ...
+# Subtest: the numbers cannot be read against the wrong window
+ok 48 - the numbers cannot be read against the wrong window
+  ---
+  duration_ms: 0.2868
+  type: 'test'
+  ...
+# Subtest: a tight budget changes the instruction, not just the numbers
+ok 49 - a tight budget changes the instruction, not just the numbers
+  ---
+  duration_ms: 0.3854
+  type: 'test'
+  ...
+# Subtest: the line still works when parts are missing
+ok 50 - the line still works when parts are missing
+  ---
+  duration_ms: 0.1936
+  type: 'test'
+  ...
+# Subtest: thresholds are configurable through the environment
+ok 51 - thresholds are configurable through the environment
+  ---
+  duration_ms: 0.3653
+  type: 'test'
+  ...
+# Subtest: nonsense in the environment falls back rather than producing NaN
+ok 52 - nonsense in the environment falls back rather than producing NaN
+  ---
+  duration_ms: 0.2867
+  type: 'test'
+  ...
+# Subtest: the off switch wins over everything
+ok 53 - the off switch wins over everything
+  ---
+  duration_ms: 1.052
+  type: 'test'
+  ...
+# Subtest: pickCached returns a slot that is still warm
+ok 54 - pickCached returns a slot that is still warm
+  ---
+  duration_ms: 0.2433
+  type: 'test'
+  ...
+# Subtest: pickCached ignores a slot that has gone cold
+ok 55 - pickCached ignores a slot that has gone cold
+  ---
+  duration_ms: 0.2219
+  type: 'test'
+  ...
+# Subtest: one session never reads another session slot
+ok 56 - one session never reads another session slot
+  ---
+  duration_ms: 0.1619
+  type: 'test'
+  ...
+# Subtest: pickCached survives a missing or malformed cache
+ok 57 - pickCached survives a missing or malformed cache
+  ---
+  duration_ms: 0.2182
+  type: 'test'
+  ...
+# Subtest: a session with no id still gets a slot of its own
+ok 58 - a session with no id still gets a slot of its own
+  ---
+  duration_ms: 0.7342
+  type: 'test'
+  ...
+# Subtest: mergeCache keeps other sessions rather than replacing them
+ok 59 - mergeCache keeps other sessions rather than replacing them
+  ---
+  duration_ms: 0.2826
+  type: 'test'
+  ...
+# Subtest: mergeCache prunes the oldest so the file cannot grow forever
+ok 60 - mergeCache prunes the oldest so the file cannot grow forever
+  ---
+  duration_ms: 0.9936
+  type: 'test'
+  ...
+# Subtest: mergeCache defaults to the shipped slot count
+ok 61 - mergeCache defaults to the shipped slot count
+  ---
+  duration_ms: 0.4002
+  type: 'test'
+  ...
+# Subtest: a cache from before per-session slots is discarded, not carried forward
+ok 62 - a cache from before per-session slots is discarded, not carried forward
+  ---
+  duration_ms: 0.2729
+  type: 'test'
+  ...
+# Subtest: keepSlots keeps real slots and drops the rest
+ok 63 - keepSlots keeps real slots and drops the rest
+  ---
+  duration_ms: 0.3318
+  type: 'test'
+  ...
+# Subtest: keepSlots survives anything at all
+ok 64 - keepSlots survives anything at all
+  ---
+  duration_ms: 0.2762
+  type: 'test'
+  ...
+# Subtest: a rebuilt reading is hedged, a read one is not
+ok 65 - a rebuilt reading is hedged, a read one is not
+  ---
+  duration_ms: 0.225
+  type: 'test'
+  ...
+# Subtest: the line explains a rebuilt reading and how to replace it
+ok 66 - the line explains a rebuilt reading and how to replace it
+  ---
+  duration_ms: 0.3081
+  type: 'test'
+  ...
+# Subtest: a normal reading says nothing about rebuilding
+ok 67 - a normal reading says nothing about rebuilding
+  ---
+  duration_ms: 0.2068
+  type: 'test'
+  ...
+# Subtest: an exhausted budget is the only state that stops the work
+ok 68 - an exhausted budget is the only state that stops the work
+  ---
+  duration_ms: 0.2518
+  type: 'test'
+  ...
+# Subtest: a short turn count is tight whatever the percentage says
+ok 69 - a short turn count is tight whatever the percentage says
+  ---
+  duration_ms: 0.1887
+  type: 'test'
+  ...
+# Subtest: a window with little runway left is tight even with no reset time
+ok 70 - a window with little runway left is tight even with no reset time
+  ---
+  duration_ms: 0.1769
+  type: 'test'
+  ...
+# Subtest: the cache keeps every field the pressure decision reads
+ok 71 - the cache keeps every field the pressure decision reads
+  ---
+  duration_ms: 0.3312
+  type: 'test'
+  ...
+# Subtest: a cached window is judged the same as a fresh one
+ok 72 - a cached window is judged the same as a fresh one
+  ---
+  duration_ms: 1.4881
+  type: 'test'
+  ...
+# Subtest: a short window is not paced, only measured
+ok 73 - a short window is not paced, only measured
+  ---
+  duration_ms: 0.307
+  type: 'test'
+  ...
+# Subtest: a weekly window is still paced once enough of it has gone
+ok 74 - a weekly window is still paced once enough of it has gone
+  ---
+  duration_ms: 0.1632
+  type: 'test'
+  ...
+# Subtest: a short window still escalates on the runway that actually binds
+ok 75 - a short window still escalates on the runway that actually binds
+  ---
+  duration_ms: 0.174
+  type: 'test'
+  ...
+# Subtest: plenty of runway is still roomy
+ok 76 - plenty of runway is still roomy
+  ---
+  duration_ms: 0.153
+  type: 'test'
+  ...
+# Subtest: the runway that binds is the one the whole account is burning
+ok 77 - the runway that binds is the one the whole account is burning
+  ---
+  duration_ms: 0.1765
+  type: 'test'
+  ...
+# Subtest: a rebuilt figure is held to the same wall as a measured one
+ok 78 - a rebuilt figure is held to the same wall as a measured one
+  ---
+  duration_ms: 0.4307
+  type: 'test'
+  ...
+# Subtest: pace is not consulted for a rolling window
+ok 79 - pace is not consulted for a rolling window
+  ---
+  duration_ms: 0.1682
+  type: 'test'
+  ...
+# Subtest: the few-turns threshold is configurable
+ok 80 - the few-turns threshold is configurable
+  ---
+  duration_ms: 0.3098
+  type: 'test'
+  ...
+# Subtest: the line says how many of those turns are actually yours
+ok 81 - the line says how many of those turns are actually yours
+  ---
+  duration_ms: 1.9092
+  type: 'test'
+  ...
+# Subtest: a session working alone is not told about sharing
+ok 82 - a session working alone is not told about sharing
+  ---
+  duration_ms: 0.26
+  type: 'test'
+  ...
+# Subtest: a window it could not rebuild is called unknown, and the fix is named
+ok 83 - a window it could not rebuild is called unknown, and the fix is named
+  ---
+  duration_ms: 0.2206
+  type: 'test'
+  ...
+# Subtest: a rebuilt window explains itself instead of the unknown wording
+ok 84 - a rebuilt window explains itself instead of the unknown wording
+  ---
+  duration_ms: 0.172
+  type: 'test'
+  ...
+# Subtest: nothing stale means neither message appears
+ok 85 - nothing stale means neither message appears
+  ---
+  duration_ms: 0.1775
+  type: 'test'
+  ...
+# Subtest: an adjusted figure is hedged, an untouched one is not
+ok 86 - an adjusted figure is hedged, an untouched one is not
+  ---
+  duration_ms: 0.184
+  type: 'test'
+  ...
+# Subtest: the line explains points added since the snapshot
+ok 87 - the line explains points added since the snapshot
+  ---
+  duration_ms: 0.2508
+  type: 'test'
+  ...
+# Subtest: a near-full window is called out even when something else binds
+ok 88 - a near-full window is called out even when something else binds
+  ---
+  duration_ms: 0.2586
+  type: 'test'
+  ...
+# Subtest: nothing is called out when the other windows are comfortable
+ok 89 - nothing is called out when the other windows are comfortable
+  ---
+  duration_ms: 0.2234
+  type: 'test'
+  ...
+# Subtest: activeShare counts sessions that have prompted as well as those that have spent
+ok 90 - activeShare counts sessions that have prompted as well as those that have spent
+  ---
+  duration_ms: 0.4755
+  type: 'test'
+  ...
+# Subtest: a window this session cannot spend into is named as one
+ok 91 - a window this session cannot spend into is named as one
+  ---
+  duration_ms: 0.6404
+  type: 'test'
+  ...
+# Subtest: a per-model weekly says that only a model switch frees it
+ok 92 - a per-model weekly says that only a model switch frees it
+  ---
+  duration_ms: 0.4057
+  type: 'test'
+  ...
+# Subtest: the two ends of the meter are both refused as a baseline
+ok 93 - the two ends of the meter are both refused as a baseline
+  ---
+  duration_ms: 2.6128
+  type: 'test'
+  ...
+# Subtest: a price is learned from a reading in the healthy middle
+ok 94 - a price is learned from a reading in the healthy middle
+  ---
+  duration_ms: 4.0165
+  type: 'test'
+  ...
+# Subtest: a full meter learns nothing, because it was no longer counting
+ok 95 - a full meter learns nothing, because it was no longer counting
+  ---
+  duration_ms: 3.0911
+  type: 'test'
+  ...
+# Subtest: a nearly empty meter learns nothing either, for the opposite reason
+ok 96 - a nearly empty meter learns nothing either, for the opposite reason
+  ---
+  duration_ms: 0.4332
+  type: 'test'
+  ...
+# Subtest: a remembered price learned at the cap is not trusted
+ok 97 - a remembered price learned at the cap is not trusted
+  ---
+  duration_ms: 0.6105
+  type: 'test'
+  ...
+# Subtest: the correction it produces matches what the account actually reported
+ok 98 - the correction it produces matches what the account actually reported
+  ---
+  duration_ms: 0.56
+  type: 'test'
+  ...
+# Subtest: an honest price displaces one learned at the cap, so the file heals
+ok 99 - an honest price displaces one learned at the cap, so the file heals
+  ---
+  duration_ms: 0.8106
+  type: 'test'
+  ...
+# Subtest: usableCalibration is the one gate, and it refuses both ends
+ok 100 - usableCalibration is the one gate, and it refuses both ends
+  ---
+  duration_ms: 0.2828
+  type: 'test'
+  ...
+# Subtest: usage.js run as the entry point can read the session history
+ok 101 - usage.js run as the entry point can read the session history
+  ---
+  duration_ms: 639.8662
+  type: 'test'
+  ...
+# Subtest: --help lists every mode
+ok 102 - --help lists every mode
+  ---
+  duration_ms: 2.6305
+  type: 'test'
+  ...
+# Subtest: -h is the same as --help
+ok 103 - -h is the same as --help
+  ---
+  duration_ms: 0.4592
+  type: 'test'
+  ...
+# Subtest: --version prints the packaged version
+ok 104 - --version prints the packaged version
+  ---
+  duration_ms: 2.4996
+  type: 'test'
+  ...
+# Subtest: lowpower is routed to the settings tool, not the report
+ok 105 - lowpower is routed to the settings tool, not the report
+  ---
+  duration_ms: 15.1045
+  type: 'test'
+  ...
+# Subtest: the bin entry named in package.json exists and is executable by node
+ok 106 - the bin entry named in package.json exists and is executable by node
+  ---
+  duration_ms: 1.5213
+  type: 'test'
+  ...
+# Subtest: everything the bin needs is in the published file list
+ok 107 - everything the bin needs is in the published file list
+  ---
+  duration_ms: 0.6328
+  type: 'test'
+  ...
+# Subtest: --help lists the panel and the status line installer
+ok 108 - --help lists the panel and the status line installer
+  ---
+  duration_ms: 0.433
+  type: 'test'
+  ...
+# Subtest: statusline status runs through the cli against the config dir
+ok 109 - statusline status runs through the cli against the config dir
+  ---
+  duration_ms: 4.8663
+  type: 'test'
+  ...
+# Subtest: panel --help runs through the cli
+ok 110 - panel --help runs through the cli
+  ---
+  duration_ms: 0.9029
+  type: 'test'
+  ...
+# Subtest: Codex on, repeated on and off preserve quoted keys, comments, CRLF and tables
+ok 111 - Codex on, repeated on and off preserve quoted keys, comments, CRLF and tables
+  ---
+  duration_ms: 3.1683
+  type: 'test'
+  ...
+# Subtest: unset keys restore and unrelated edits survive
+ok 112 - unset keys restore and unrelated edits survive
+  ---
+  duration_ms: 0.5194
+  type: 'test'
+  ...
+# Subtest: manual managed edits, malformed TOML and corrupt restore data refuse writes
+ok 113 - manual managed edits, malformed TOML and corrupt restore data refuse writes
+  ---
+  duration_ms: 2.1247
+  type: 'test'
+  ...
+# Subtest: actual CLI routes hosts, dry runs, restores and rejects malformed options without touching Claude
+ok 114 - actual CLI routes hosts, dry runs, restores and rejects malformed options without touching Claude
+  ---
+  duration_ms: 2857.683
+  type: 'test'
+  ...
+# Subtest: Codex recommendations never suggest Claude families or raise minimal effort
+ok 115 - Codex recommendations never suggest Claude families or raise minimal effort
+  ---
+  duration_ms: 1.2622
+  type: 'test'
+  ...
+# Subtest: the thresholds mirror exactly: every used percentage maps to its remaining twin
+ok 116 - the thresholds mirror exactly: every used percentage maps to its remaining twin
+  ---
+  duration_ms: 2.8249
+  type: 'test'
+  ...
+# Subtest: 80 used is 20 left is yellow, and 90 used is 10 left is red
+ok 117 - 80 used is 20 left is yellow, and 90 used is 10 left is red
+  ---
+  duration_ms: 0.3341
+  type: 'test'
+  ...
+# Subtest: a Codex row reports what is left, not what is spent
+ok 118 - a Codex row reports what is left, not what is spent
+  ---
+  duration_ms: 3.0312
+  type: 'test'
+  ...
+# Subtest: a nearly-spent Codex window is red, where the same number used would be green
+ok 119 - a nearly-spent Codex window is red, where the same number used would be green
+  ---
+  duration_ms: 0.3266
+  type: 'test'
+  ...
+# Subtest: every drawn figure carries the word left, so it cannot be read as spend
+ok 120 - every drawn figure carries the word left, so it cannot be read as spend
+  ---
+  duration_ms: 0.8587
+  type: 'test'
+  ...
+# Subtest: a window past its reset reports nothing rather than a stale remainder
+ok 121 - a window past its reset reports nothing rather than a stale remainder
+  ---
+  duration_ms: 0.4072
+  type: 'test'
+  ...
+# Subtest: the titles are the ones Codex uses for itself
+ok 122 - the titles are the ones Codex uses for itself
+  ---
+  duration_ms: 0.5288
+  type: 'test'
+  ...
+# Subtest: no reading means the block is not present, and that is not an error
+ok 123 - no reading means the block is not present, and that is not an error
+  ---
+  duration_ms: 0.6392
+  type: 'test'
+  ...
+# Subtest: a plan that meters no rolling window is present and says so
+ok 124 - a plan that meters no rolling window is present and says so
+  ---
+  duration_ms: 0.8202
+  type: 'test'
+  ...
+# Subtest: the freshness of the Codex reading is judged on its own clock
+ok 125 - the freshness of the Codex reading is judged on its own clock
+  ---
+  duration_ms: 1.0487
+  type: 'test'
+  ...
+# Subtest: Codex is labelled by name, because no font can draw its logo
+ok 126 - Codex is labelled by name, because no font can draw its logo
+  ---
+  duration_ms: 0.4976
+  type: 'test'
+  ...
+# Subtest: the two marks are painted in different colours
+ok 127 - the two marks are painted in different colours
+  ---
+  duration_ms: 1.321
+  type: 'test'
+  ...
+# Subtest: a Codex window not present in the payload produces no row
+ok 128 - a Codex window not present in the payload produces no row
+  ---
+  duration_ms: 0.3357
+  type: 'test'
+  ...
+# Subtest: used percentages outside 0-100 are clamped rather than drawn past the ends
+ok 129 - used percentages outside 0-100 are clamped rather than drawn past the ends
+  ---
+  duration_ms: 0.2957
+  type: 'test'
+  ...
+# Subtest: both windows are read when the plan reports both
+ok 130 - both windows are read when the plan reports both
+  ---
+  duration_ms: 6.8262
+  type: 'test'
+  ...
+# Subtest: a window the plan does not report is not invented
+ok 131 - a window the plan does not report is not invented
+  ---
+  duration_ms: 0.469
+  type: 'test'
+  ...
+# Subtest: a missing slot and a malformed slot are both simply absent
+ok 132 - a missing slot and a malformed slot are both simply absent
+  ---
+  duration_ms: 0.343
+  type: 'test'
+  ...
+# Subtest: a window is filed by its own length, not by which slot it came in
+ok 133 - a window is filed by its own length, not by which slot it came in
+  ---
+  duration_ms: 0.4801
+  type: 'test'
+  ...
+# Subtest: an unfamiliar window length is named by its length rather than guessed at
+ok 134 - an unfamiliar window length is named by its length rather than guessed at
+  ---
+  duration_ms: 0.4804
+  type: 'test'
+  ...
+# Subtest: two windows of the same length do not overwrite each other
+ok 135 - two windows of the same length do not overwrite each other
+  ---
+  duration_ms: 0.7519
+  type: 'test'
+  ...
+# Subtest: a plan with no rolling window keeps its plan and its credits
+ok 136 - a plan with no rolling window keeps its plan and its credits
+  ---
+  duration_ms: 0.3882
+  type: 'test'
+  ...
+# Subtest: the plan names the API reports are all recognised
+ok 137 - the plan names the API reports are all recognised
+  ---
+  duration_ms: 4.8853
+  type: 'test'
+  ...
+# Subtest: a plan name we have not seen is shown, not called unknown
+ok 138 - a plan name we have not seen is shown, not called unknown
+  ---
+  duration_ms: 0.7061
+  type: 'test'
+  ...
+# Subtest: no plan at all is unknown rather than a fabricated name
+ok 139 - no plan at all is unknown rather than a fabricated name
+  ---
+  duration_ms: 0.7744
+  type: 'test'
+  ...
+# Subtest: calibrate measures the price of a point from meter movement
+ok 140 - calibrate measures the price of a point from meter movement
+  ---
+  duration_ms: 0.7771
+  type: 'test'
+  ...
+# Subtest: calibrate refuses a sample too thin to mean anything
+ok 141 - calibrate refuses a sample too thin to mean anything
+  ---
+  duration_ms: 0.2286
+  type: 'test'
+  ...
+# Subtest: calibrate refuses when the meter barely moved
+ok 142 - calibrate refuses when the meter barely moved
+  ---
+  duration_ms: 0.1776
+  type: 'test'
+  ...
+# Subtest: calibrate never pairs readings across a reset
+ok 143 - calibrate never pairs readings across a reset
+  ---
+  duration_ms: 0.3288
+  type: 'test'
+  ...
+# Subtest: token weighting keeps the classes apart
+ok 144 - token weighting keeps the classes apart
+  ---
+  duration_ms: 0.3605
+  type: 'test'
+  ...
+# Subtest: reasoning is read from Codex too, and kept inside output
+ok 145 - reasoning is read from Codex too, and kept inside output
+  ---
+  duration_ms: 0.2423
+  type: 'test'
+  ...
+# Subtest: the model in force is carried forward from the turn context
+ok 146 - the model in force is carried forward from the turn context
+  ---
+  duration_ms: 2.3016
+  type: 'test'
+  ...
+# Subtest: the newer of the two live sources wins
+ok 147 - the newer of the two live sources wins
+  ---
+  duration_ms: 2.2746
+  type: 'test'
+  ...
+# Subtest: the setting is a last resort, never a live reading
+ok 148 - the setting is a last resort, never a live reading
+  ---
+  duration_ms: 0.4085
+  type: 'test'
+  ...
+# Subtest: an absent or default setting reports nothing rather than the word default
+ok 149 - an absent or default setting reports nothing rather than the word default
+  ---
+  duration_ms: 0.2678
+  type: 'test'
+  ...
+# Subtest: a reading with no timestamp still beats the setting
+ok 150 - a reading with no timestamp still beats the setting
+  ---
+  duration_ms: 0.6787
+  type: 'test'
+  ...
+# Subtest: empty or non-string efforts are ignored
+ok 151 - empty or non-string efforts are ignored
+  ---
+  duration_ms: 0.2944
+  type: 'test'
+  ...
+# Subtest: liveEffort reads the effort off the transcript, which follows /effort
+ok 152 - liveEffort reads the effort off the transcript, which follows /effort
+  ---
+  duration_ms: 10.1725
+  type: 'test'
+  ...
+# Subtest: liveEffort is quiet about a session it has never seen
+ok 153 - liveEffort is quiet about a session it has never seen
+  ---
+  duration_ms: 1.574
+  type: 'test'
+  ...
+# Subtest: a half-written line at the tail does not stop the effort being read
+ok 154 - a half-written line at the tail does not stop the effort being read
+  ---
+  duration_ms: 17.7702
+  type: 'test'
+  ...
+# Subtest: each effort is measured on its own, sorted by what it writes
+ok 155 - each effort is measured on its own, sorted by what it writes
+  ---
+  duration_ms: 2.0573
+  type: 'test'
+  ...
+# Subtest: subagent calls and refusals are not turns and do not dilute the rate
+ok 156 - subagent calls and refusals are not turns and do not dilute the rate
+  ---
+  duration_ms: 0.9495
+  type: 'test'
+  ...
+# Subtest: the warning prices the window at the effort actually set
+ok 157 - the warning prices the window at the effort actually set
+  ---
+  duration_ms: 1.047
+  type: 'test'
+  ...
+# Subtest: the comparison is on output, not on cost, so a big context cannot invert it
+ok 158 - the comparison is on output, not on cost, so a big context cannot invert it
+  ---
+  duration_ms: 0.6697
+  type: 'test'
+  ...
+# Subtest: nothing is said without enough turns at that effort to mean anything
+ok 159 - nothing is said without enough turns at that effort to mean anything
+  ---
+  duration_ms: 0.3261
+  type: 'test'
+  ...
+# Subtest: nothing is said about a rolled-over window or an unknown effort
+ok 160 - nothing is said about a rolled-over window or an unknown effort
+  ---
+  duration_ms: 0.2716
+  type: 'test'
+  ...
+# Subtest: the scan offset is counted in bytes, so multi-byte characters cannot drift it
+ok 161 - the scan offset is counted in bytes, so multi-byte characters cannot drift it
+  ---
+  duration_ms: 1.5516
+  type: 'test'
+  ...
+# Subtest: a trailing partial line is left for the next read rather than half-parsed
+ok 162 - a trailing partial line is left for the next read rather than half-parsed
+  ---
+  duration_ms: 0.5585
+  type: 'test'
+  ...
+# Subtest: a second scan reuses the cache and returns exactly what the first did
+ok 163 - a second scan reuses the cache and returns exactly what the first did
+  ---
+  duration_ms: 49.8443
+  type: 'test'
+  ...
+# Subtest: a turn repeated in a resumed session is counted once across files
+ok 164 - a turn repeated in a resumed session is counted once across files
+  ---
+  duration_ms: 12.0282
+  type: 'test'
+  ...
+# Subtest: a rewritten file is re-read from the start rather than trusted at its old offset
+ok 165 - a rewritten file is re-read from the start rather than trusted at its old offset
+  ---
+  duration_ms: 26.3726
+  type: 'test'
+  ...
+# Subtest: a scan that runs out of its budget says so instead of reporting a short total
+ok 166 - a scan that runs out of its budget says so instead of reporting a short total
+  ---
+  duration_ms: 61.2028
+  type: 'test'
+  ...
+# Subtest: the line names the windows with their percentages
+ok 167 - the line names the windows with their percentages
+  ---
+  duration_ms: 383.9589
+  type: 'test'
+  ...
+# Subtest: the Fable week appears when Fable is the model
+ok 168 - the Fable week appears when Fable is the model
+  ---
+  duration_ms: 245.3127
+  type: 'test'
+  ...
+# Subtest: per-response rate limits from Claude Code win over the cache
+ok 169 - per-response rate limits from Claude Code win over the cache
+  ---
+  duration_ms: 277.3126
+  type: 'test'
+  ...
+# Subtest: the feed records the session, and a quick second update means working
+ok 170 - the feed records the session, and a quick second update means working
+  ---
+  duration_ms: 729.1152
+  type: 'test'
+  ...
+# Subtest: it fits the columns it is given
+ok 171 - it fits the columns it is given
+  ---
+  duration_ms: 1487.418
+  type: 'test'
+  ...
+# Subtest: bad stdin is not a crash
+ok 172 - bad stdin is not a crash
+  ---
+  duration_ms: 526.9084
+  type: 'test'
+  ...
+# Subtest: no snapshot at all says so rather than inventing bars
+ok 173 - no snapshot at all says so rather than inventing bars
+  ---
+  duration_ms: 161.6459
+  type: 'test'
+  ...
+# Subtest: a previous status line runs first and its output goes above ours
+ok 174 - a previous status line runs first and its output goes above ours
+  ---
+  duration_ms: 336.9494
+  type: 'test'
+  ...
+# Subtest: a previous status line that fails is skipped silently
+ok 175 - a previous status line that fails is skipped silently
+  ---
+  duration_ms: 479.3179
+  type: 'test'
+  ...
+# Subtest: USAGE_LIMITS_STATUSLINE=off still records the feed but prints nothing
+ok 176 - USAGE_LIMITS_STATUSLINE=off still records the feed but prints nothing
+  ---
+  duration_ms: 154.5647
+  type: 'test'
+  ...
+# Subtest: line paints the percentage only once it is worth noticing
+ok 177 - line paints the percentage only once it is worth noticing
+  ---
+  duration_ms: 2.7762
+  type: 'test'
+  ...
+# Subtest: line shows the spinner while working, and names the effort it was given
+ok 178 - line shows the spinner while working, and names the effort it was given
+  ---
+  duration_ms: 1.0011
+  type: 'test'
+  ...
+# Subtest: slotFrom keeps what an update does not repeat
+ok 179 - slotFrom keeps what an update does not repeat
+  ---
+  duration_ms: 0.5116
+  type: 'test'
+  ...
+# Subtest: record keeps the newest sessions and newest picks the latest
+ok 180 - record keeps the newest sessions and newest picks the latest
+  ---
+  duration_ms: 0.9655
+  type: 'test'
+  ...
+# Subtest: a status line on a fast timer cannot look permanently working
+ok 181 - a status line on a fast timer cannot look permanently working
+  ---
+  duration_ms: 0.2422
+  type: 'test'
+  ...
+# Subtest: the line spins for its own session only
+ok 182 - the line spins for its own session only
+  ---
+  duration_ms: 1.4459
+  type: 'test'
+  ...
+# Subtest: the bars run rainbow under ultrathink and purple under the ultracode level
+ok 183 - the bars run rainbow under ultrathink and purple under the ultracode level
+  ---
+  duration_ms: 0.7106
+  type: 'test'
+  ...
+# Subtest: a display sticks to one session instead of flipping between two
+ok 184 - a display sticks to one session instead of flipping between two
+  ---
+  duration_ms: 0.3276
+  type: 'test'
+  ...
+# Subtest: Codex gets a line of its own, underneath, counting down
+ok 185 - Codex gets a line of its own, underneath, counting down
+  ---
+  duration_ms: 172.5075
+  type: 'test'
+  ...
+# Subtest: the Codex line is dropped, not blanked, when there is nothing to report
+ok 186 - the Codex line is dropped, not blanked, when there is nothing to report
+  ---
+  duration_ms: 162.6117
+  type: 'test'
+  ...
+# Subtest: the Codex line fits whatever width it is given
+ok 187 - the Codex line fits whatever width it is given
+  ---
+  duration_ms: 828.4723
+  type: 'test'
+  ...
+# Subtest: Claude Code handing over its own status JSON settles the host
+ok 188 - Claude Code handing over its own status JSON settles the host
+  ---
+  duration_ms: 199.9903
+  type: 'test'
+  ...
+# Subtest: a config-directory account file carrying the meter is the one used
+ok 189 - a config-directory account file carrying the meter is the one used
+  ---
+  duration_ms: 11.292
+  type: 'test'
+  ...
+# Subtest: a snapshotless stub never passes for the account file
+ok 190 - a snapshotless stub never passes for the account file
+  ---
+  duration_ms: 6.8312
+  type: 'test'
+  ...
+# Subtest: detection never picks Codex while a Claude snapshot is readable
+ok 191 - detection never picks Codex while a Claude snapshot is readable
+  ---
+  duration_ms: 4.3554
+  type: 'test'
+  ...
+# Subtest: the AGENTS.md block is delimited by its own markers
+ok 192 - the AGENTS.md block is delimited by its own markers
+  ---
+  duration_ms: 1.9347
+  type: 'test'
+  ...
+# Subtest: stripping the block leaves everything else exactly as it was
+ok 193 - stripping the block leaves everything else exactly as it was
+  ---
+  duration_ms: 0.5475
+  type: 'test'
+  ...
+# Subtest: stripping is a no-op when the block is not there
+ok 194 - stripping is a no-op when the block is not there
+  ---
+  duration_ms: 0.2357
+  type: 'test'
+  ...
+# Subtest: a block written twice is still one block
+ok 195 - a block written twice is still one block
+  ---
+  duration_ms: 0.4957
+  type: 'test'
+  ...
+# Subtest: a half-written block is not mistaken for a whole one
+ok 196 - a half-written block is not mistaken for a whole one
+  ---
+  duration_ms: 0.3082
+  type: 'test'
+  ...
+# Subtest: our hook entries are recognised by the script they run
+ok 197 - our hook entries are recognised by the script they run
+  ---
+  duration_ms: 0.4635
+  type: 'test'
+  ...
+# Subtest: removing our entries leaves other peoples hooks alone
+ok 198 - removing our entries leaves other peoples hooks alone
+  ---
+  duration_ms: 1.9826
+  type: 'test'
+  ...
+# Subtest: the command names an absolute node, not whatever is on PATH
+ok 199 - the command names an absolute node, not whatever is on PATH
+  ---
+  duration_ms: 0.3246
+  type: 'test'
+  ...
+# Subtest: readToken reads the access token Claude Code keeps on disk
+ok 200 - readToken reads the access token Claude Code keeps on disk
+  ---
+  duration_ms: 21.7183
+  type: 'test'
+  ...
+# Subtest: readToken says why when there is nothing to read
+ok 201 - readToken says why when there is nothing to read
+  ---
+  duration_ms: 10.175
+  type: 'test'
+  ...
+# Subtest: readToken asks the keychain on macOS when the file is absent
+ok 202 - readToken asks the keychain on macOS when the file is absent
+  ---
+  duration_ms: 3.4422
+  type: 'test'
+  ...
+# Subtest: fetchUsage makes the call Claude Code makes and returns the body
+ok 203 - fetchUsage makes the call Claude Code makes and returns the body
+  ---
+  duration_ms: 87.3938
+  type: 'test'
+  ...
+# Subtest: fetchUsage classifies every way the call can fail
+ok 204 - fetchUsage classifies every way the call can fail
+  ---
+  duration_ms: 36.6213
+  type: 'test'
+  ...
+# Subtest: a 429 carries the retry-after the server asked for
+ok 205 - a 429 carries the retry-after the server asked for
+  ---
+  duration_ms: 7.5116
+  type: 'test'
+  ...
+# Subtest: a body that is not JSON is a bad response, not a reading
+ok 206 - a body that is not JSON is a bad response, not a reading
+  ---
+  duration_ms: 6.164
+  type: 'test'
+  ...
+# Subtest: no answer within the timeout is offline
+ok 207 - no answer within the timeout is offline
+  ---
+  duration_ms: 239.2988
+  type: 'test'
+  ...
+# Subtest: a connection that is refused is offline
+ok 208 - a connection that is refused is offline
+  ---
+  duration_ms: 7.447
+  type: 'test'
+  ...
+# Subtest: no token means no call at all
+ok 209 - no token means no call at all
+  ---
+  duration_ms: 0.9777
+  type: 'test'
+  ...
+# Subtest: nextDelayMs backs off the way each failure deserves
+ok 210 - nextDelayMs backs off the way each failure deserves
+  ---
+  duration_ms: 0.6413
+  type: 'test'
+  ...
+# Subtest: describe gives every outcome a short honest label
+ok 211 - describe gives every outcome a short honest label
+  ---
+  duration_ms: 0.4572
+  type: 'test'
+  ...
+# Subtest: the live file round-trips and shrugs off corruption
+ok 212 - the live file round-trips and shrugs off corruption
+  ---
+  duration_ms: 44.695
+  type: 'test'
+  ...
+# Subtest: refresh with the network off makes no call and says so
+ok 213 - refresh with the network off makes no call and says so
+  ---
+  duration_ms: 2.2394
+  type: 'test'
+  ...
+# Subtest: refresh writes the reading with the account it belongs to
+ok 214 - refresh writes the reading with the account it belongs to
+  ---
+  duration_ms: 42.4582
+  type: 'test'
+  ...
+# Subtest: refresh without a login keeps whatever reading was there
+ok 215 - refresh without a login keeps whatever reading was there
+  ---
+  duration_ms: 10.65
+  type: 'test'
+  ...
+# Subtest: refreshIfStale leaves a young reading alone and takes one when it has aged
+ok 216 - refreshIfStale leaves a young reading alone and takes one when it has aged
+  ---
+  duration_ms: 45.1416
+  type: 'test'
+  ...
+# Subtest: refreshIfStale backs off after a failure instead of waiting on every prompt
+ok 217 - refreshIfStale backs off after a failure instead of waiting on every prompt
+  ---
+  duration_ms: 37.6819
+  type: 'test'
+  ...
+# Subtest: refreshIfStale with the network off never calls
+ok 218 - refreshIfStale with the network off never calls
+  ---
+  duration_ms: 2.7353
+  type: 'test'
+  ...
+# Subtest: the login only ever goes to Anthropic over https, or to this machine
+ok 219 - the login only ever goes to Anthropic over https, or to this machine
+  ---
+  duration_ms: 0.3325
+  type: 'test'
+  ...
+# Subtest: a refused url makes no request
+ok 220 - a refused url makes no request
+  ---
+  duration_ms: 0.1747
+  type: 'test'
+  ...
+# Subtest: an expired login is not sent; the panel waits for Claude Code to renew it
+ok 221 - an expired login is not sent; the panel waits for Claude Code to renew it
+  ---
+  duration_ms: 4.8213
+  type: 'test'
+  ...
+# Subtest: parseArgs defaults to status
+ok 222 - parseArgs defaults to status
+  ---
+  duration_ms: 3.0331
+  type: 'test'
+  ...
+# Subtest: parseArgs accepts both flag spellings
+ok 223 - parseArgs accepts both flag spellings
+  ---
+  duration_ms: 1.7181
+  type: 'test'
+  ...
+# Subtest: capture records an absent key as null so it can be removed later
+ok 224 - capture records an absent key as null so it can be removed later
+  ---
+  duration_ms: 0.3004
+  type: 'test'
+  ...
+# Subtest: planApply lowers effort and remembers what was there
+ok 225 - planApply lowers effort and remembers what was there
+  ---
+  duration_ms: 2.0766
+  type: 'test'
+  ...
+# Subtest: planApply leaves the model alone unless asked
+ok 226 - planApply leaves the model alone unless asked
+  ---
+  duration_ms: 0.5545
+  type: 'test'
+  ...
+# Subtest: planApply run twice keeps the original values
+ok 227 - planApply run twice keeps the original values
+  ---
+  duration_ms: 0.3369
+  type: 'test'
+  ...
+# Subtest: planApply rejects an effort level that does not exist
+ok 228 - planApply rejects an effort level that does not exist
+  ---
+  duration_ms: 0.9007
+  type: 'test'
+  ...
+# Subtest: planApply refuses 'max', which settings.json does not accept
+ok 229 - planApply refuses 'max', which settings.json does not accept
+  ---
+  duration_ms: 0.2656
+  type: 'test'
+  ...
+# Subtest: planRestore puts back exactly what was saved
+ok 230 - planRestore puts back exactly what was saved
+  ---
+  duration_ms: 0.9109
+  type: 'test'
+  ...
+# Subtest: planRestore removes a key that was never set
+ok 231 - planRestore removes a key that was never set
+  ---
+  duration_ms: 0.8163
+  type: 'test'
+  ...
+# Subtest: planRestore does nothing without saved state
+ok 232 - planRestore does nothing without saved state
+  ---
+  duration_ms: 0.3321
+  type: 'test'
+  ...
+# Subtest: planRestore never touches settings outside its own list
+ok 233 - planRestore never touches settings outside its own list
+  ---
+  duration_ms: 0.3403
+  type: 'test'
+  ...
+# Subtest: describe reports both states
+ok 234 - describe reports both states
+  ---
+  duration_ms: 0.4963
+  type: 'test'
+  ...
+# Subtest: the npm pack output shape is one we understand
+ok 235 - the npm pack output shape is one we understand
+  ---
+  duration_ms: 4365.878
+  type: 'test'
+  ...
+# Subtest: everything the published CLI requires is inside the tarball
+ok 236 - everything the published CLI requires is inside the tarball
+  ---
+  duration_ms: 22.1616
+  type: 'test'
+  ...
+# Subtest: the skill itself ships, not just the scripts
+ok 237 - the skill itself ships, not just the scripts
+  ---
+  duration_ms: 0.2438
+  type: 'test'
+  ...
+# Subtest: both hosts get everything they need to install it
+ok 238 - both hosts get everything they need to install it
+  ---
+  duration_ms: 0.3384
+  type: 'test'
+  ...
+# Subtest: every host manifest carries the same version as the package
+ok 239 - every host manifest carries the same version as the package
+  ---
+  duration_ms: 1.3148
+  type: 'test'
+  ...
+# Subtest: the version script updates every manifest, not just the first
+ok 240 - the version script updates every manifest, not just the first
+  ---
+  duration_ms: 0.5595
+  type: 'test'
+  ...
+# Subtest: the tarball stays small enough to be uncontroversial
+ok 241 - the tarball stays small enough to be uncontroversial
+  ---
+  duration_ms: 0.3676
+  type: 'test'
+  ...
+# Subtest: the package version and the plugin manifest version agree
+ok 242 - the package version and the plugin manifest version agree
+  ---
+  duration_ms: 0.6537
+  type: 'test'
+  ...
+# Subtest: openCommand knows how to split each terminal
+ok 243 - openCommand knows how to split each terminal
+  ---
+  duration_ms: 5.1983
+  type: 'test'
+  ...
+# Subtest: parseArgs reads every flag
+ok 244 - parseArgs reads every flag
+  ---
+  duration_ms: 0.6019
+  type: 'test'
+  ...
+# Subtest: render draws a titled section per window with the reset underneath
+ok 245 - render draws a titled section per window with the reset underneath
+  ---
+  duration_ms: 7.2963
+  type: 'test'
+  ...
+# Subtest: render hides the Fable week for another model and fits a narrow pane
+ok 246 - render hides the Fable week for another model and fits a narrow pane
+  ---
+  duration_ms: 1.1617
+  type: 'test'
+  ...
+# Subtest: render fits a short pane by dropping breathing room, then the footer
+ok 247 - render fits a short pane by dropping breathing room, then the footer
+  ---
+  duration_ms: 1.687
+  type: 'test'
+  ...
+# Subtest: render paints the working state, the ultracode rainbow and the note colours
+ok 248 - render paints the working state, the ultracode rainbow and the note colours
+  ---
+  duration_ms: 5.9937
+  type: 'test'
+  ...
+# Subtest: fit cuts a painted line without leaving colour running
+ok 249 - fit cuts a painted line without leaving colour running
+  ---
+  duration_ms: 0.4073
+  type: 'test'
+  ...
+# Subtest: --once prints a frame from the reading on disk and exits
+ok 250 - --once prints a frame from the reading on disk and exits
+  ---
+  duration_ms: 446.443
+  type: 'test'
+  ...
+# Subtest: --json prints the frame as fields and never the token
+ok 251 - --json prints the frame as fields and never the token
+  ---
+  duration_ms: 449.9641
+  type: 'test'
+  ...
+# Subtest: with the network unreachable the frame says offline and keeps the reading
+ok 252 - with the network unreachable the frame says offline and keeps the reading
+  ---
+  duration_ms: 576.0648
+  type: 'test'
+  ...
+# Subtest: USAGE_LIMITS_FETCH=off is the same as --no-fetch
+ok 253 - USAGE_LIMITS_FETCH=off is the same as --no-fetch
+  ---
+  duration_ms: 491.7395
+  type: 'test'
+  ...
+# Subtest: under Codex the panel reads the Codex meter and says so in the title
+ok 254 - under Codex the panel reads the Codex meter and says so in the title
+  ---
+  duration_ms: 444.8529
+  type: 'test'
+  ...
+# Subtest: --help prints the flags
+ok 255 - --help prints the flags
+  ---
+  duration_ms: 321.0764
+  type: 'test'
+  ...
+# Subtest: pollBase is quick while working, slow while idle, and never under the floor
+ok 256 - pollBase is quick while working, slow while idle, and never under the floor
+  ---
+  duration_ms: 0.3236
+  type: 'test'
+  ...
+# Subtest: the footer reports the network setting, not whether this frame fetched
+ok 257 - the footer reports the network setting, not whether this frame fetched
+  ---
+  duration_ms: 238.3812
+  type: 'test'
+  ...
+# Subtest: tmux older than 3.1 gets the old percentage flag
+ok 258 - tmux older than 3.1 gets the old percentage flag
+  ---
+  duration_ms: 0.4568
+  type: 'test'
+  ...
+# Subtest: render cuts to the width that really exists, even under the layout minimum
+ok 259 - render cuts to the width that really exists, even under the layout minimum
+  ---
+  duration_ms: 0.5028
+  type: 'test'
+  ...
+# Subtest: the pace line says when the binding window runs out, coloured by how soon
+ok 260 - the pace line says when the binding window runs out, coloured by how soon
+  ---
+  duration_ms: 0.8332
+  type: 'test'
+  ...
+# Subtest: the pace line shrinks to fit a narrow pane instead of being cut off
+ok 261 - the pace line shrinks to fit a narrow pane instead of being cut off
+  ---
+  duration_ms: 1.0698
+  type: 'test'
+  ...
+# Subtest: the freshness footer stacks in a narrow pane and a plain cut stays plain
+ok 262 - the freshness footer stacks in a narrow pane and a plain cut stays plain
+  ---
+  duration_ms: 0.557
+  type: 'test'
+  ...
+# Subtest: a session is due the first time it is seen
+ok 263 - a session is due the first time it is seen
+  ---
+  duration_ms: 2.0838
+  type: 'test'
+  ...
+# Subtest: a session is not due again until the interval has passed
+ok 264 - a session is not due again until the interval has passed
+  ---
+  duration_ms: 0.3963
+  type: 'test'
+  ...
+# Subtest: sessions are throttled independently
+ok 265 - sessions are throttled independently
+  ---
+  duration_ms: 0.2329
+  type: 'test'
+  ...
+# Subtest: a corrupt or missing slot does not silence the ping
+ok 266 - a corrupt or missing slot does not silence the ping
+  ---
+  duration_ms: 0.2783
+  type: 'test'
+  ...
+# Subtest: trim keeps the newest sessions and records this one
+ok 267 - trim keeps the newest sessions and records this one
+  ---
+  duration_ms: 0.7898
+  type: 'test'
+  ...
+# Subtest: the quiet subagent refresh keeps a throttle of its own
+ok 268 - the quiet subagent refresh keeps a throttle of its own
+  ---
+  duration_ms: 0.268
+  type: 'test'
+  ...
+# Subtest: an unnamed session still gets a slot
+ok 269 - an unnamed session still gets a slot
+  ---
+  duration_ms: 0.4004
+  type: 'test'
+  ...
+# Subtest: the envelope is the documented PostToolUse shape
+ok 270 - the envelope is the documented PostToolUse shape
+  ---
+  duration_ms: 0.283
+  type: 'test'
+  ...
+# Subtest: the line names the window, the runway and the sharing
+ok 271 - the line names the window, the runway and the sharing
+  ---
+  duration_ms: 1.069
+  type: 'test'
+  ...
+# Subtest: an exhausted budget says to stop rather than to hurry
+ok 272 - an exhausted budget says to stop rather than to hurry
+  ---
+  duration_ms: 0.7667
+  type: 'test'
+  ...
+# Subtest: a window at zero is still reported, not treated as missing
+ok 273 - a window at zero is still reported, not treated as missing
+  ---
+  duration_ms: 0.3209
+  type: 'test'
+  ...
+# Subtest: nothing worth saying produces no line at all
+ok 274 - nothing worth saying produces no line at all
+  ---
+  duration_ms: 0.1658
+  type: 'test'
+  ...
+# Subtest: a single session is not described as sharing
+ok 275 - a single session is not described as sharing
+  ---
+  duration_ms: 0.2049
+  type: 'test'
+  ...
+# Subtest: the interval is two minutes unless the environment says otherwise
+ok 276 - the interval is two minutes unless the environment says otherwise
+  ---
+  duration_ms: 0.5512
+  type: 'test'
+  ...
+# Subtest: the ping can be turned off entirely
+ok 277 - the ping can be turned off entirely
+  ---
+  duration_ms: 0.5937
+  type: 'test'
+  ...
+# Subtest: the ping gives a new session its equal share and counts the same sessions as the brief
+ok 278 - the ping gives a new session its equal share and counts the same sessions as the brief
+  ---
+  duration_ms: 31.4209
+  type: 'test'
+  ...
+# Subtest: no binding window means no recommendation
+ok 279 - no binding window means no recommendation
+  ---
+  duration_ms: 3.5999
+  type: 'test'
+  ...
+# Subtest: a stale window is treated as no reading
+ok 280 - a stale window is treated as no reading
+  ---
+  duration_ms: 1.471
+  type: 'test'
+  ...
+# Subtest: no measured turn cost means no recommendation
+ok 281 - no measured turn cost means no recommendation
+  ---
+  duration_ms: 1.0424
+  type: 'test'
+  ...
+# Subtest: roomy keeps everything as it is
+ok 282 - roomy keeps everything as it is
+  ---
+  duration_ms: 0.545
+  type: 'test'
+  ...
+# Subtest: tight drops effort one notch and spells out both commands
+ok 283 - tight drops effort one notch and spells out both commands
+  ---
+  duration_ms: 0.6007
+  type: 'test'
+  ...
+# Subtest: critical goes to the floor and moves the next session to sonnet
+ok 284 - critical goes to the floor and moves the next session to sonnet
+  ---
+  duration_ms: 0.3157
+  type: 'test'
+  ...
+# Subtest: a small reasoning share vetoes the effort change
+ok 285 - a small reasoning share vetoes the effort change
+  ---
+  duration_ms: 0.4203
+  type: 'test'
+  ...
+# Subtest: when the reset wins the race, nothing is economised
+ok 286 - when the reset wins the race, nothing is economised
+  ---
+  duration_ms: 0.2507
+  type: 'test'
+  ...
+# Subtest: a job that does not fit is critical however roomy the window looks
+ok 287 - a job that does not fit is critical however roomy the window looks
+  ---
+  duration_ms: 0.6723
+  type: 'test'
+  ...
+# Subtest: a job that barely fits is tight
+ok 288 - a job that barely fits is tight
+  ---
+  duration_ms: 0.8443
+  type: 'test'
+  ...
+# Subtest: a small job against a wide window is roomy
+ok 289 - a small job against a wide window is roomy
+  ---
+  duration_ms: 0.4019
+  type: 'test'
+  ...
+# Subtest: the delegate ladder goes one tier down and stops at haiku
+ok 290 - the delegate ladder goes one tier down and stops at haiku
+  ---
+  duration_ms: 0.2401
+  type: 'test'
+  ...
+# Subtest: currentEffort prefers the setting, then the measured effort, then xhigh
+ok 291 - currentEffort prefers the setting, then the measured effort, then xhigh
+  ---
+  duration_ms: 0.1801
+  type: 'test'
+  ...
+# Subtest: under Codex the command saves Codex defaults without Claude model advice
+ok 292 - under Codex the command saves Codex defaults without Claude model advice
+  ---
+  duration_ms: 0.3645
+  type: 'test'
+  ...
+# Subtest: a current effort of max is warned about, and never written to settings
+ok 293 - a current effort of max is warned about, and never written to settings
+  ---
+  duration_ms: 0.2613
+  type: 'test'
+  ...
+# Subtest: a second session spending the budget is noted
+ok 294 - a second session spending the budget is noted
+  ---
+  duration_ms: 0.4125
+  type: 'test'
+  ...
+# Subtest: fromReport reduces the report to what decide reads
+ok 295 - fromReport reduces the report to what decide reads
+  ---
+  duration_ms: 0.3292
+  type: 'test'
+  ...
+# Subtest: renderRecommend explains itself when there is nothing to go on
+ok 296 - renderRecommend explains itself when there is nothing to go on
+  ---
+  duration_ms: 0.392
+  type: 'test'
+  ...
+# Subtest: renderRecommend prints the commands when the budget is tight
+ok 297 - renderRecommend prints the commands when the budget is tight
+  ---
+  duration_ms: 0.4266
+  type: 'test'
+  ...
+# Subtest: delegateModel sends the bulk to the cheapest model this account has measured
+ok 298 - delegateModel sends the bulk to the cheapest model this account has measured
+  ---
+  duration_ms: 0.3348
+  type: 'test'
+  ...
+# Subtest: status reports off when nothing is set
+ok 299 - status reports off when nothing is set
+  ---
+  duration_ms: 4.3242
+  type: 'test'
+  ...
+# Subtest: on writes the launcher and points settings.json at it
+ok 300 - on writes the launcher and points settings.json at it
+  ---
+  duration_ms: 62.6543
+  type: 'test'
+  ...
+# Subtest: an existing status line is kept and chained
+ok 301 - an existing status line is kept and chained
+  ---
+  duration_ms: 32.7096
+  type: 'test'
+  ...
+# Subtest: --no-chain records the previous line but does not run it
+ok 302 - --no-chain records the previous line but does not run it
+  ---
+  duration_ms: 39.7244
+  type: 'test'
+  ...
+# Subtest: --refresh sets the timer and refuses nonsense
+ok 303 - --refresh sets the timer and refuses nonsense
+  ---
+  duration_ms: 32.9823
+  type: 'test'
+  ...
+# Subtest: on twice keeps the original to restore
+ok 304 - on twice keeps the original to restore
+  ---
+  duration_ms: 44.3652
+  type: 'test'
+  ...
+# Subtest: off puts back exactly what was there, including nothing
+ok 305 - off puts back exactly what was there, including nothing
+  ---
+  duration_ms: 40.516
+  type: 'test'
+  ...
+# Subtest: --dry-run writes nothing
+ok 306 - --dry-run writes nothing
+  ---
+  duration_ms: 3.6207
+  type: 'test'
+  ...
+# Subtest: an unknown command is refused
+ok 307 - an unknown command is refused
+  ---
+  duration_ms: 1.7108
+  type: 'test'
+  ...
+# Subtest: the launcher finds feed.js and prints the line
+ok 308 - the launcher finds feed.js and prints the line
+  ---
+  duration_ms: 378.7
+  type: 'test'
+  ...
+# Subtest: the launcher exits quietly when there is nothing to run
+ok 309 - the launcher exits quietly when there is nothing to run
+  ---
+  duration_ms: 162.4617
+  type: 'test'
+  ...
+# Subtest: planOn never records our own launcher as the thing to restore
+ok 310 - planOn never records our own launcher as the thing to restore
+  ---
+  duration_ms: 0.4003
+  type: 'test'
+  ...
+# Subtest: the stop hook answers with a systemMessage carrying the tally
+ok 311 - the stop hook answers with a systemMessage carrying the tally
+  ---
+  duration_ms: 82.8687
+  type: 'test'
+  ...
+# Subtest: the stop hook keeps its running total on disk
+ok 312 - the stop hook keeps its running total on disk
+  ---
+  duration_ms: 77.9027
+  type: 'test'
+  ...
+# Subtest: the stop hook says nothing without a transcript to read
+ok 313 - the stop hook says nothing without a transcript to read
+  ---
+  duration_ms: 18.3824
+  type: 'test'
+  ...
+# Subtest: the tally can be turned off
+ok 314 - the tally can be turned off
+  ---
+  duration_ms: 7.0325
+  type: 'test'
+  ...
+# Subtest: the session end hook prints the closing line and stamps the session
+ok 315 - the session end hook prints the closing line and stamps the session
+  ---
+  duration_ms: 29.9451
+  type: 'test'
+  ...
+# Subtest: the session end hook also respects the kill switch
+ok 316 - the session end hook also respects the kill switch
+  ---
+  duration_ms: 7.3135
+  type: 'test'
+  ...
+# Subtest: readNewLines hands back only complete lines and where to resume
+ok 317 - readNewLines hands back only complete lines and where to resume
+  ---
+  duration_ms: 54.8923
+  type: 'test'
+  ...
+# Subtest: readNewLines starts over when the file is shorter than the cursor
+ok 318 - readNewLines starts over when the file is shorter than the cursor
+  ---
+  duration_ms: 16.7019
+  type: 'test'
+  ...
+# Subtest: readNewLines copes with a file that is not there
+ok 319 - readNewLines copes with a file that is not there
+  ---
+  duration_ms: 0.6189
+  type: 'test'
+  ...
+# Subtest: update totals a session once and reports only what is new the next time
+ok 320 - update totals a session once and reports only what is new the next time
+  ---
+  duration_ms: 13.7788
+  type: 'test'
+  ...
+# Subtest: update counts subagent transcripts as this session, apart from the turns
+ok 321 - update counts subagent transcripts as this session, apart from the turns
+  ---
+  duration_ms: 22.5342
+  type: 'test'
+  ...
+# Subtest: update does not count a turn twice when a fork replays it
+ok 322 - update does not count a turn twice when a fork replays it
+  ---
+  duration_ms: 28.0547
+  type: 'test'
+  ...
+# Subtest: update remembers the latest context size and the model mix
+ok 323 - update remembers the latest context size and the model mix
+  ---
+  duration_ms: 34.4283
+  type: 'test'
+  ...
+# Subtest: trim keeps the newest sessions by last activity
+ok 324 - trim keeps the newest sessions by last activity
+  ---
+  duration_ms: 0.95
+  type: 'test'
+  ...
+# Subtest: formatTally leads with what this reply cost, then the session, tokens first
+ok 325 - formatTally leads with what this reply cost, then the session, tokens first
+  ---
+  duration_ms: 1.373
+  type: 'test'
+  ...
+# Subtest: formatTally leaves out what it does not know
+ok 326 - formatTally leaves out what it does not know
+  ---
+  duration_ms: 0.7663
+  type: 'test'
+  ...
+# Subtest: formatTally names subagent turns separately
+ok 327 - formatTally names subagent turns separately
+  ---
+  duration_ms: 0.4354
+  type: 'test'
+  ...
+# Subtest: formatClosed says how long the session ran and what it cost
+ok 328 - formatClosed says how long the session ran and what it cost
+  ---
+  duration_ms: 0.4294
+  type: 'test'
+  ...
+# Subtest: the state file lives beside the other caches and honours CLAUDE_CONFIG_DIR
+ok 329 - the state file lives beside the other caches and honours CLAUDE_CONFIG_DIR
+  ---
+  duration_ms: 13.9098
+  type: 'test'
+  ...
+# Subtest: readState survives a corrupt file
+ok 330 - readState survives a corrupt file
+  ---
+  duration_ms: 12.9574
+  type: 'test'
+  ...
+# Subtest: formatTally and formatClosed use the singular for one of something
+ok 331 - formatTally and formatClosed use the singular for one of something
+  ---
+  duration_ms: 0.3131
+  type: 'test'
+  ...
+# Subtest: report marks a scoped weekly the session cannot spend into
+ok 332 - report marks a scoped weekly the session cannot spend into
+  ---
+  duration_ms: 196.3639
+  type: 'test'
+  ...
+# Subtest: report counts the models this session actually ran, not just the setting
+ok 333 - report counts the models this session actually ran, not just the setting
+  ---
+  duration_ms: 62.9822
+  type: 'test'
+  ...
+# Subtest: limitWindows reads every limit the account lists, scoped ones included
+ok 334 - limitWindows reads every limit the account lists, scoped ones included
+  ---
+  duration_ms: 8.0685
+  type: 'test'
+  ...
+# Subtest: limitWindows copes with a snapshot that has no such list
+ok 335 - limitWindows copes with a snapshot that has no such list
+  ---
+  duration_ms: 0.4373
+  type: 'test'
+  ...
+# Subtest: buildWindows adds a per-model weekly window priced from that model alone
+ok 336 - buildWindows adds a per-model weekly window priced from that model alone
+  ---
+  duration_ms: 3.7278
+  type: 'test'
+  ...
+# Subtest: buildWindows takes a window from the limits list when its bucket is missing
+ok 337 - buildWindows takes a window from the limits list when its bucket is missing
+  ---
+  duration_ms: 0.6242
+  type: 'test'
+  ...
+# Subtest: buildWindows prices a metered window from its dollar limit, not from calibration
+ok 338 - buildWindows prices a metered window from its dollar limit, not from calibration
+  ---
+  duration_ms: 1.5002
+  type: 'test'
+  ...
+# Subtest: bindingWindow trusts the limit the account marks active when its own measure is a tie
+ok 339 - bindingWindow trusts the limit the account marks active when its own measure is a tie
+  ---
+  duration_ms: 0.6537
+  type: 'test'
+  ...
+# Subtest: render marks a window the account calls critical
+ok 340 - render marks a window the account calls critical
+  ---
+  duration_ms: 43.2084
+  type: 'test'
+  ...
+# Subtest: familiesInUse takes the configured model, and adds what the session actually ran
+ok 341 - familiesInUse takes the configured model, and adds what the session actually ran
+  ---
+  duration_ms: 0.79
+  type: 'test'
+  ...
+# Subtest: a per-model weekly only applies to an agent running that model
+ok 342 - a per-model weekly only applies to an agent running that model
+  ---
+  duration_ms: 2.435
+  type: 'test'
+  ...
+# Subtest: the bucket-table per-model weeklies are scoped to their model too
+ok 343 - the bucket-table per-model weeklies are scoped to their model too
+  ---
+  duration_ms: 1.1569
+  type: 'test'
+  ...
+# Subtest: bindingWindow never picks a window this agent cannot spend into
+ok 344 - bindingWindow never picks a window this agent cannot spend into
+  ---
+  duration_ms: 1.0953
+  type: 'test'
+  ...
+# Subtest: criticalOthers leaves out a full window that this agent cannot move
+ok 345 - criticalOthers leaves out a full window that this agent cannot move
+  ---
+  duration_ms: 0.6256
+  type: 'test'
+  ...
+# Subtest: the status line leaves out a per-model weekly for a model that is not running
+ok 346 - the status line leaves out a per-model weekly for a model that is not running
+  ---
+  duration_ms: 1.4567
+  type: 'test'
+  ...
+# Subtest: render says which windows this agent is not spending into
+ok 347 - render says which windows this agent is not spending into
+  ---
+  duration_ms: 0.7507
+  type: 'test'
+  ...
+# Subtest: familiesInUse counts subagent turns, and only this session
+ok 348 - familiesInUse counts subagent turns, and only this session
+  ---
+  duration_ms: 0.7864
+  type: 'test'
+  ...
+# Subtest: a setting that names a strategy rather than a model resolves to every model it runs
+ok 349 - a setting that names a strategy rather than a model resolves to every model it runs
+  ---
+  duration_ms: 0.3567
+  type: 'test'
+  ...
+# Subtest: a per-model weekly for a model this table does not know is never suppressed
+ok 350 - a per-model weekly for a model this table does not know is never suppressed
+  ---
+  duration_ms: 0.2351
+  type: 'test'
+  ...
+# Subtest: bindingWindow still names a window when the only reading left is a suppressed one
+ok 351 - bindingWindow still names a window when the only reading left is a suppressed one
+  ---
+  duration_ms: 14.344
+  type: 'test'
+  ...
+# Subtest: a newer live reading is preferred over the cache
+ok 352 - a newer live reading is preferred over the cache
+  ---
+  duration_ms: 35.9025
+  type: 'test'
+  ...
+# Subtest: an older live reading loses to the cache
+ok 353 - an older live reading loses to the cache
+  ---
+  duration_ms: 29.8533
+  type: 'test'
+  ...
+# Subtest: a live reading for another account is ignored
+ok 354 - a live reading for another account is ignored
+  ---
+  duration_ms: 11.3623
+  type: 'test'
+  ...
+# Subtest: a live reading stamped in the future is not trusted as fresher
+ok 355 - a live reading stamped in the future is not trusted as fresher
+  ---
+  duration_ms: 17.4938
+  type: 'test'
+  ...
+# Subtest: with no cache at all the live reading is the snapshot
+ok 356 - with no cache at all the live reading is the snapshot
+  ---
+  duration_ms: 13.6519
+  type: 'test'
+  ...
+# Subtest: with neither there is no snapshot, as before
+ok 357 - with neither there is no snapshot, as before
+  ---
+  duration_ms: 16.1829
+  type: 'test'
+  ...
+# Subtest: preferLive is the whole rule, in one place
+ok 358 - preferLive is the whole rule, in one place
+  ---
+  duration_ms: 0.5397
+  type: 'test'
+  ...
+# Subtest: modelSpend counts turns and calls apart, and marks a model that has never taken a turn
+ok 359 - modelSpend counts turns and calls apart, and marks a model that has never taken a turn
+  ---
+  duration_ms: 4.7926
+  type: 'test'
+  ...
+# Subtest: windowForFamily gives a family its own weekly, and the shared one otherwise
+ok 360 - windowForFamily gives a family its own weekly, and the shared one otherwise
+  ---
+  duration_ms: 1.4496
+  type: 'test'
+  ...
+# Subtest: modelHeadroom prices the room left in turns of each model
+ok 361 - modelHeadroom prices the room left in turns of each model
+  ---
+  duration_ms: 0.9217
+  type: 'test'
+  ...
+# Subtest: modelHeadroom refuses to project turns for a model that has taken none
+ok 362 - modelHeadroom refuses to project turns for a model that has taken none
+  ---
+  duration_ms: 0.6953
+  type: 'test'
+  ...
+# Subtest: modelHeadroom falls back to the record when this week is too thin to price a turn
+ok 363 - modelHeadroom falls back to the record when this week is too thin to price a turn
+  ---
+  duration_ms: 0.6242
+  type: 'test'
+  ...
+# Subtest: modelSamples keeps the freshest adequate measurement and nothing else
+ok 364 - modelSamples keeps the freshest adequate measurement and nothing else
+  ---
+  duration_ms: 0.531
+  type: 'test'
+  ...
+# Subtest: the report prints the headroom table, and never a turn count it does not have
+ok 365 - the report prints the headroom table, and never a turn count it does not have
+  ---
+  duration_ms: 45.4821
+  type: 'test'
+  ...
+# Subtest: modelHeadroom projects nothing against a window that has rolled over
+ok 366 - modelHeadroom projects nothing against a window that has rolled over
+  ---
+  duration_ms: 0.502
+  type: 'test'
+  ...
+# Subtest: sessionSpend carries the tokens along with the money
+ok 367 - sessionSpend carries the tokens along with the money
+  ---
+  duration_ms: 2.9929
+  type: 'test'
+  ...
+# Subtest: renderSessions lists the newest first with tokens and cost, and marks the open ones
+ok 368 - renderSessions lists the newest first with tokens and cost, and marks the open ones
+  ---
+  duration_ms: 1.7105
+  type: 'test'
+  ...
+# Subtest: renderSessions explains itself when there is nothing yet
+ok 369 - renderSessions explains itself when there is nothing yet
+  ---
+  duration_ms: 0.237
+  type: 'test'
+  ...
+# Subtest: renderSession shows one session in full
+ok 370 - renderSession shows one session in full
+  ---
+  duration_ms: 41.7652
+  type: 'test'
+  ...
+# Subtest: renderSession says when and why a closed session ended
+ok 371 - renderSession says when and why a closed session ended
+  ---
+  duration_ms: 0.9591
+  type: 'test'
+  ...
+# Subtest: pickSession finds the newest, an exact id, or a unique prefix
+ok 372 - pickSession finds the newest, an exact id, or a unique prefix
+  ---
+  duration_ms: 0.6791
+  type: 'test'
+  ...
+# Subtest: eventFrom leaves out a synthetic message, which is not an API call
+ok 373 - eventFrom leaves out a synthetic message, which is not an API call
+  ---
+  duration_ms: 4.7824
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost and costPercentiles measure main-thread calls only
+ok 374 - typicalTurnCost and costPercentiles measure main-thread calls only
+  ---
+  duration_ms: 0.979
+  type: 'test'
+  ...
+# Subtest: buildWindow counts subagent spend in the money and leaves it out of the turns
+ok 375 - buildWindow counts subagent spend in the money and leaves it out of the turns
+  ---
+  duration_ms: 2.8011
+  type: 'test'
+  ...
+# Subtest: sessionSpend counts main-thread turns and all of the money
+ok 376 - sessionSpend counts main-thread turns and all of the money
+  ---
+  duration_ms: 1.3323
+  type: 'test'
+  ...
+# Subtest: the report reads subagent transcripts and says how many calls they made
+ok 377 - the report reads subagent transcripts and says how many calls they made
+  ---
+  duration_ms: 219.5793
+  type: 'test'
+  ...
+# Subtest: readClaudeEvents finds the agents a Workflow runs, two directories down
+ok 378 - readClaudeEvents finds the agents a Workflow runs, two directories down
+  ---
+  duration_ms: 16.4432
+  type: 'test'
+  ...
+# Subtest: rateFor matches known ids exactly
+ok 379 - rateFor matches known ids exactly
+  ---
+  duration_ms: 6.4867
+  type: 'test'
+  ...
+# Subtest: rateFor strips a bracketed variant suffix and prices the model it names
+ok 380 - rateFor strips a bracketed variant suffix and prices the model it names
+  ---
+  duration_ms: 0.5189
+  type: 'test'
+  ...
+# Subtest: cache reads use the per-model rate when one is stated
+ok 381 - cache reads use the per-model rate when one is stated
+  ---
+  duration_ms: 0.6358
+  type: 'test'
+  ...
+# Subtest: rateFor falls back to the family when the id is unknown
+ok 382 - rateFor falls back to the family when the id is unknown
+  ---
+  duration_ms: 0.9821
+  type: 'test'
+  ...
+# Subtest: costOf prices cache traffic at its own multipliers
+ok 383 - costOf prices cache traffic at its own multipliers
+  ---
+  duration_ms: 0.3298
+  type: 'test'
+  ...
+# Subtest: costOf handles records that only carry the cache total
+ok 384 - costOf handles records that only carry the cache total
+  ---
+  duration_ms: 0.269
+  type: 'test'
+  ...
+# Subtest: costOf is zero for a missing record
+ok 385 - costOf is zero for a missing record
+  ---
+  duration_ms: 0.4002
+  type: 'test'
+  ...
+# Subtest: tokensOf sums every token class once
+ok 386 - tokensOf sums every token class once
+  ---
+  duration_ms: 0.2967
+  type: 'test'
+  ...
+# Subtest: eventFrom reads an assistant turn
+ok 387 - eventFrom reads an assistant turn
+  ---
+  duration_ms: 28.248
+  type: 'test'
+  ...
+# Subtest: eventFrom reads a refused request as a refusal, not a turn
+ok 388 - eventFrom reads a refused request as a refusal, not a turn
+  ---
+  duration_ms: 4.1837
+  type: 'test'
+  ...
+# Subtest: lastRejections keeps the most recent refusal per window
+ok 389 - lastRejections keeps the most recent refusal per window
+  ---
+  duration_ms: 3.329
+  type: 'test'
+  ...
+# Subtest: a refusal in the past anchors the window that is running now
+ok 390 - a refusal in the past anchors the window that is running now
+  ---
+  duration_ms: 2.9189
+  type: 'test'
+  ...
+# Subtest: eventFrom skips a turn already counted in another file
+ok 391 - eventFrom skips a turn already counted in another file
+  ---
+  duration_ms: 0.5221
+  type: 'test'
+  ...
+# Subtest: eventFrom ignores lines that are not billable turns
+ok 392 - eventFrom ignores lines that are not billable turns
+  ---
+  duration_ms: 0.2559
+  type: 'test'
+  ...
+# Subtest: buildWindow calibrates dollars per percent from measured spend
+ok 393 - buildWindow calibrates dollars per percent from measured spend
+  ---
+  duration_ms: 0.6953
+  type: 'test'
+  ...
+# Subtest: buildWindow reports runs-out when the pace beats the reset
+ok 394 - buildWindow reports runs-out when the pace beats the reset
+  ---
+  duration_ms: 0.3237
+  type: 'test'
+  ...
+# Subtest: buildWindow stays idle when nothing recent can set a pace
+ok 395 - buildWindow stays idle when nothing recent can set a pace
+  ---
+  duration_ms: 0.3335
+  type: 'test'
+  ...
+# Subtest: buildWindow leaves an untouched window uncalibrated
+ok 396 - buildWindow leaves an untouched window uncalibrated
+  ---
+  duration_ms: 2.168
+  type: 'test'
+  ...
+# Subtest: buildWindow survives a missing snapshot
+ok 397 - buildWindow survives a missing snapshot
+  ---
+  duration_ms: 0.2421
+  type: 'test'
+  ...
+# Subtest: buildWindow marks a low reading as coarse
+ok 398 - buildWindow marks a low reading as coarse
+  ---
+  duration_ms: 0.4675
+  type: 'test'
+  ...
+# Subtest: buildWindow excludes spend from before the window opened
+ok 399 - buildWindow excludes spend from before the window opened
+  ---
+  duration_ms: 0.3047
+  type: 'test'
+  ...
+# Subtest: bindingWindow picks the limit that stops the work first
+ok 400 - bindingWindow picks the limit that stops the work first
+  ---
+  duration_ms: 0.4103
+  type: 'test'
+  ...
+# Subtest: bindingWindow falls back to the fullest window with no pace
+ok 401 - bindingWindow falls back to the fullest window with no pace
+  ---
+  duration_ms: 0.1685
+  type: 'test'
+  ...
+# Subtest: bindingWindow returns nothing when no window has a reading
+ok 402 - bindingWindow returns nothing when no window has a reading
+  ---
+  duration_ms: 0.1386
+  type: 'test'
+  ...
+# Subtest: formatDuration reads like a clock
+ok 403 - formatDuration reads like a clock
+  ---
+  duration_ms: 0.225
+  type: 'test'
+  ...
+# Subtest: formatUSD keeps small amounts readable
+ok 404 - formatUSD keeps small amounts readable
+  ---
+  duration_ms: 0.1989
+  type: 'test'
+  ...
+# Subtest: dominantEffort reports the level most turns ran at
+ok 405 - dominantEffort reports the level most turns ran at
+  ---
+  duration_ms: 0.3346
+  type: 'test'
+  ...
+# Subtest: verdictLine says something useful in every state
+ok 406 - verdictLine says something useful in every state
+  ---
+  duration_ms: 0.6843
+  type: 'test'
+  ...
+# Subtest: render explains itself when there is no snapshot
+ok 407 - render explains itself when there is no snapshot
+  ---
+  duration_ms: 1.6312
+  type: 'test'
+  ...
+# Subtest: detectPlan identifies Pro
+ok 408 - detectPlan identifies Pro
+  ---
+  duration_ms: 0.3763
+  type: 'test'
+  ...
+# Subtest: detectPlan separates Max 5x from Max 20x
+ok 409 - detectPlan separates Max 5x from Max 20x
+  ---
+  duration_ms: 0.2845
+  type: 'test'
+  ...
+# Subtest: detectPlan prefers the user tier over the org tier
+ok 410 - detectPlan prefers the user tier over the org tier
+  ---
+  duration_ms: 0.8013
+  type: 'test'
+  ...
+# Subtest: detectPlan falls back to plain Max when no tier is reported
+ok 411 - detectPlan falls back to plain Max when no tier is reported
+  ---
+  duration_ms: 0.4111
+  type: 'test'
+  ...
+# Subtest: detectPlan handles Team and Enterprise
+ok 412 - detectPlan handles Team and Enterprise
+  ---
+  duration_ms: 0.2302
+  type: 'test'
+  ...
+# Subtest: detectPlan degrades instead of throwing
+ok 413 - detectPlan degrades instead of throwing
+  ---
+  duration_ms: 0.3605
+  type: 'test'
+  ...
+# Subtest: render prints the plan advice when there is one
+ok 414 - render prints the plan advice when there is one
+  ---
+  duration_ms: 56.0309
+  type: 'test'
+  ...
+# Subtest: tokenParts splits the classes, with reasoning inside output
+ok 415 - tokenParts splits the classes, with reasoning inside output
+  ---
+  duration_ms: 0.244
+  type: 'test'
+  ...
+# Subtest: reasoning is carried alongside output, never added to it
+ok 416 - reasoning is carried alongside output, never added to it
+  ---
+  duration_ms: 0.2342
+  type: 'test'
+  ...
+# Subtest: reasoningSpend prices the thinking at the rate of whoever did it
+ok 417 - reasoningSpend prices the thinking at the rate of whoever did it
+  ---
+  duration_ms: 0.3935
+  type: 'test'
+  ...
+# Subtest: reasoningSpend stays quiet when there was no thinking to price
+ok 418 - reasoningSpend stays quiet when there was no thinking to price
+  ---
+  duration_ms: 0.1872
+  type: 'test'
+  ...
+# Subtest: reasoningSpend reports a share even when it cannot price it
+ok 419 - reasoningSpend reports a share even when it cannot price it
+  ---
+  duration_ms: 0.2138
+  type: 'test'
+  ...
+# Subtest: byModel groups by model, dearest first, with shares summing to one
+ok 420 - byModel groups by model, dearest first, with shares summing to one
+  ---
+  duration_ms: 0.7551
+  type: 'test'
+  ...
+# Subtest: formatTokens stays short at every scale
+ok 421 - formatTokens stays short at every scale
+  ---
+  duration_ms: 0.3304
+  type: 'test'
+  ...
+# Subtest: statusLine is short and names every window
+ok 422 - statusLine is short and names every window
+  ---
+  duration_ms: 0.85
+  type: 'test'
+  ...
+# Subtest: statusLine flags a window that is nearly gone
+ok 423 - statusLine flags a window that is nearly gone
+  ---
+  duration_ms: 0.2728
+  type: 'test'
+  ...
+# Subtest: statusLine says nothing rather than something wrong
+ok 424 - statusLine says nothing rather than something wrong
+  ---
+  duration_ms: 0.1618
+  type: 'test'
+  ...
+# Subtest: statusLine copes with a window that reports no reset time
+ok 425 - statusLine copes with a window that reports no reset time
+  ---
+  duration_ms: 0.2837
+  type: 'test'
+  ...
+# Subtest: byProject groups spend by working directory, dearest first
+ok 426 - byProject groups spend by working directory, dearest first
+  ---
+  duration_ms: 0.3888
+  type: 'test'
+  ...
+# Subtest: shortenProject keeps the identifying tail
+ok 427 - shortenProject keeps the identifying tail
+  ---
+  duration_ms: 0.2104
+  type: 'test'
+  ...
+# Subtest: render shows the project split only when more than one ran
+ok 428 - render shows the project split only when more than one ran
+  ---
+  duration_ms: 0.6676
+  type: 'test'
+  ...
+# Subtest: buildWindow treats a passed reset time as stale, not as exhausted
+ok 429 - buildWindow treats a passed reset time as stale, not as exhausted
+  ---
+  duration_ms: 0.3771
+  type: 'test'
+  ...
+# Subtest: buildWindow leaves a live window unstale
+ok 430 - buildWindow leaves a live window unstale
+  ---
+  duration_ms: 0.3056
+  type: 'test'
+  ...
+# Subtest: bindingWindow ignores a stale window when a live one exists
+ok 431 - bindingWindow ignores a stale window when a live one exists
+  ---
+  duration_ms: 1.4836
+  type: 'test'
+  ...
+# Subtest: verdictLine explains a rolled over window
+ok 432 - verdictLine explains a rolled over window
+  ---
+  duration_ms: 0.2129
+  type: 'test'
+  ...
+# Subtest: statusLine says rolling instead of a percentage it knows is wrong
+ok 433 - statusLine says rolling instead of a percentage it knows is wrong
+  ---
+  duration_ms: 7.9216
+  type: 'test'
+  ...
+# Subtest: creditsFrom reads the disabled shape without inventing numbers
+ok 434 - creditsFrom reads the disabled shape without inventing numbers
+  ---
+  duration_ms: 3.898
+  type: 'test'
+  ...
+# Subtest: creditsFrom converts minor units at the stated exponent
+ok 435 - creditsFrom converts minor units at the stated exponent
+  ---
+  duration_ms: 0.2375
+  type: 'test'
+  ...
+# Subtest: creditsFrom returns nothing when neither block is present
+ok 436 - creditsFrom returns nothing when neither block is present
+  ---
+  duration_ms: 0.159
+  type: 'test'
+  ...
+# Subtest: formatClock gives a wall clock time
+ok 437 - formatClock gives a wall clock time
+  ---
+  duration_ms: 7.7583
+  type: 'test'
+  ...
+# Subtest: render reports credits without repeating the warning Claude Code gives
+ok 438 - render reports credits without repeating the warning Claude Code gives
+  ---
+  duration_ms: 0.6732
+  type: 'test'
+  ...
+# Subtest: render says work simply stops when credits are off
+ok 439 - render says work simply stops when credits are off
+  ---
+  duration_ms: 0.8259
+  type: 'test'
+  ...
+# Subtest: render names a time to come back to the work
+ok 440 - render names a time to come back to the work
+  ---
+  duration_ms: 0.946
+  type: 'test'
+  ...
+# Subtest: render leaves the plan block out when there is room
+ok 441 - render leaves the plan block out when there is room
+  ---
+  duration_ms: 1.2644
+  type: 'test'
+  ...
+# Subtest: costPercentiles describes the spread, not just the middle
+ok 442 - costPercentiles describes the spread, not just the middle
+  ---
+  duration_ms: 0.4947
+  type: 'test'
+  ...
+# Subtest: costPercentiles ignores turns that cost nothing
+ok 443 - costPercentiles ignores turns that cost nothing
+  ---
+  duration_ms: 0.1667
+  type: 'test'
+  ...
+# Subtest: costPercentiles gives up on an empty history
+ok 444 - costPercentiles gives up on an empty history
+  ---
+  duration_ms: 0.1349
+  type: 'test'
+  ...
+# Subtest: forecastWindow prices a job in points of the window
+ok 445 - forecastWindow prices a job in points of the window
+  ---
+  duration_ms: 0.7307
+  type: 'test'
+  ...
+# Subtest: forecastWindow calls it tight before it calls it impossible
+ok 446 - forecastWindow calls it tight before it calls it impossible
+  ---
+  duration_ms: 0.631
+  type: 'test'
+  ...
+# Subtest: forecastWindow refuses a job that does not fit
+ok 447 - forecastWindow refuses a job that does not fit
+  ---
+  duration_ms: 0.1878
+  type: 'test'
+  ...
+# Subtest: forecastWindow will not price what it cannot measure
+ok 448 - forecastWindow will not price what it cannot measure
+  ---
+  duration_ms: 0.214
+  type: 'test'
+  ...
+# Subtest: renderForecast says whether the job fits and why
+ok 449 - renderForecast says whether the job fits and why
+  ---
+  duration_ms: 0.6123
+  type: 'test'
+  ...
+# Subtest: renderForecast asks for a number rather than guessing
+ok 450 - renderForecast asks for a number rather than guessing
+  ---
+  duration_ms: 0.2295
+  type: 'test'
+  ...
+# Subtest: renderForecast admits when it has nothing to price against
+ok 451 - renderForecast admits when it has nothing to price against
+  ---
+  duration_ms: 0.1472
+  type: 'test'
+  ...
+# Subtest: familyOf recognises the family from the model id
+ok 452 - familyOf recognises the family from the model id
+  ---
+  duration_ms: 0.1549
+  type: 'test'
+  ...
+# Subtest: familyAverage averages every known member of the family
+ok 453 - familyAverage averages every known member of the family
+  ---
+  duration_ms: 0.2027
+  type: 'test'
+  ...
+# Subtest: an unreleased model is priced at its family average, not refused
+ok 454 - an unreleased model is priced at its family average, not refused
+  ---
+  duration_ms: 0.2627
+  type: 'test'
+  ...
+# Subtest: an unrecognised family errs expensive rather than cheap
+ok 455 - an unrecognised family errs expensive rather than cheap
+  ---
+  duration_ms: 0.1689
+  type: 'test'
+  ...
+# Subtest: isKnownModel separates a real rate from an assumed one
+ok 456 - isKnownModel separates a real rate from an assumed one
+  ---
+  duration_ms: 0.1397
+  type: 'test'
+  ...
+# Subtest: byModel flags rows that were priced by assumption
+ok 457 - byModel flags rows that were priced by assumption
+  ---
+  duration_ms: 1.0019
+  type: 'test'
+  ...
+# Subtest: reconstructWindow prices the live window from the closed one
+ok 458 - reconstructWindow prices the live window from the closed one
+  ---
+  duration_ms: 0.5422
+  type: 'test'
+  ...
+# Subtest: reconstructWindow refuses a rebuild that overflows the window
+ok 459 - reconstructWindow refuses a rebuild that overflows the window
+  ---
+  duration_ms: 0.2969
+  type: 'test'
+  ...
+# Subtest: reconstructWindow leaves a window that has not rolled over alone
+ok 460 - reconstructWindow leaves a window that has not rolled over alone
+  ---
+  duration_ms: 0.2529
+  type: 'test'
+  ...
+# Subtest: reconstructWindow refuses when it cannot calibrate
+ok 461 - reconstructWindow refuses when it cannot calibrate
+  ---
+  duration_ms: 0.3311
+  type: 'test'
+  ...
+# Subtest: a rolled over window comes back rebuilt, and says it was rebuilt
+ok 462 - a rolled over window comes back rebuilt, and says it was rebuilt
+  ---
+  duration_ms: 0.38
+  type: 'test'
+  ...
+# Subtest: a rebuilt window is eligible to be the binding one
+ok 463 - a rebuilt window is eligible to be the binding one
+  ---
+  duration_ms: 0.4813
+  type: 'test'
+  ...
+# Subtest: a nearly full window is not passed over for lacking a pace estimate
+ok 464 - a nearly full window is not passed over for lacking a pace estimate
+  ---
+  duration_ms: 0.2367
+  type: 'test'
+  ...
+# Subtest: an empty window with no pace does not claim to be binding
+ok 465 - an empty window with no pace does not claim to be binding
+  ---
+  duration_ms: 0.1466
+  type: 'test'
+  ...
+# Subtest: an equally urgent tie goes to the shorter window
+ok 466 - an equally urgent tie goes to the shorter window
+  ---
+  duration_ms: 0.315
+  type: 'test'
+  ...
+# Subtest: the weekly window still binds when it is genuinely the wall
+ok 467 - the weekly window still binds when it is genuinely the wall
+  ---
+  duration_ms: 0.285
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost throws out the extremes rather than following them
+ok 468 - typicalTurnCost throws out the extremes rather than following them
+  ---
+  duration_ms: 0.2657
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost follows the skew, so a turn count is not flattered
+ok 469 - typicalTurnCost follows the skew, so a turn count is not flattered
+  ---
+  duration_ms: 0.2132
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost ignores a sample too thin to trust
+ok 470 - typicalTurnCost ignores a sample too thin to trust
+  ---
+  duration_ms: 0.176
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost widens again when the window itself is thin
+ok 471 - typicalTurnCost widens again when the window itself is thin
+  ---
+  duration_ms: 0.1668
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost uses the best it has when nothing reaches the floor
+ok 472 - typicalTurnCost uses the best it has when nothing reaches the floor
+  ---
+  duration_ms: 0.1458
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost ignores turns that cost nothing
+ok 473 - typicalTurnCost ignores turns that cost nothing
+  ---
+  duration_ms: 0.1474
+  type: 'test'
+  ...
+# Subtest: typicalTurnCost gives up on an empty history
+ok 474 - typicalTurnCost gives up on an empty history
+  ---
+  duration_ms: 0.1513
+  type: 'test'
+  ...
+# Subtest: activeSessions finds the sessions spending right now
+ok 475 - activeSessions finds the sessions spending right now
+  ---
+  duration_ms: 0.4418
+  type: 'test'
+  ...
+# Subtest: activeSessions ignores a session that has gone quiet
+ok 476 - activeSessions ignores a session that has gone quiet
+  ---
+  duration_ms: 0.2118
+  type: 'test'
+  ...
+# Subtest: activeSessions takes a custom window
+ok 477 - activeSessions takes a custom window
+  ---
+  duration_ms: 0.1725
+  type: 'test'
+  ...
+# Subtest: activeSessions copes with turns that carry no session
+ok 478 - activeSessions copes with turns that carry no session
+  ---
+  duration_ms: 0.1436
+  type: 'test'
+  ...
+# Subtest: shareOf gives the whole budget to a session working alone
+ok 479 - shareOf gives the whole budget to a session working alone
+  ---
+  duration_ms: 0.2033
+  type: 'test'
+  ...
+# Subtest: shareOf splits the budget when another session is working
+ok 480 - shareOf splits the budget when another session is working
+  ---
+  duration_ms: 0.3241
+  type: 'test'
+  ...
+# Subtest: shareOf assumes an even split when it cannot identify the caller
+ok 481 - shareOf assumes an even split when it cannot identify the caller
+  ---
+  duration_ms: 0.1902
+  type: 'test'
+  ...
+# Subtest: a rebuild that overflows the window refuses instead of reporting 100%
+ok 482 - a rebuild that overflows the window refuses instead of reporting 100%
+  ---
+  duration_ms: 0.332
+  type: 'test'
+  ...
+# Subtest: an overflowing rebuild leaves the window unknown, not full
+ok 483 - an overflowing rebuild leaves the window unknown, not full
+  ---
+  duration_ms: 1.3673
+  type: 'test'
+  ...
+# Subtest: a sound rebuild is still accepted
+ok 484 - a sound rebuild is still accepted
+  ---
+  duration_ms: 0.2977
+  type: 'test'
+  ...
+# Subtest: the saturation limit leaves room for rounding, not for nonsense
+ok 485 - the saturation limit leaves room for rounding, not for nonsense
+  ---
+  duration_ms: 0.3467
+  type: 'test'
+  ...
+# Subtest: spend since the snapshot is added to its reading
+ok 486 - spend since the snapshot is added to its reading
+  ---
+  duration_ms: 0.5455
+  type: 'test'
+  ...
+# Subtest: a fresh snapshot with nothing spent since is left alone
+ok 487 - a fresh snapshot with nothing spent since is left alone
+  ---
+  duration_ms: 0.262
+  type: 'test'
+  ...
+# Subtest: the adjustment never runs on a window that has rolled over
+ok 488 - the adjustment never runs on a window that has rolled over
+  ---
+  duration_ms: 0.1999
+  type: 'test'
+  ...
+# Subtest: a correction that overflows the window is refused, not capped
+ok 489 - a correction that overflows the window is refused, not capped
+  ---
+  duration_ms: 0.2993
+  type: 'test'
+  ...
+# Subtest: a baseline too thin to price a point is not used
+ok 490 - a baseline too thin to price a point is not used
+  ---
+  duration_ms: 0.221
+  type: 'test'
+  ...
+# Subtest: a near-empty reading cannot price a point, so spend after it is left alone
+ok 491 - a near-empty reading cannot price a point, so spend after it is left alone
+  ---
+  duration_ms: 0.7794
+  type: 'test'
+  ...
+# Subtest: the same near-empty reading corrects fine off a remembered real price
+ok 492 - the same near-empty reading corrects fine off a remembered real price
+  ---
+  duration_ms: 0.4113
+  type: 'test'
+  ...
+# Subtest: a remembered price read off a near-empty meter is refused too
+ok 493 - a remembered price read off a near-empty meter is refused too
+  ---
+  duration_ms: 0.2554
+  type: 'test'
+  ...
+# Subtest: betterCalibration prefers meter movement over turn count
+ok 494 - betterCalibration prefers meter movement over turn count
+  ---
+  duration_ms: 0.2481
+  type: 'test'
+  ...
+# Subtest: a rebuild refuses a closed window that read almost nothing
+ok 495 - a rebuild refuses a closed window that read almost nothing
+  ---
+  duration_ms: 0.195
+  type: 'test'
+  ...
+# Subtest: no snapshot timestamp means no adjustment rather than a guess
+ok 496 - no snapshot timestamp means no adjustment rather than a guess
+  ---
+  duration_ms: 0.1675
+  type: 'test'
+  ...
+# Subtest: a rebuild counts only the window running now, not the one that reset
+ok 497 - a rebuild counts only the window running now, not the one that reset
+  ---
+  duration_ms: 0.2202
+  type: 'test'
+  ...
+# Subtest: a reset longer ago than the span falls back to the rolling window
+ok 498 - a reset longer ago than the span falls back to the rolling window
+  ---
+  duration_ms: 0.1948
+  type: 'test'
+  ...
+# Subtest: spend before the reset never counts toward the new window
+ok 499 - spend before the reset never counts toward the new window
+  ---
+  duration_ms: 0.3358
+  type: 'test'
+  ...
+# Subtest: a rebuilt window is never also adjusted
+ok 500 - a rebuilt window is never also adjusted
+  ---
+  duration_ms: 1.376
+  type: 'test'
+  ...
+# Subtest: adjusting keeps used and left adding up
+ok 501 - adjusting keeps used and left adding up
+  ---
+  duration_ms: 1.9723
+  type: 'test'
+  ...
+# Subtest: a snapshot timestamp outside the window is ignored
+ok 502 - a snapshot timestamp outside the window is ignored
+  ---
+  duration_ms: 0.3115
+  type: 'test'
+  ...
+# Subtest: adjusting cannot drive headroom below zero
+ok 503 - adjusting cannot drive headroom below zero
+  ---
+  duration_ms: 0.3373
+  type: 'test'
+  ...
+# Subtest: another Claude working alongside is counted in the reading
+ok 504 - another Claude working alongside is counted in the reading
+  ---
+  duration_ms: 1.3099
+  type: 'test'
+  ...
+# Subtest: report carries everything the hook needs, so neither builds its own view
+ok 505 - report carries everything the hook needs, so neither builds its own view
+  ---
+  duration_ms: 0.9098
+  type: 'test'
+  ...
+# Subtest: criticalOthers finds a near-full window that is not the binding one
+ok 506 - criticalOthers finds a near-full window that is not the binding one
+  ---
+  duration_ms: 0.3346
+  type: 'test'
+  ...
+# Subtest: criticalOthers never reports the binding window back
+ok 507 - criticalOthers never reports the binding window back
+  ---
+  duration_ms: 0.1655
+  type: 'test'
+  ...
+# Subtest: criticalOthers ignores comfortable and unreadable windows
+ok 508 - criticalOthers ignores comfortable and unreadable windows
+  ---
+  duration_ms: 0.1732
+  type: 'test'
+  ...
+# Subtest: the status line includes a per-model weekly, not just the bucket windows
+ok 509 - the status line includes a per-model weekly, not just the bucket windows
+  ---
+  duration_ms: 0.4235
+  type: 'test'
+  ...
+# Subtest: betterCalibration keeps whichever sample rests on more turns
+ok 510 - betterCalibration keeps whichever sample rests on more turns
+  ---
+  duration_ms: 0.1588
+  type: 'test'
+  ...
+# Subtest: betterCalibration refuses a nonsense sample
+ok 511 - betterCalibration refuses a nonsense sample
+  ---
+  duration_ms: 0.296
+  type: 'test'
+  ...
+# Subtest: a thin baseline borrows the remembered price instead of guessing
+ok 512 - a thin baseline borrows the remembered price instead of guessing
+  ---
+  duration_ms: 1.7816
+  type: 'test'
+  ...
+# Subtest: a calibration learned on another plan is dropped, not reused
+ok 513 - a calibration learned on another plan is dropped, not reused
+  ---
+  duration_ms: 0.3112
+  type: 'test'
+  ...
+# Subtest: a calibration from the same plan is kept
+ok 514 - a calibration from the same plan is kept
+  ---
+  duration_ms: 0.1613
+  type: 'test'
+  ...
+# Subtest: an unstamped calibration is unknown rather than assumed current
+ok 515 - an unstamped calibration is unknown rather than assumed current
+  ---
+  duration_ms: 0.1951
+  type: 'test'
+  ...
+# Subtest: with no plan detected nothing is dropped
+ok 516 - with no plan detected nothing is dropped
+  ---
+  duration_ms: 0.1787
+  type: 'test'
+  ...
+# Subtest: what is written back carries the plan it was learned on
+ok 517 - what is written back carries the plan it was learned on
+  ---
+  duration_ms: 0.2787
+  type: 'test'
+  ...
+# Subtest: a better baseline is preferred over a remembered one
+ok 518 - a better baseline is preferred over a remembered one
+  ---
+  duration_ms: 0.4216
+  type: 'test'
+  ...
+# Subtest: promptFrom recognises a prompt the user typed and nothing else
+ok 519 - promptFrom recognises a prompt the user typed and nothing else
+  ---
+  duration_ms: 0.3584
+  type: 'test'
+  ...
+# Subtest: eventFrom carries the context the model saw and whether it was a sidechain
+ok 520 - eventFrom carries the context the model saw and whether it was a sidechain
+  ---
+  duration_ms: 0.8179
+  type: 'test'
+  ...
+# Subtest: shareOf never starves a session that has only just started
+ok 521 - shareOf never starves a session that has only just started
+  ---
+  duration_ms: 0.4243
+  type: 'test'
+  ...
+# Subtest: shareOf splits among every open session when more are open than have spent
+ok 522 - shareOf splits among every open session when more are open than have spent
+  ---
+  duration_ms: 0.2486
+  type: 'test'
+  ...
+# Subtest: the three windows come out with Claude's own titles
+ok 523 - the three windows come out with Claude's own titles
+  ---
+  duration_ms: 6.9728
+  type: 'test'
+  ...
+# Subtest: the Fable week only shows while Fable is the model in use
+ok 524 - the Fable week only shows while Fable is the model in use
+  ---
+  duration_ms: 1.6347
+  type: 'test'
+  ...
+# Subtest: per-response headers beat an older reading and lose to a newer one
+ok 525 - per-response headers beat an older reading and lose to a newer one
+  ---
+  duration_ms: 1.0209
+  type: 'test'
+  ...
+# Subtest: headers alone are enough for the two shared windows
+ok 526 - headers alone are enough for the two shared windows
+  ---
+  duration_ms: 0.4691
+  type: 'test'
+  ...
+# Subtest: levels follow the thresholds per window
+ok 527 - levels follow the thresholds per window
+  ---
+  duration_ms: 0.9912
+  type: 'test'
+  ...
+# Subtest: zero with no reset time is an empty window from a live reading, unknown from a cache
+ok 528 - zero with no reset time is an empty window from a live reading, unknown from a cache
+  ---
+  duration_ms: 0.636
+  type: 'test'
+  ...
+# Subtest: a window whose reset has passed is stale
+ok 529 - a window whose reset has passed is stale
+  ---
+  duration_ms: 0.3352
+  type: 'test'
+  ...
+# Subtest: state and note describe what the reader is looking at
+ok 530 - state and note describe what the reader is looking at
+  ---
+  duration_ms: 1.5877
+  type: 'test'
+  ...
+# Subtest: ultracode is the effort level, ultrathink is the word, and each paints the bars its own way
+ok 531 - ultracode is the effort level, ultrathink is the word, and each paints the bars its own way
+  ---
+  duration_ms: 2.2632
+  type: 'test'
+  ...
+# Subtest: a spend limit from a gateway is shown when present
+ok 532 - a spend limit from a gateway is shown when present
+  ---
+  duration_ms: 0.8575
+  type: 'test'
+  ...
+# Subtest: the display name from Claude beats the pretty-printed id
+ok 533 - the display name from Claude beats the pretty-printed id
+  ---
+  duration_ms: 0.4897
+  type: 'test'
+  ...
+# Subtest: a host with windows of its own lengths gets a row per window
+ok 534 - a host with windows of its own lengths gets a row per window
+  ---
+  duration_ms: 1.2679
+  type: 'test'
+  ...
+# Subtest: the model Claude Code reports wins over the setting for the Fable week
+ok 535 - the model Claude Code reports wins over the setting for the Fable week
+  ---
+  duration_ms: 0.7005
+  type: 'test'
+  ...
+# Subtest: the extension activates, paints the status bar and renders the view
+ok 536 - the extension activates, paints the status bar and renders the view
+  ---
+  duration_ms: 1224.408
+  type: 'test'
+  ...
+1..536
+# tests 536
+# suites 0
+# pass 536
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7006.8706

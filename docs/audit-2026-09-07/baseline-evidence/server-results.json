@@ -1,0 +1,34 @@
+[
+  {
+    "repo": "atelier",
+    "normal": {
+      "status": 200,
+      "body": "PUBLIC"
+    },
+    "traversal": {
+      "status": 200,
+      "body": "AUDIT-SIBLING-MARKER"
+    },
+    "malformed": {
+      "error": "ECONNRESET"
+    },
+    "exited": 1,
+    "error": "file:///AUDIT_ROOT/atelier/scripts/atelier.mjs:538\r\n    let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);\r\n            ^\r\n\r\nURIError: URI malformed\r\n    at decodeURIComponent (<anonymous>)\r\n    at Server.<anonymous> (file:///AUDIT_ROOT/atelier/scripts/atelier.mjs:538:13)\r\n    at Server.emit (node:events:519:28)\r\n    at parserOnIncoming (node:_http_server:1184:12)\r\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:122:17)\r\n\r\nNode.js v22.21.0\r\n"
+  },
+  {
+    "repo": "cinematic-web-design",
+    "normal": {
+      "status": 200,
+      "body": "PUBLIC"
+    },
+    "traversal": {
+      "status": 200,
+      "body": "AUDIT-SIBLING-MARKER"
+    },
+    "malformed": {
+      "error": "ECONNRESET"
+    },
+    "exited": 1,
+    "error": "file:///AUDIT_ROOT/cinematic-web-design/scripts/webdesign.mjs:593\r\n    let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);\r\n            ^\r\n\r\nURIError: URI malformed\r\n    at decodeURIComponent (<anonymous>)\r\n    at Server.<anonymous> (file:///AUDIT_ROOT/cinematic-web-design/scripts/webdesign.mjs:593:13)\r\n    at Server.emit (node:events:519:28)\r\n    at parserOnIncoming (node:_http_server:1184:12)\r\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:122:17)\r\n\r\nNode.js v22.21.0\r\n"
+  }
+]

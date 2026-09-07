@@ -1,0 +1,72 @@
+[
+  {
+    "repo": "atelier",
+    "calls": [
+      {
+        "expected": [
+          "plugin",
+          "marketplace",
+          "add",
+          "C:\\Audit Fixtures\\my plugin"
+        ],
+        "actual": [
+          "plugin",
+          "marketplace",
+          "add",
+          "C:\\Audit",
+          "Fixtures\\my",
+          "plugin"
+        ],
+        "shell": true
+      },
+      {
+        "expected": [
+          "plugin",
+          "install",
+          "atelier@atelier"
+        ],
+        "actual": [
+          "plugin",
+          "install",
+          "atelier@atelier"
+        ],
+        "shell": true
+      }
+    ]
+  },
+  {
+    "repo": "cinematic-web-design",
+    "calls": [
+      {
+        "expected": [
+          "plugin",
+          "marketplace",
+          "add",
+          "C:\\Audit Fixtures\\my plugin"
+        ],
+        "actual": [
+          "plugin",
+          "marketplace",
+          "add",
+          "C:\\Audit",
+          "Fixtures\\my",
+          "plugin"
+        ],
+        "shell": true
+      },
+      {
+        "expected": [
+          "plugin",
+          "install",
+          "cinematic-web-design@cinematic-web-design"
+        ],
+        "actual": [
+          "plugin",
+          "install",
+          "cinematic-web-design@cinematic-web-design"
+        ],
+        "shell": true
+      }
+    ]
+  }
+]

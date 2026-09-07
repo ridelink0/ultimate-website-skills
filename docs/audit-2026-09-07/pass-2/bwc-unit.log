@@ -1,0 +1,152 @@
+TAP version 13
+# (node:29924) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///AUDIT_ROOT/buildwithclaude/web-ui/lib/indexer/search-pagination.test.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to AUDIT_ROOT\\buildwithclaude\\web-ui\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: getSearchMaxPages
+    # Subtest: returns 0 for empty totals
+    ok 1 - returns 0 for empty totals
+      ---
+      duration_ms: 1.8013
+      type: 'test'
+      ...
+    # Subtest: paginates topic:claude-code-plugins scale (issue \#157)
+    ok 2 - paginates topic:claude-code-plugins scale (issue \#157)
+      ---
+      duration_ms: 0.4294
+      type: 'test'
+      ...
+    # Subtest: caps at 10 pages
+    ok 3 - caps at 10 pages
+      ---
+      duration_ms: 0.2197
+      type: 'test'
+      ...
+    1..3
+ok 1 - getSearchMaxPages
+  ---
+  duration_ms: 5.98
+  type: 'suite'
+  ...
+# (node:36516) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///AUDIT_ROOT/buildwithclaude/web-ui/lib/search/search-hydration.test.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to AUDIT_ROOT\\buildwithclaude\\web-ui\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: hydrateHitsByTypeAndSlug
+    # Subtest: keeps plugin and skill records separate when they share a slug
+    ok 1 - keeps plugin and skill records separate when they share a slug
+      ---
+      duration_ms: 2.622
+      type: 'test'
+      ...
+    1..1
+ok 2 - hydrateHitsByTypeAndSlug
+  ---
+  duration_ms: 6.5352
+  type: 'suite'
+  ...
+# (node:13808) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///AUDIT_ROOT/buildwithclaude/web-ui/lib/search/search-types.test.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to AUDIT_ROOT\\buildwithclaude\\web-ui\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: makeObjectID
+    # Subtest: namespaces by type with a __ separator
+    ok 1 - namespaces by type with a __ separator
+      ---
+      duration_ms: 4.5911
+      type: 'test'
+      ...
+    # Subtest: sanitizes characters Meilisearch forbids in primary keys
+    ok 2 - sanitizes characters Meilisearch forbids in primary keys
+      ---
+      duration_ms: 1.7767
+      type: 'test'
+      ...
+    # Subtest: does not collide when different slugs sanitize to the same text
+    ok 3 - does not collide when different slugs sanitize to the same text
+      ---
+      duration_ms: 0.4461
+      type: 'test'
+      ...
+    # Subtest: keeps ids stable + unique across types for the same slug
+    ok 4 - keeps ids stable + unique across types for the same slug
+      ---
+      duration_ms: 0.3436
+      type: 'test'
+      ...
+    1..4
+ok 3 - makeObjectID
+  ---
+  duration_ms: 11.0133
+  type: 'suite'
+  ...
+# Subtest: urlForDocument
+    # Subtest: maps the six detail types to their singular routes
+    ok 1 - maps the six detail types to their singular routes
+      ---
+      duration_ms: 0.4987
+      type: 'test'
+      ...
+    # Subtest: deep-links marketplaces into the list, pre-filtered by name (no per-item route exists)
+    ok 2 - deep-links marketplaces into the list, pre-filtered by name (no per-item route exists)
+      ---
+      duration_ms: 0.2237
+      type: 'test'
+      ...
+    1..2
+ok 4 - urlForDocument
+  ---
+  duration_ms: 1.1236
+  type: 'suite'
+  ...
+# Subtest: isSearchContentType
+    # Subtest: accepts all seven canonical types
+    ok 1 - accepts all seven canonical types
+      ---
+      duration_ms: 0.5023
+      type: 'test'
+      ...
+    # Subtest: rejects unknown values (e.g. legacy "mcp")
+    ok 2 - rejects unknown values (e.g. legacy "mcp")
+      ---
+      duration_ms: 0.3268
+      type: 'test'
+      ...
+    1..2
+ok 5 - isSearchContentType
+  ---
+  duration_ms: 1.4237
+  type: 'suite'
+  ...
+# (node:21308) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///AUDIT_ROOT/buildwithclaude/web-ui/lib/stories-server.test.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to AUDIT_ROOT\\buildwithclaude\\web-ui\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: normalizeStoryDate
+    # Subtest: formats an unquoted YAML date as a renderable string
+    ok 1 - formats an unquoted YAML date as a renderable string
+      ---
+      duration_ms: 8.8794
+      type: 'test'
+      ...
+    # Subtest: preserves trimmed human-readable dates and rejects other values
+    ok 2 - preserves trimmed human-readable dates and rejects other values
+      ---
+      duration_ms: 0.2648
+      type: 'test'
+      ...
+    1..2
+ok 6 - normalizeStoryDate
+  ---
+  duration_ms: 11.3792
+  type: 'suite'
+  ...
+1..6
+# tests 14
+# suites 6
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 585.5248

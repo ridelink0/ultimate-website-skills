@@ -1,0 +1,9 @@
+{
+  "attemptedStarts": 2,
+  "ensureHostCalls": 1,
+  "errors": [
+    "temporary compiler failure",
+    "temporary compiler failure"
+  ],
+  "stuckRejectedStartupPromise": true
+}

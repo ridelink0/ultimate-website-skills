@@ -1,0 +1,123 @@
+[
+  {
+    "check": "usage",
+    "exit": 0,
+    "seconds": 7.18
+  },
+  {
+    "check": "computer-policy",
+    "exit": 0,
+    "seconds": 0.14
+  },
+  {
+    "check": "computer-sessions",
+    "exit": 0,
+    "seconds": 0.42
+  },
+  {
+    "check": "computer-astra",
+    "exit": 0,
+    "seconds": 2.92
+  },
+  {
+    "check": "computer-build",
+    "exit": 0,
+    "seconds": 5.67
+  },
+  {
+    "check": "computer-driver",
+    "exit": 0,
+    "seconds": 0.48
+  },
+  {
+    "check": "atelier",
+    "exit": 0,
+    "seconds": 1.09
+  },
+  {
+    "check": "cinematic-web-design",
+    "exit": 0,
+    "seconds": 2.69
+  },
+  {
+    "check": "bwc-validation",
+    "exit": 0,
+    "seconds": 3.6
+  },
+  {
+    "check": "bwc-pagination",
+    "exit": 0,
+    "seconds": 0.29
+  },
+  {
+    "check": "bwc-unit",
+    "exit": 0,
+    "seconds": 0.68
+  },
+  {
+    "check": "bwc-skills",
+    "exit": 0,
+    "seconds": 0.56
+  },
+  {
+    "check": "bwc-pdf",
+    "exit": 0,
+    "seconds": 0.28
+  },
+  {
+    "check": "awesome-pdf",
+    "exit": 0,
+    "seconds": 0.25
+  },
+  {
+    "check": "structure",
+    "exit": 0,
+    "seconds": 92.86
+  },
+  {
+    "check": "frontmatter",
+    "exit": 0,
+    "seconds": 2.62
+  },
+  {
+    "check": "python",
+    "exit": 0,
+    "seconds": 1.89
+  },
+  {
+    "check": "manifests",
+    "exit": 0,
+    "seconds": 110.21
+  },
+  {
+    "check": "structure-findings",
+    "exit": 0,
+    "findings": 0
+  },
+  {
+    "check": "frontmatter-findings",
+    "exit": 0,
+    "findings": 0
+  },
+  {
+    "check": "python-findings",
+    "exit": 0,
+    "findings": 0
+  },
+  {
+    "check": "manifest-findings",
+    "exit": 0,
+    "targets": 303,
+    "failures": 0
+  },
+  {
+    "check": "atelier-scaffold",
+    "exit": 0,
+    "expectedPlaceholderFailure": true
+  },
+  {
+    "check": "cinematic-web-design-scaffold",
+    "exit": 0,
+    "expectedPlaceholderFailure": true
+  }
+]

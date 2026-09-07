@@ -1,0 +1,150 @@
+[
+  {
+    "repo": "atelier",
+    "checked": 2,
+    "absent": 0,
+    "errors": []
+  },
+  {
+    "repo": "awesome-claude-code-toolkit",
+    "checked": 259,
+    "absent": 181,
+    "errors": []
+  },
+  {
+    "repo": "awesome-claude-plugins",
+    "checked": 56,
+    "absent": 5,
+    "errors": [
+      {
+        "file": "backend-architect/agents/backend-architect.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "create-pr/commands/create-pr.md",
+        "line": 2,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "frontend-developer/agents/frontend-developer.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "skill-bus/commands/complete.md",
+        "line": 2,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "test-writer-fixer/agents/test-writer-fixer.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      }
+    ]
+  },
+  {
+    "repo": "awesome-claude-skills",
+    "checked": 865,
+    "absent": 0,
+    "errors": []
+  },
+  {
+    "repo": "behisecc-acs",
+    "checked": 0,
+    "absent": 0,
+    "errors": []
+  },
+  {
+    "repo": "buildwithclaude",
+    "checked": 1135,
+    "absent": 2,
+    "errors": [
+      {
+        "file": "plugins/claude-ops/skills/ops-package/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/dsh-deepread/skills/dsh-deepread/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/analyze-pitch-deck/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/cap-table-waterfall/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/deal-sourcing-signals/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/explain-equity-terms/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/financial-model/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/fund-operations/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/hard-screening-startup/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/market-size/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      },
+      {
+        "file": "plugins/venture-capital-intelligence/skills/soft-screening-startup/SKILL.md",
+        "line": 3,
+        "error": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"
+      }
+    ]
+  },
+  {
+    "repo": "cinematic-web-design",
+    "checked": 3,
+    "absent": 0,
+    "errors": []
+  },
+  {
+    "repo": "claude-code-usage-limits",
+    "checked": 5,
+    "absent": 0,
+    "errors": []
+  },
+  {
+    "repo": "claude-computer-use",
+    "checked": 2,
+    "absent": 0,
+    "errors": []
+  },
+  {
+    "repo": "jqs-acc",
+    "checked": 0,
+    "absent": 0,
+    "errors": []
+  },
+  {
+    "repo": "travisvn-acs",
+    "checked": 0,
+    "absent": 0,
+    "errors": []
+  }
+]

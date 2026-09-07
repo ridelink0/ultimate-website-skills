@@ -1,0 +1,12 @@
+
+webdesign audit  ..\pass-1-final\scaffold-cinematic-web-design
+  1 html, 2 css, 5 js
+
+  ok    no emoji
+  ok    prefers-reduced-motion honoured
+  ok    no pure #fff / #000
+  ok    58 custom properties all defined
+  warn  index.html: meta description is 55 chars (aim 80-160)
+  ERROR index.html: scaffold copy still present: "first half of the claim" (+4 more)
+
+  1 error(s), 1 warning(s)

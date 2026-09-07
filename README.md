@@ -1,3 +1,5 @@
+Cinematic Web Design 3.0.0 now includes Atelier. [Migration and aliases](docs/merge.md) · [Claude Design setup](skills/cinematic-web-design/references/claude-design.md)
+
 # cinematic-web-design
 
 A pinned art direction for websites, plus the code that produces it.

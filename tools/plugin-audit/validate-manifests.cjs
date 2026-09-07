@@ -1,0 +1,9 @@
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const root=process.env.PLUGIN_AUDIT_ROOT || process.cwd(),cli=process.env.CLAUDE_VALIDATE_CLI || 'claude';
+const jobs=[],results=[];
+for(const r of JSON.parse(fs.readFileSync(path.join(root,'structure-results.json'),'utf8'))){
+ const dir=path.join(root,r.repo),files=cp.execFileSync('git',['ls-files'],{cwd:dir,encoding:'utf8'}).trim().split(/\r?\n/);
+ for(const file of files.filter(f=>/(^|\/)\.claude-plugin\/(plugin|marketplace)\.json$/.test(f)))jobs.push({repo:r.repo,file,absolute:path.join(dir,file)});
+}
+async function worker(){while(jobs.length){const job=jobs.shift();await new Promise(resolve=>{cp.execFile(cli,['plugin','validate','--json',job.absolute],{encoding:'utf8',timeout:120000,maxBuffer:5e6,windowsHide:true},(err,stdout,stderr)=>{let data;try{data=JSON.parse(stdout)}catch{data={success:false,parseError:stderr||String(err)}};const row={repo:job.repo,file:job.file,success:data.success,manifestErrors:data.manifest?.errors||[],contentErrors:(data.contents||[]).flatMap(c=>(c.errors||[]).map(e=>({file:path.relative(path.join(root,job.repo),c.file),...e}))),warnings:(data.manifest?.warnings||[]),parseError:data.parseError};results.push(row);fs.appendFileSync(path.join(root,'manifest-progress.jsonl'),JSON.stringify(row)+'\n');resolve();});});}}
+Promise.all(Array.from({length:4},worker)).then(()=>{fs.writeFileSync(path.join(root,'manifest-results.json'),JSON.stringify(results,null,2));for(const repo of [...new Set(results.map(r=>r.repo))]){const rs=results.filter(r=>r.repo===repo);console.log(JSON.stringify({repo,total:rs.length,failed:rs.filter(r=>!r.success).length,manifestFailures:rs.filter(r=>r.manifestErrors.length).length,contentFailures:rs.filter(r=>r.contentErrors.length).length}));}});

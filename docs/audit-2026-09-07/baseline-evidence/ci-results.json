@@ -1,0 +1,53 @@
+[
+  {
+    "repo": "claude-code-usage-limits",
+    "total": 105,
+    "runs": [
+      {
+        "name": "test",
+        "sha": "62ceb7a60a93d0945388c541c0a9708c3f499811",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/ridelink0/claude-code-usage-limits/actions/runs/34141442244"
+      },
+      {
+        "name": "test",
+        "sha": "51746592bfe9d1f13e9a4a76837e29974376453d",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/ridelink0/claude-code-usage-limits/actions/runs/34140628589"
+      },
+      {
+        "name": "test",
+        "sha": "e19f005e07ef72e94b50b9d02298a8c25306be8c",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/ridelink0/claude-code-usage-limits/actions/runs/34140063404"
+      },
+      {
+        "name": "test",
+        "sha": "a4edaad55b18656e172954f7a89cd960bb40cb44",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/ridelink0/claude-code-usage-limits/actions/runs/34139872490"
+      },
+      {
+        "name": "test",
+        "sha": "2d66d48cb93b1fb4c1ebac9efaaa70c40bf7c467",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/ridelink0/claude-code-usage-limits/actions/runs/34119686348"
+      }
+    ]
+  },
+  {
+    "repo": "buildwithclaude",
+    "total": 0,
+    "runs": []
+  },
+  {
+    "repo": "awesome-claude-skills",
+    "total": 0,
+    "runs": []
+  }
+]

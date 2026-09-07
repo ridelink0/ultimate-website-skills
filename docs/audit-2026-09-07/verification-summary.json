@@ -1,0 +1,23 @@
+{
+  "asOf": "2026-09-07",
+  "passes": [
+    "pass-1-final",
+    "pass-2"
+  ],
+  "functionalTestsPerPass": 770,
+  "manifestTargetsPerPass": 303,
+  "scanCounts": {
+    "repositories": 11,
+    "files": 4677,
+    "JSON": 389,
+    "JavaScript": 451,
+    "Python": 179,
+    "YAML blocks": 2329
+  },
+  "limitations": [
+    "visual UI excluded",
+    "native desktop actions excluded",
+    "Design authentication not exercised",
+    "active task settings cannot be changed via defaults"
+  ]
+}

@@ -10,7 +10,8 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch } from 'node:fs';
 import { join, dirname, resolve, extname, basename, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createServer } from 'node:http';
+import { startServer } from './preview-server.mjs';
+import { parseArgs } from './args.mjs';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 
@@ -19,13 +20,7 @@ const ASSETS = resolve(HERE, '..', 'skills', 'cinematic-web-design', 'assets');
 
 const argv = process.argv.slice(2);
 const cmd = argv[0];
-const positional = argv.slice(1).filter((a) => !a.startsWith('--'));
-const flag = (name, def = null) => {
-  const i = argv.indexOf('--' + name);
-  if (i === -1) return def;
-  const v = argv[i + 1];
-  return v === undefined || v.startsWith('--') ? true : v;
-};
+const { positional, flag } = parseArgs(argv);
 
 const die = (msg, code = 1) => { console.error('cinematic-web-design: ' + msg); process.exit(code); };
 const ok = (s) => `  ok    ${s}`;
@@ -583,28 +578,6 @@ function cmdAudit() {
 }
 
 /* ---------------------------------------------------------------- serve -- */
-const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json',
-  '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp',
-  '.avif': 'image/avif', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
-
-function startServer(dir, port) {
-  const srv = createServer((req, res) => {
-    let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-    if (p.endsWith('/')) p += 'index.html';
-    const file = join(dir, p);
-    if (!file.startsWith(dir) || !existsSync(file) || statSync(file).isDirectory()) {
-      res.writeHead(404, { 'content-type': 'text/plain' }); res.end('404'); return;
-    }
-    res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream',
-                         'cache-control': 'no-store' });
-    res.end(readFileSync(file));
-  });
-  srv.listen(port);
-  srv.unref();
-  return srv;
-}
-
 function cmdServe() {
   const dir = resolve(positional[0] || '.');
   const port = parseInt(String(flag('port', '4321')), 10) || 4321;
@@ -716,7 +689,7 @@ async function cmdStudy() {
   const ff = ['ffmpeg', join(process.env.LOCALAPPDATA || '', 'Microsoft', 'WinGet', 'Packages')]
     .flatMap((p) => p === 'ffmpeg' ? [p] : (existsSync(p) ? readdirSync(p).filter((d) => /ffmpeg/i.test(d))
       .flatMap((d) => readdirSync(join(p, d)).filter((s) => /ffmpeg/i.test(s)).map((s) => join(p, d, s, 'bin', 'ffmpeg.exe'))) : []))
-    .find((c) => c === 'ffmpeg' ? spawnSync('ffmpeg', ['-version'], { shell: process.platform === 'win32' }).status === 0 : existsSync(c));
+    .find((c) => c === 'ffmpeg' ? spawnSync('ffmpeg', ['-version'], { shell: false, windowsHide: true }).status === 0 : existsSync(c));
 
   const sheets = [];
   if (ff) {
@@ -751,7 +724,7 @@ function cmdCut() {
   for (const f of ['out', 'name', 'model']) { const v = flag(f); if (v && v !== true) args.push('--' + f, String(v)); }
   if (argv.includes('--alpha-matting')) args.push('--alpha-matting');
   for (const py of ['python', 'python3', 'py']) {
-    const r = spawnSync(py, args, { stdio: 'inherit', shell: process.platform === 'win32' });
+    const r = spawnSync(py, args, { stdio: 'inherit', shell: false, windowsHide: true });
     if (r.status !== null && r.status !== 9009 && !(r.error && r.error.code === 'ENOENT')) {
       process.exit(r.status || 0);
     }

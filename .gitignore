@@ -4,3 +4,7 @@ Thumbs.db
 *.log
 .in_use/
 .orphaned_at
+
+__pycache__/
+*.pyc
+!docs/audit-2026-09-07/**/*.log
