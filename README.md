@@ -79,6 +79,7 @@ atelier.mjs add <id> [--to <file>]   insert one section
 atelier.mjs audit <dir>              source check: copy, semantics, the tells
 atelier.mjs look <dir|url>           RENDER it at two scroll positions: overlap, overflow, contrast, PNGs
 atelier.mjs cut <photo>              one photograph into parallax planes (rembg, local)
+atelier.mjs study --list editorial   render a batch of reference sites into contact sheets
 atelier.mjs serve <dir>              local preview
 ```
 

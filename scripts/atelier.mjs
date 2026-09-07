@@ -644,7 +644,11 @@ async function cmdStudy() {
   for (const [i, url] of urls.entries()) {
     const dir = join(out, `s${String(i + 1).padStart(2, '0')}`);
     try {
-      const r = await inspect(url, { widths: [1440], out: dir, scrolls, wait: 2600 });
+      const r = await inspect(url, { widths: [1440], out: dir, scrolls, wait: 4200 });
+      // A bot wall or an access-denied page is not a reference. Say so and
+      // leave it out of the sheet rather than tiling a Cloudflare screen.
+      const wall = r.some((s) => s.stats && s.stats.textElements < 12);
+      if (wall) { console.log(`  wall  ${url}  (almost no text rendered - blocked, or a JS-only page)`); continue; }
       for (const shot of r) if (shot.file) tiles.push(shot.file);
       console.log(`  ok    ${url}`);
     } catch (e) {

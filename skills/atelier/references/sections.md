@@ -100,6 +100,38 @@ Four equal link columns is a listed tell. Make one column wider - a colophon, an
 address set in the serif, a single line of real prose - and let the rest be
 narrow.
 
+## Seen in the wild
+
+Rendered with `atelier.mjs study` on 7 Sept 2026. What is specific, not what
+is generic.
+
+- **Publications table** (Anthropic Research): DATE / CATEGORY / TITLE columns,
+  11px uppercase column heads, hairline rows, dates in tabular figures, a
+  search field at the right of the heading. The editorial answer to a blog
+  grid - and it scales to hundreds of rows without becoming a wall of cards.
+- **Line drawings as the imagery for abstract subjects** (Anthropic Research):
+  a protractor and ruler drawn on green graph paper, a ruled plate behind a
+  headline. When the subject cannot be photographed - research, policy,
+  software - a technical illustration in one consistent hand does the job a
+  photograph does elsewhere. `references/imagery.md` has the drawing rules.
+- **Run-in small-caps labels** (Hodinkee): `INTRODUCING` / `DISPATCH` /
+  `BREAKING NEWS` set in 10px letterspaced caps at the start of the card
+  title, same line, not a pill above it. Encodes the kind of piece without a
+  badge.
+- **Object on white** (Apple): the product as a cut-out on a plain ground with
+  one soft contact shadow, a bold sans headline under it, then rounded-corner
+  photo cards in a snap rail with the price as a 12px caption. Sixty percent of
+  each screen is empty. This is the `bone` preset with the serif swapped for a
+  grotesk, and it is the register for a made thing sold at a price.
+- **A single identifiable hand** (Teenage Engineering): black-line comic
+  illustration and a monospaced label system, nothing else. One drawn voice
+  across the whole site beats any amount of stock.
+- **What headless cannot see**: WebGL sites (lusion.co, igloo.inc) render only
+  their preloader in a headless browser; Cloudflare walls (Aesop, Cartier) and
+  cookie modals (Kinfolk, Hodinkee) cover the first screen. `study` now skips
+  a render with almost no text and says `wall`; for the rest, read the
+  `-y900` tile, which is usually below the modal.
+
 ## Glass
 
 `.card--glass` in `core.css`. The numbers:

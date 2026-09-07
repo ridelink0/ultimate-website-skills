@@ -232,7 +232,7 @@ render exists - each of those is the low-effort version.
 | Need | Reach for |
 |---|---|
 | To see what a site you are imitating actually does | `atelier.mjs look <url>` - real render, two scroll positions, PNGs. Study the reference as an image, not as a description of one |
-| Visual research on a style, a palette, a font in the wild | the `imagesearch` skill if it is installed (search, fetch, download, read the images), else `look` on the sites it names |
+| Visual research on a style, a palette, a font in the wild | `atelier.mjs study --list editorial\|object\|cinema\|product` renders a curated batch into contact sheets; the `imagesearch` skill, if installed, for anything it does not cover |
 | Photographs | Unsplash, Pexels, Wikimedia, museum IIIF - `references/imagery.md` has the URL formats and licences. Verify every hotlink with a HEAD request |
 | Depth from one photograph | `atelier.mjs cut` (rembg, local) |
 | Pinning, scrubbing, sequenced choreography | GSAP 3.15 + ScrollTrigger from cdnjs, free for everything now. `gsap.matchMedia()` for the reduced-motion and narrow-screen branches |
