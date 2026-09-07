@@ -97,7 +97,7 @@ function cmdNew() {
   mkdirSync(dir, { recursive: true });
   mkdirSync(join(dir, 'img'), { recursive: true });
 
-  for (const f of ['core.css', 'motion.js', 'gradient.js', 'depth.js', 'exploded.js']) writeFileSync(join(dir, f), readFileSync(join(ASSETS, f)));
+  for (const f of ['core.css', 'motion.js', 'gradient.js', 'depth.js', 'exploded.js', 'sky.js']) writeFileSync(join(dir, f), readFileSync(join(ASSETS, f)));
 
   const head = sections.get('head').body
     .replace(/SITE NAME/g, name)
@@ -149,18 +149,22 @@ function cmdNew() {
     gradient: /data-gradient|class="[^"]*\bgradient\b/.test(body),
     depth: /class="[^"]*\bdepth\b|data-depth=/.test(body),
     exploded: /class="[^"]*\bexploded\b/.test(body),
+    sky: /data-sky/.test(body),
   };
   const engines = [];
   if (needs.gradient) engines.push('<script src="gradient.js" defer></script>');
   if (needs.depth) engines.push('<script src="depth.js" defer></script>');
-  if (needs.exploded) {
+  // An import map must come BEFORE any module script that relies on it, or the
+  // browser refuses it outright. Emit it first.
+  if (needs.exploded || needs.sky) {
     engines.push(
       '<script type="importmap">\n{"imports":{\n' +
       '  "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",\n' +
       '  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"\n' +
       '}}</script>',
-      '<script type="module" src="exploded.js"></script>',
     );
+    if (needs.sky) engines.push('<script type="module" src="sky.js"></script>');
+    if (needs.exploded) engines.push('<script type="module" src="exploded.js"></script>');
   }
 
   const html = `<!doctype html>

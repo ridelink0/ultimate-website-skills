@@ -612,3 +612,22 @@ figcaption { margin-top: var(--s-3); font-family: var(--font-ui); font-size: var
 @media (prefers-reduced-motion: reduce) {
   .depth .plane { transform: none !important; scale: 1; }
 }
+
+/* ══════════════════════════════════════════ the launch-page sky (sky.js) ══ */
+.sky { position: absolute; inset: 0; z-index: -2;
+       background: linear-gradient(178deg in oklab, #2f6fb8, #e8d3b4); }
+.sky__gl { position: absolute; inset: 0; }
+.sky__gl canvas { width: 100% !important; height: 100% !important; display: block; }
+/* the palette dots: the page's one piece of chrome, bottom-left like the
+   reference, and operable by keyboard because they are real buttons */
+.sky__dots { position: absolute; left: var(--gutter); bottom: var(--s-5);
+             display: flex; gap: var(--s-3); z-index: 2; }
+.sky__dot { width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%;
+            background: transparent; cursor: pointer; display: grid; place-items: center; }
+/* the visible dot is 14px; the target around it is 26px, per WCAG 2.5.8 */
+.sky__dot::before { content: ""; width: 14px; height: 14px; border-radius: 50%;
+            background: var(--dot); border: 1px solid rgb(255 255 255 / .45);
+            transition: transform var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease); }
+.sky__dot[aria-pressed="true"]::before { box-shadow: 0 0 0 3px rgb(255 255 255 / .5); }
+.sky__dot:hover::before { transform: scale(1.15); }
+.sky__dot:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }

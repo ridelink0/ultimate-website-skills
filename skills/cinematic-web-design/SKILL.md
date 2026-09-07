@@ -133,8 +133,8 @@ counters, `data-magnetic` buttons, `data-split` per-word headline reveal, nav
 shrink, scroll progress. It respects `prefers-reduced-motion` and uses one rAF
 loop for every scroll effect.
 
-Presets (token overrides only): `fable` the launch-page look - one photograph
-under a solid cream header, staggered serif title, dot-leader contents;
+Presets (token overrides only): `fable` the launch-page look - pair it with
+`hero-fable` for the WebGL sky, staggered serif title and dot-leader contents;
 `bone` warm paper, `ink` near-black throughout,
 `cinema` photography carries the page.
 
@@ -266,6 +266,11 @@ scaffolder. Use them before reaching for anything heavier.
   softer. Negative is behind and lags, positive is in front and leads. Also
   does single-photo 3D from a depth map (`data-photo` + `data-depthmap`,
   generate with Depth Anything V2).
+- **`sky.js`** - the launch-page hero itself: a WebGL sky you re-light with
+  three palette dots. Not a crossfade - one weight vector, eased with
+  `1 - exp(-dt * 2.2)`, barycentrically blends every sky and light colour and
+  the sun direction, so the world re-lights the way the reference does.
+  `hero-fable` uses it. Real buttons, keyboard-operable, CSS fallback.
 - **`exploded.js`** - any made thing taken apart, in three.js. Reads its
   layers from a `<ol>` in the markup, so the semantic list is also the no-JS
   fallback. Callouts project onto each slab's real position and track it
