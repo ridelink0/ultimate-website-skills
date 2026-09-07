@@ -201,6 +201,14 @@ const PROBE = `(() => {
     if (!vis(el)) continue;
     const own = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim().length > 1);
     if (!own) continue;
+    // A fixed or sticky header sits over whatever scrolls under it by design.
+    // That is not the overlap this check exists to find.
+    let pinned = false;
+    for (let a = el; a && a !== document.body; a = a.parentElement) {
+      const pos = getComputedStyle(a).position;
+      if (pos === 'fixed' || pos === 'sticky') { pinned = true; break; }
+    }
+    if (pinned) continue;
     const r = el.getBoundingClientRect();
     if (r.width < 2 || r.height < 2) continue;
     textEls.push({ el, r, cs: getComputedStyle(el) });
