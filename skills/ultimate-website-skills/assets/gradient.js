@@ -1,4 +1,4 @@
-/* cinematic-web-design/gradient.js - animated WebGL mesh gradient.
+/* ultimate-website-skills/gradient.js - animated WebGL mesh gradient.
 
    The expensive-looking gradient is not a CSS radial stack. It is a surface
    whose colour field is driven by layered simplex noise, moving slowly enough

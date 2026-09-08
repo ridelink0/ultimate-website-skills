@@ -10,7 +10,7 @@ if (args.some(a => !['setup', '--dry-run'].includes(a)) || !args.includes('setup
   if (args.includes('--dry-run')) console.log('claude ' + command.join(' '));
   else {
     const cli = findClaude();
-    if (!cli) { console.error('Claude Code CLI not found. See skills/cinematic-web-design/references/claude-design.md.'); process.exitCode = 1; }
+    if (!cli) { console.error('Claude Code CLI not found. See skills/ultimate-website-skills/references/claude-design.md.'); process.exitCode = 1; }
     else {
       const result = runClaude(cli, command);
       process.stdout.write(result.stdout || ''); process.stderr.write(result.stderr || '');

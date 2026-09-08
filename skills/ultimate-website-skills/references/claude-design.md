@@ -1,4 +1,4 @@
-# Claude Design with Cinematic Web Design
+# Claude Design with Ultimate Website Skills
 
 Verified 7 September 2026 against Anthropic's current documentation.
 

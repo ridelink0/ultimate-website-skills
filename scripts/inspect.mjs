@@ -1,4 +1,4 @@
-/* cinematic-web-design/inspect - render a page in a real headless browser, screenshot it,
+/* ultimate-website-skills/inspect - render a page in a real headless browser, screenshot it,
    and report what is actually wrong with the LAYOUT rather than the source.
 
    Static analysis cannot see an overlap. This can: it walks the rendered box

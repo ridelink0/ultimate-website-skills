@@ -1,4 +1,4 @@
-/* cinematic-web-design/depth.js - real three-plane parallax.
+/* ultimate-website-skills/depth.js - real three-plane parallax.
 
    Foreground, middle ground, background, each moving at its own rate against
    both scroll AND the pointer, with depth of field and aerial perspective

@@ -1,4 +1,4 @@
-/* cinematic-web-design/motion.js - dependency-free scroll motion. Load with <script defer>.
+/* ultimate-website-skills/motion.js - dependency-free scroll motion. Load with <script defer>.
    Everything here degrades to a fully visible, static page. */
 (() => {
   'use strict';

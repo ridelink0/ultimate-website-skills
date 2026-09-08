@@ -1,4 +1,4 @@
-/* cinematic-web-design/exploded.js - any made thing, taken apart, in real 3D.
+/* ultimate-website-skills/exploded.js - any made thing, taken apart, in real 3D.
 
    Reads its parts from the markup, so the semantic list IS the no-JS
    fallback and nothing is duplicated. Each <li> is one part: a shape, a

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* cinematic-web-design - scaffold and audit editorial websites.
+/* ultimate-website-skills - scaffold and audit editorial websites.
    node webdesign.mjs new <dir> [--preset fable|bone|ink|cinema] [--name "X"] [--sections a,b,c]
    node webdesign.mjs sections                     list section ids
    node webdesign.mjs add <id> [--to <file>]       print a section, or append it to a file
@@ -16,13 +16,13 @@ import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ASSETS = resolve(HERE, '..', 'skills', 'cinematic-web-design', 'assets');
+const ASSETS = resolve(HERE, '..', 'skills', 'ultimate-website-skills', 'assets');
 
 const argv = process.argv.slice(2);
 const cmd = argv[0];
 const { positional, flag } = parseArgs(argv);
 
-const die = (msg, code = 1) => { console.error('cinematic-web-design: ' + msg); process.exit(code); };
+const die = (msg, code = 1) => { console.error('ultimate-website-skills: ' + msg); process.exit(code); };
 const ok = (s) => `  ok    ${s}`;
 const warn = (s) => `  warn  ${s}`;
 const err = (s) => `  ERROR ${s}`;
@@ -216,7 +216,7 @@ ${preset.css}
     Cache-Control = "public, max-age=0, must-revalidate"
 `, 'utf8');
 
-  console.log(`cinematic-web-design: ${relative(process.cwd(), dir) || '.'} (${presetName})`);
+  console.log(`ultimate-website-skills: ${relative(process.cwd(), dir) || '.'} (${presetName})`);
   console.log(`  index.html  ${wanted.join(', ')}`);
   console.log(`  core.css motion.js gradient.js depth.js exploded.js site.css netlify.toml`);
   console.log(`\nNext: replace every word of placeholder copy, then "node webdesign.mjs audit ${dir}".`);
@@ -245,7 +245,7 @@ function cmdAdd() {
     ? cur.replace('</main>', `\n${block}\n</main>`)
     : cur + '\n' + block + '\n';
   writeFileSync(p, out, 'utf8');
-  console.log(`cinematic-web-design: added "${id}" to ${relative(process.cwd(), p)}`);
+  console.log(`ultimate-website-skills: added "${id}" to ${relative(process.cwd(), p)}`);
 }
 
 /* ---------------------------------------------------------------- audit -- */
@@ -615,7 +615,7 @@ function cmdServe() {
   const port = parseInt(String(flag('port', '4321')), 10) || 4321;
   const srv = startServer(dir, port);
   srv.ref();
-  console.log(`cinematic-web-design: http://localhost:${port}  (${dir})`);
+  console.log(`ultimate-website-skills: http://localhost:${port}  (${dir})`);
 }
 
 /* ----------------------------------------------------------------- look -- */
@@ -779,7 +779,7 @@ async function cmdDev() {
   const srv = startServer(dir, port);
   srv.ref();
   const url = `http://127.0.0.1:${port}/`;
-  console.log(`cinematic-web-design dev\n  ${url}\n  watching ${dir}\n  shots -> ${shots}\n`);
+  console.log(`ultimate-website-skills dev\n  ${url}\n  watching ${dir}\n  shots -> ${shots}\n`);
 
   const { inspect, formatReport } = await import('./inspect.mjs');
   let busy = false, again = false;
@@ -915,7 +915,7 @@ switch (cmd) {
   case 'security': case 'secure': await cmdSecurity(); break;
   case 'video': await cmdVideo(); break;
   default:
-    console.log(`cinematic-web-design
+    console.log(`ultimate-website-skills
 
   new <dir> [--preset fable|bone|ink|cinema] [--name "X"] [--sections a,b,c]
   sections                        list section ids and presets
