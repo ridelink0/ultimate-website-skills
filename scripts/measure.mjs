@@ -115,7 +115,7 @@ const DEPTH = (distance) => `(async () => {
       name: named(el),
       declared: el.dataset.depth !== undefined ? Number(el.dataset.depth) : null,
       promises: declared(el),
-      rate: Number(((before[i] - after[i]) / ${distance}).toFixed(3)),
+      rate: ${distance} > 0 ? Number(((before[i] - after[i]) / ${distance}).toFixed(3)) : null,
       fixed: getComputedStyle(el).position === 'fixed',
     })),
   });
@@ -297,7 +297,10 @@ export function judge(measured, context = {}) {
 
   if (depth.error) note('note', 'parallax could not be measured: ' + depth.error);
   else if ((depth.planes || []).length) {
-    const moving = depth.planes.filter((plane) => !plane.fixed);
+    // A plane whose rate did not come back as a number was not measured, and
+    // an unmeasured plane cannot fail: JSON turns NaN into null across the
+    // page boundary, and null.toFixed() was a crash after a full browser run.
+    const moving = depth.planes.filter((plane) => !plane.fixed && Number.isFinite(plane.rate));
     const rates = moving.map((plane) => plane.rate);
     const spread = rates.length ? Math.max.apply(null, rates) - Math.min.apply(null, rates) : 0;
     // Only planes that declared a depth are failing a promise. A page with two

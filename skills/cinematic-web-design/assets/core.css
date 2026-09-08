@@ -271,6 +271,13 @@ h2, h3 { font-variation-settings: "opsz" 48, "wght" 360; }
   transition: background var(--dur-2) var(--ease), color var(--dur-2) var(--ease),
               padding var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
+/* The light default assumes a photograph, a canvas or a dark ground under the
+   header. A hero with none of those - hero-split's type-and-object opener on
+   the bone ground - was getting bone-50 text on bone, near-invisible until the
+   nav stuck. Flat heroes take the page ink instead. */
+body:has(.hero:not(:has(.hero__media, canvas, .on-media)):not([data-tone="dark"])) .nav:not(.is-stuck) {
+  color: var(--nav-ink, var(--fg));
+}
 .nav__brand { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: 0.04em; }
 .nav__links { display: flex; gap: clamp(1rem, 2.4vw, 2.25rem); list-style: none; padding: 0; }
 .nav a { text-decoration: none; opacity: 0.86; }

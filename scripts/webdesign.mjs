@@ -401,7 +401,10 @@ function cmdAudit() {
   const E = (m) => { errors++; console.log(err(m)); };
   const W = (m) => { warns++; console.log(warn(m)); };
 
-  const allCss = csss.map((f) => readFileSync(f, 'utf8')).join('\n');
+  // Comments first. A block somebody commented out - the old transition: all,
+  // the outline: none they removed - is not live CSS, and every regex below
+  // was reading it as though it were and failing the build for dead code.
+  const allCss = csss.map((f) => readFileSync(f, 'utf8')).join('\n').replace(/\/\*[\s\S]*?\*\//g, '');
   const allText = [...htmls, ...csss, ...jss].map((f) => readFileSync(f, 'utf8')).join('\n');
 
   /* --- project-wide ---------------------------------------------------- */
@@ -541,11 +544,18 @@ function cmdAudit() {
       else if (!/type=["']importmap["']/.test(h))
         E(`${n}: exploded.js is a module importing "three" - it needs an importmap`);
     }
+    // The sky hero has the same two failure modes as the exploded view and
+    // had neither check: markup with no engine, or the engine with no map.
+    if (/data-sky/.test(h)) {
+      if (!/sky\.js/.test(h)) E(`${n}: has a [data-sky] hero but never loads sky.js`);
+      else if (!/type=["']importmap["']/.test(h))
+        E(`${n}: sky.js is a module importing "three" - it needs an importmap`);
+    }
     // and the reverse: paying for an engine nothing uses. Match the script tag,
     // not the filename anywhere in the file - a comment mentioning gradient.js
     // is not a page that loads it.
     for (const [f, sel] of [['gradient.js', /data-gradient=/], ['depth.js', /class=["'][^"']*\bdepth\b/],
-                            ['exploded.js', /class=["'][^"']*\bexploded\b/]])
+                            ['exploded.js', /class=["'][^"']*\bexploded\b/], ['sky.js', /data-sky/]])
       if (new RegExp(`<script[^>]+src=["'][^"']*${f.replace('.', '\\.')}["']`).test(h) && !sel.test(h))
         W(`${n}: loads ${f} but nothing on the page uses it`);
     if (/class=["'][^"']*\bgrain\b/.test(h) === false) W(`${n}: no .grain overlay - the page will look flat`);
@@ -811,6 +821,14 @@ async function cmdDebug() {
 async function cmdQuality() {
   const { debugSite } = await import('./debug.mjs');
   const { judge, formatQuality, BUDGETS } = await import('./measure.mjs');
+  // Validated here, where the flags are parsed, the way inspect validates
+  // widths and wait. A zero travel divided every plane rate into NaN, which
+  // JSON laundered into null on the way back from the page and judge() then
+  // tried to format - one bad flag killed the whole run after a full browser
+  // pass.
+  const record = Number(flag('record', 1600)), travel = Number(flag('travel', 700));
+  if (!Number.isFinite(record) || record < 200 || record > 30000) die('--record must be milliseconds between 200 and 30000');
+  if (!Number.isFinite(travel) || travel < 50 || travel > 20000) die('--travel must be pixels between 50 and 20000');
   const result = await debugSite(positional[0] || '.', {
     out: flag('out'), widths: String(flag('widths', '1440')).split(',').map(Number),
     wait: Number(flag('wait', 2200)),
@@ -819,7 +837,7 @@ async function cmdQuality() {
     // is invisible unless the same page is measured twice.
     motion: flag('motion', 'both'),
     scrolls: [0],
-    measured: { motionMs: Number(flag('record', 1600)), depthDistance: Number(flag('travel', 700)) },
+    measured: { motionMs: record, depthDistance: travel },
   });
   let errors = 0, warns = 0;
   for (const frame of result.results) {

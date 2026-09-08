@@ -66,3 +66,13 @@ test('the real page is measured, not the source', { skip: !findBrowser(), timeou
     assert.ok(measured.type.measureChars > 0, 'the body measure is counted in characters');
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+// JSON turns NaN into null on the way back from the page, and null.toFixed()
+// killed a whole quality run after a full browser pass. An unmeasured plane
+// cannot fail a promise.
+test('a plane whose rate came back null is unmeasured, not a crash and not a failure', () => {
+  const planes = [{ name: 'a', declared: 0.4, promises: true, rate: null, fixed: false },
+                  { name: 'b', declared: 0.8, promises: true, rate: null, fixed: false }];
+  const found = judge({ ...clean, depth: { planes } });
+  assert.equal(found.filter((f) => f.level === 'error').length, 0);
+});

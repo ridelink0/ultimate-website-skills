@@ -153,6 +153,8 @@
     gl.uniform1i(U('uN'), cols.length);
     cols.forEach((c, i) => gl.uniform3fv(U(`uC[${i}]`), hex(c)));
 
+    const draw = (t) => { gl.uniform1f(uT, t); gl.drawArrays(gl.TRIANGLES, 0, 3); };
+
     const resize = () => {
       const r = cv.getBoundingClientRect();
       // a gradient has no detail to lose: half-res on HiDPI is free performance
@@ -160,16 +162,18 @@
       const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
       if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; gl.viewport(0, 0, w, h); }
       gl.uniform1f(uAspect, r.height ? r.width / r.height : 1);
+      // Setting the canvas size clears it. With no loop running under reduced
+      // motion, nothing painted it again: the still frame went blank on the
+      // first resize, rotation or DevTools toggle after load.
+      if (reduced) draw(12.0);
     };
     resize();
     if ('ResizeObserver' in window) new ResizeObserver(resize).observe(cv);
     else addEventListener('resize', resize, { passive: true });
 
-    const draw = (t) => { gl.uniform1f(uT, t); gl.drawArrays(gl.TRIANGLES, 0, 3); };
+    if (reduced) return;                           // one frame: the picture, not the motion
 
-    if (reduced) { draw(12.0); return; }          // one frame: the picture, not the motion
-
-    let raf = 0, t0 = 0, running = false;
+    let raf = 0, t0 = 0, running = false, visible = false;
     const loop = (ts) => {
       if (!t0) t0 = ts;
       draw((ts - t0) / 1000);
@@ -177,13 +181,16 @@
     };
     // only run while it is on screen - an offscreen shader is pure waste
     const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !running) { running = true; raf = requestAnimationFrame(loop); }
-      else if (!e.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
+      visible = e.isIntersecting;
+      if (visible && !running) { running = true; raf = requestAnimationFrame(loop); }
+      else if (!visible && running) { running = false; cancelAnimationFrame(raf); }
     }, { threshold: 0 });
     io.observe(cv);
+    // Coming back to the tab restarts the loop only if the canvas is on
+    // screen; otherwise a tab switch quietly undid the off-screen pause.
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && running) { running = false; cancelAnimationFrame(raf); }
-      else if (!document.hidden && !running) { running = true; raf = requestAnimationFrame(loop); }
+      else if (!document.hidden && !running && visible) { running = true; raf = requestAnimationFrame(loop); }
     });
   }
 

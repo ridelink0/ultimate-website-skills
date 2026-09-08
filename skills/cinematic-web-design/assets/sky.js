@@ -72,7 +72,12 @@ for (const root of document.querySelectorAll('[data-sky]')) {
       dots.forEach((d, k) => d.setAttribute('aria-pressed', String(k === i)));
       root.style.setProperty('--sky-fallback', MOODS[i].hex);
       root.dataset.mood = MOODS[i].label.toLowerCase();
-      if (calm || !renderer) { for (let k = 0; k < n; k++) W[k] = T[k]; paintFallback(); }
+      // Three cases, not two. With no WebGL the CSS fallback is the sky. With
+      // WebGL under reduced motion the canvas is the sky and a CSS gradient
+      // painted behind it changes nothing visible - the dot looked dead. Snap
+      // the weights and render the one still frame the calm path uses.
+      if (!renderer) { for (let k = 0; k < n; k++) W[k] = T[k]; paintFallback(); }
+      else if (calm) { for (let k = 0; k < n; k++) W[k] = T[k]; frame(0); }
       else kick();
     });
     bar.appendChild(b);
