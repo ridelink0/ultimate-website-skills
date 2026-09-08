@@ -13,6 +13,7 @@ import { spawn } from 'node:child_process';
 import { mkdtempSync, existsSync, readFileSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { inflateSync } from 'node:zlib';
 import { MEASURE_INIT, measure, judge, formatQuality } from './measure.mjs';
 
 /* ------------------------------------------------------------- browser ---- */
@@ -146,7 +147,7 @@ const CANVAS_INIT = `(() => {
 /* Runs inside the page. Everything it needs must be self-contained. */
 const PROBE = `(() => {
   const out = { overlaps: [], overflow: [], contrast: [], collapsed: [], broken: [],
-                tiny: [], offscreen: [], stats: {} };
+                tiny: [], offscreen: [], imageCandidates: [], stats: {} };
   const vw = innerWidth, vh = innerHeight;
 
   const vis = (el) => {
@@ -302,21 +303,41 @@ const PROBE = `(() => {
   out.offscreen = out.offscreen.slice(0, 8);
   out.overflow = out.overflow.slice(0, 8);
 
-  // Contrast, only where the background is a solid colour we can actually read.
+  // Contrast. Where the background resolves to a solid colour we can check it
+  // here, in the page, cheaply. Where it does not - a background image, or a
+  // positioned layer painting underneath - bgOf() correctly refuses to guess,
+  // but the house style puts display type on photographs behind scrims, so
+  // that "cannot tell" case is exactly where the worst legibility failures
+  // live. Hand those to Node as candidates: it already has the screenshot, so
+  // it can sample the pixels actually behind the box instead of guessing.
   for (const { el, cs, r } of textEls) {
     const fg = parseRGB(cs.color);
-    const bg = bgOf(el);
-    if (!fg || !bg || fg.a < 0.9) continue;
+    if (!fg || fg.a < 0.9) continue;
     const size = parseFloat(cs.fontSize);
     const bold = +cs.fontWeight >= 700;
     const large = size >= 24 || (size >= 18.66 && bold);
-    const cr = ratio(fg, bg);
     const need = large ? 3 : 4.5;
-    if (cr < need)
-      out.contrast.push({ el: label(el), ratio: +cr.toFixed(2), need, size: Math.round(size) });
+    const bg = bgOf(el);
+    if (bg) {
+      const cr = ratio(fg, bg);
+      if (cr < need)
+        out.contrast.push({ el: label(el), ratio: +cr.toFixed(2), need, size: Math.round(size), method: 'solid' });
+      continue;
+    }
+    // Only a box at least partly on screen is worth a pixel sample, and only
+    // one of a sane size - a full-bleed section "is text" by the own-text-node
+    // test above but sampling its whole rect is not a legibility check of
+    // anything in particular.
+    if (r.right <= 0 || r.bottom <= 0 || r.left >= vw || r.top >= vh) continue;
+    if (r.width < 2 || r.height < 2 || r.width * r.height > 400000) continue;
+    out.imageCandidates.push({
+      el: label(el), fg, need, size: Math.round(size),
+      rect: { left: Math.max(0, r.left), top: Math.max(0, r.top), width: Math.min(r.width, vw - Math.max(0, r.left)), height: Math.min(r.height, vh - Math.max(0, r.top)) },
+    });
   }
   out.contrast.sort((a, b) => a.ratio - b.ratio);
   out.contrast = out.contrast.slice(0, 10);
+  out.imageCandidates = out.imageCandidates.slice(0, 20);
 
   // Content that is present but has collapsed to nothing.
   for (const el of document.querySelectorAll('body *')) {
@@ -351,6 +372,128 @@ const PROBE = `(() => {
   out.stats.viewport = vw + 'x' + vh;
   return JSON.stringify(out);
 })()`;
+
+/* ------------------------------------------------ image-backed contrast --- */
+/* A minimal PNG decoder. Chrome's Page.captureScreenshot always emits 8-bit,
+   non-interlaced PNG (colour type 2 or 6), so that is the only shape handled;
+   anything else - a palette, 16-bit depth, interlacing - returns null and the
+   candidate is silently skipped rather than sampled wrong. zlib is a Node
+   builtin, so this stays a zero-dependency file the way the rest of the tool
+   is; only the chunk framing and filter reversal are hand-rolled. */
+function decodePNG(buf) {
+  if (buf.length < 8 || buf.readUInt32BE(0) !== 0x89504e47) return null;
+  let pos = 8, width = 0, height = 0, bitDepth = 0, colorType = 0, interlace = 0;
+  const idat = [];
+  while (pos < buf.length) {
+    const len = buf.readUInt32BE(pos);
+    const type = buf.toString('ascii', pos + 4, pos + 8);
+    const data = buf.subarray(pos + 8, pos + 8 + len);
+    if (type === 'IHDR') {
+      width = data.readUInt32BE(0); height = data.readUInt32BE(4);
+      bitDepth = data[8]; colorType = data[9]; interlace = data[12];
+    } else if (type === 'IDAT') idat.push(data);
+    else if (type === 'IEND') break;
+    pos += 12 + len;
+  }
+  if (!width || !height || bitDepth !== 8 || interlace !== 0) return null;
+  const channels = colorType === 6 ? 4 : colorType === 2 ? 3 : null;
+  if (!channels) return null; // grayscale / palette / alpha-gray: not what a screenshot produces
+  let raw;
+  try { raw = inflateSync(Buffer.concat(idat)); } catch { return null; }
+  const stride = width * channels;
+  const out = Buffer.alloc(stride * height);
+  const paeth = (a, b, c) => {
+    const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+    return pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
+  };
+  let src = 0;
+  for (let y = 0; y < height; y++) {
+    const filter = raw[src++];
+    const rowStart = y * stride, prevStart = (y - 1) * stride;
+    for (let x = 0; x < stride; x++) {
+      const val = raw[src++];
+      const a = x >= channels ? out[rowStart + x - channels] : 0;
+      const b = y > 0 ? out[prevStart + x] : 0;
+      const c = y > 0 && x >= channels ? out[prevStart + x - channels] : 0;
+      let v;
+      if (filter === 0) v = val;
+      else if (filter === 1) v = val + a;
+      else if (filter === 2) v = val + b;
+      else if (filter === 3) v = val + ((a + b) >> 1);
+      else if (filter === 4) v = val + paeth(a, b, c);
+      else return null; // unrecognised filter byte - corrupt or unsupported stream
+      out[rowStart + x] = v & 0xff;
+    }
+  }
+  return {
+    width, height,
+    at(x, y) {
+      x = Math.min(width - 1, Math.max(0, x)); y = Math.min(height - 1, Math.max(0, y));
+      const i = y * stride + x * channels;
+      return { r: out[i], g: out[i + 1], b: out[i + 2] };
+    },
+  };
+}
+
+const relLum = (c) => {
+  const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+};
+const contrastRatio = (a, b) => {
+  const l1 = relLum(a), l2 = relLum(b);
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+};
+
+// Samples the pixels a text box actually sits on and reports contrast against
+// their average, and against their darkest tenth - a scrim eases from clear
+// to dark, and a headline sitting near the light end of that ease is the
+// failure the average alone would hide. If the sampled patch is genuinely
+// mixed - part of it much lighter than the rest, which means the box spans an
+// edge in the photo rather than sitting on one tone - the sample is thrown
+// out instead of turned into a confident-sounding wrong answer.
+function sampleImageContrast(png, candidates) {
+  const found = [];
+  for (const cand of candidates) {
+    const { left, top, width, height } = cand.rect;
+    if (width < 2 || height < 2) continue;
+    const cols = Math.min(10, Math.max(2, Math.round(width / 6)));
+    const rows = Math.min(10, Math.max(2, Math.round(height / 6)));
+    const samples = [];
+    for (let iy = 0; iy < rows; iy++) {
+      for (let ix = 0; ix < cols; ix++) {
+        const x = Math.round(left + ((ix + 0.5) / cols) * width);
+        const y = Math.round(top + ((iy + 0.5) / rows) * height);
+        samples.push(png.at(x, y));
+      }
+    }
+    if (!samples.length) continue;
+    const lums = samples.map(relLum);
+    const mean = lums.reduce((a, v) => a + v, 0) / lums.length;
+    const variance = lums.reduce((a, v) => a + (v - mean) ** 2, 0) / lums.length;
+    // A stddev this size on a 0-1 luminance scale means the patch is not one
+    // surface - a hard edge in the photo runs through the text box - and any
+    // single "the background is X" answer would be a guess dressed as data.
+    if (Math.sqrt(variance) > 0.16) continue;
+    const avg = {
+      r: Math.round(samples.reduce((a, p) => a + p.r, 0) / samples.length),
+      g: Math.round(samples.reduce((a, p) => a + p.g, 0) / samples.length),
+      b: Math.round(samples.reduce((a, p) => a + p.b, 0) / samples.length),
+    };
+    const order = samples.map((p, i) => i).sort((i, j) => lums[i] - lums[j]);
+    const darkN = Math.max(1, Math.round(samples.length * 0.1));
+    const darkIdx = order.slice(0, darkN);
+    const dark = {
+      r: Math.round(darkIdx.reduce((a, i) => a + samples[i].r, 0) / darkIdx.length),
+      g: Math.round(darkIdx.reduce((a, i) => a + samples[i].g, 0) / darkIdx.length),
+      b: Math.round(darkIdx.reduce((a, i) => a + samples[i].b, 0) / darkIdx.length),
+    };
+    const avgRatio = contrastRatio(cand.fg, avg);
+    const darkRatio = contrastRatio(cand.fg, dark);
+    if (avgRatio < cand.need)
+      found.push({ el: cand.el, ratio: +avgRatio.toFixed(2), darkRatio: +darkRatio.toFixed(2), need: cand.need, size: cand.size, method: 'photo' });
+  }
+  return found;
+}
 
 /* ------------------------------------------------------------- the API ---- */
 
@@ -430,12 +573,32 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
         Object.assign(report, collectEvents(session));
 
         let file = null;
-        if (out) {
-          mkdirSync(out, { recursive: true });
+        // A screenshot is captured for the imageCandidates the probe found
+        // even when `out` was never given: sampling their pixels is the only
+        // way to answer "is this legible", and the buffer is thrown away
+        // (not written) when nobody asked for the PNGs on disk. Skipped for
+        // `full` captures - that image extends beyond the viewport its rects
+        // were measured against, so viewport coordinates would land on the
+        // wrong pixels.
+        const wantsShot = out || (!full && report.imageCandidates?.length);
+        if (wantsShot) {
           const shot = await session.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: full });
-          file = join(out, `w${w}${sy ? '-y' + sy : ''}.png`);
-          writeFileSync(file, Buffer.from(shot.data, 'base64'));
+          const buf = Buffer.from(shot.data, 'base64');
+          if (out) {
+            mkdirSync(out, { recursive: true });
+            file = join(out, `w${w}${sy ? '-y' + sy : ''}.png`);
+            writeFileSync(file, buf);
+          }
+          if (!full && report.imageCandidates?.length) {
+            const png = decodePNG(buf);
+            if (png) {
+              report.contrast.push(...sampleImageContrast(png, report.imageCandidates));
+              report.contrast.sort((a, b) => a.ratio - b.ratio);
+              report.contrast = report.contrast.slice(0, 10);
+            }
+          }
         }
+        delete report.imageCandidates;
         // Once per width, at the top of the page, because the frame rate and
         // the load cost are properties of the page rather than of a scroll
         // position, and measuring them three times says the same thing three
@@ -457,12 +620,24 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
         Object.assign(report, collectEvents(session));
         const state = await session.send('Runtime.evaluate', { expression: '(' + canvasProbe.toString() + ')()', returnByValue: true });
         let file = null;
-        if (out) {
-          mkdirSync(out, { recursive: true });
+        if (out || report.imageCandidates?.length) {
           const shot = await session.send('Page.captureScreenshot', { format: 'png' });
-          file = join(out, 'w' + w + '-step' + (index + 1) + '.png');
-          writeFileSync(file, Buffer.from(shot.data, 'base64'));
+          const buf = Buffer.from(shot.data, 'base64');
+          if (out) {
+            mkdirSync(out, { recursive: true });
+            file = join(out, 'w' + w + '-step' + (index + 1) + '.png');
+            writeFileSync(file, buf);
+          }
+          if (report.imageCandidates?.length) {
+            const png = decodePNG(buf);
+            if (png) {
+              report.contrast.push(...sampleImageContrast(png, report.imageCandidates));
+              report.contrast.sort((a, b) => a.ratio - b.ratio);
+              report.contrast = report.contrast.slice(0, 10);
+            }
+          }
         }
+        delete report.imageCandidates;
         results.push({ width: w, scroll: null, step: index + 1, action: step, file, ...report, visual: state.result?.value || {}, actionErrors, reducedMotion });
       }
     }
@@ -512,7 +687,11 @@ export function formatReport(results) {
       if (c.level === 'error') { errors++; lines.push(`  ERROR console: ${c.text}`); }
       else { warns++; lines.push(`  warn  console: ${c.text}`); }
     }
-    for (const c of r.contrast) { warns++; lines.push(`  warn  contrast ${c.ratio}:1 (needs ${c.need}) at ${c.size}px: ${c.el}`); }
+    for (const c of r.contrast) {
+      warns++;
+      const via = c.method === 'photo' ? ' [sampled from the photo behind it' + (c.darkRatio != null ? `, ${c.darkRatio}:1 at its darkest` : '') + ']' : ' [solid background]';
+      lines.push(`  warn  contrast ${c.ratio}:1 (needs ${c.need}) at ${c.size}px: ${c.el}${via}`);
+    }
     for (const t of r.tiny) { warns++; lines.push(`  warn  tap target ${t.w}x${t.h}px (needs 24): ${t.el}`); }
   }
   return { text: lines.join('\n'), errors, warns };

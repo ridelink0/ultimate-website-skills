@@ -1,6 +1,6 @@
 {
   "name": "ultimate-website-skills",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "Ultimate Website Skills (UWS for Claude). Build cinematic, editorial websites the way an award-winning studio does: WebGL mesh gradients, three-plane parallax with real depth, three.js exploded product views, GSAP and anime.js scroll choreography, and a typographic system that does not read as AI-generated. Ships a copy-in CSS chassis, motion and WebGL runtimes, a section library, a scaffolder, a headless render check and a reference-site study tool.",
   "author": {
     "name": "Gev",

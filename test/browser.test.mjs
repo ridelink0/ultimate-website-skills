@@ -3,9 +3,12 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { once } from 'node:events';
 import { debugSite } from '../scripts/debug.mjs';
 import { Session, findBrowser, inspect } from '../scripts/inspect.mjs';
 import { writeReview } from '../scripts/review.mjs';
+import { runVerify } from '../scripts/verify.mjs';
+import { startServer } from '../scripts/preview-server.mjs';
 
 test('CDP synchronous send failure removes pending requests', async () => {
   const s = new Session({ send() { throw new Error('socket unavailable'); }, close() {} });
@@ -56,6 +59,69 @@ test('post-click exceptions, HTTP errors and visually hidden assertions fail the
     assert.ok(result.results.some(r => r.network?.some(n => n.error.includes('HTTP 404'))));
     assert.ok(result.results.some(r => r.actionErrors?.some(e => e.includes('not visible'))));
     assert.ok(result.errors >= 3);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+// bgOf() correctly gives up the moment it meets a background-image - a flat
+// linear-gradient counts, same as a photo - so this is exactly the case the
+// solid-colour contrast path could never see. Two boxes with the same "image"
+// background: one text colour illegible against it, one legible. Only the
+// illegible one should be reported, and it must say it came from the sample.
+test('contrast against an image background is measured from the actual pixels', { skip: !findBrowser(), timeout: 30000 }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'visual-photo-contrast-'));
+  try {
+    const html = '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<div style="background:linear-gradient(#141414,#141414);padding:32px"><h2 style="color:#262626;font-size:16px;margin:0">Barely there</h2></div>' +
+      '<div style="background:linear-gradient(#141414,#141414);padding:32px"><h2 style="color:#f5f5f5;font-size:16px;margin:0">Perfectly legible</h2></div>' +
+      '</html>';
+    writeFileSync(join(dir, 'index.html'), html);
+    const result = await debugSite(dir, { widths: [800], wait: 60, motion: 'normal', scrolls: [0] });
+    const found = result.results[0].contrast;
+    const bad = found.find(c => c.el.includes('Barely there'));
+    const good = found.find(c => c.el.includes('Perfectly legible'));
+    assert.ok(bad, 'the illegible heading on the image background must be reported: ' + JSON.stringify(found));
+    assert.equal(bad.method, 'photo');
+    assert.ok(bad.ratio < bad.need);
+    assert.equal(good, undefined, 'the legible heading must not be flagged');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+// verify's whole point is reconciling audit + render/quality + security into
+// one verdict. A page with a source-only defect (audit), a render defect
+// (contrast) and nothing wrong with security should end up with an error in
+// both of the first two sections, a clean third, and one exit code covering
+// all of it.
+test('verify merges audit, render and security into one verdict with one exit code', { skip: !findBrowser(), timeout: 30000 }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'verify-merge-'));
+  try {
+    // no <main>/<section>/<article> -> an audit ERROR; #222 on #141414 -> a
+    // render/contrast warning; nothing here trips a high-severity security rule.
+    writeFileSync(join(dir, 'index.html'),
+      '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">' +
+      '<title>Verify fixture</title><meta name="description" content="A fixture page long enough to pass the meta-description length check comfortably.">' +
+      '<h1>Verify fixture</h1><div style="background:#141414;padding:24px"><p style="color:#222222">low contrast</p></div></html>');
+    const result = await runVerify(dir, { widths: [800], wait: 60 });
+    assert.equal(result.exitCode, 1);
+    assert.ok(result.sections.audit.errors >= 1, 'audit should flag the missing <main>/<section>/<article>');
+    assert.ok(result.sections.render.warns >= 1, 'render should flag the low-contrast text on the dark box');
+    assert.ok(!result.sections.security.skipped);
+    assert.equal(result.totals.error, result.sections.audit.errors + result.sections.render.errors + (result.sections.security.errors || 0));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('verify skips the source-only sections for a URL target instead of guessing', { skip: !findBrowser(), timeout: 30000 }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'verify-url-'));
+  try {
+    writeFileSync(join(dir, 'index.html'), '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>t</title><meta name="description" content="A fixture page long enough to pass the meta-description length check comfortably."><main><h1>t</h1></main></html>');
+    const server = startServer(dir, 0);
+    await once(server, 'listening');
+    try {
+      const url = 'http://127.0.0.1:' + server.address().port + '/';
+      const result = await runVerify(url, { widths: [800], wait: 60 });
+      assert.ok(result.sections.audit.skipped);
+      assert.ok(result.sections.security.skipped);
+      assert.ok(!result.sections.render.skipped);
+    } finally { await new Promise((r) => server.close(r)); }
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 

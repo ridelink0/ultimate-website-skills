@@ -110,6 +110,7 @@ webdesign.mjs look <dir|url>           RENDER it at two scroll positions: overla
 webdesign.mjs cut <photo>              one photograph into parallax planes (rembg, local)
 webdesign.mjs study --list editorial   render a batch of reference sites into contact sheets
 webdesign.mjs serve <dir>              local preview
+webdesign.mjs verify <dir|url>         one verdict: audit + render/quality + security, findings by severity
 ```
 
 **`references/stack.md`** - which library for which job, with specifiers
@@ -129,6 +130,18 @@ against the background actually behind an element (including `oklch()` and
 `color-mix()`, which every naive checker gets wrong), elements collapsed to zero,
 images that failed to load, and tap targets under 24px. It writes a PNG at each
 width so the agent can look at what it built.
+
+Contrast has two paths. Where the background resolves to a solid colour, it is
+checked in the page directly. Where it does not - a background image, or a
+positioned layer painting underneath, which `bgOf()` correctly refuses to guess
+at rather than produce a false failure - the screenshot the inspector already
+captured is decoded and the actual pixels under the text are sampled: an
+average across the box, and the darkest tenth of it, since a scrim eases from
+clear to dark and a headline near the light end of that ease is the failure the
+average alone would hide. A sample that spans a hard edge in the photo (part of
+the box much lighter than the rest) is thrown out rather than turned into a
+confident-sounding wrong answer. Every contrast finding says which method
+produced it.
 
 A layer covering half the composition passes every static check ever written.
 This is how you catch it.
@@ -254,3 +267,26 @@ only the served site can answer - whether the headers actually arrive, and
 whether `/.git/HEAD` and `/.env` are 404s - as curl commands to run after the
 deploy. See `skills/ultimate-website-skills/references/security.md` for the
 reasoning behind every rule.
+
+## Verify - one command, one verdict
+
+```
+node scripts/webdesign.mjs verify <site-directory-or-url> [--json]
+```
+
+Finishing a page today means running audit, debug, quality and security
+separately, each printing its own format with its own exit code, and
+reconciling them by hand. `verify` runs the source check, one browser pass
+that covers both rendering and the frame-rate/script-weight/type-scale
+budgets, and the security scan, then folds every finding from all three into
+one report grouped by severity - `error`, `warning`, `low`, `note` - with one
+summary line and one exit code. A URL target has no source files, so the
+audit and security sections are marked `skipped` instead of guessing at a
+tree that was never given; the render/quality section still runs.
+
+`--json` prints the same result as structured data (`{ target, sections,
+totals, exitCode }`) instead of the formatted text, for a script that wants
+to act on it rather than read it. The exit code is 1 exactly when any
+underlying checker would already have exited 1 today - an audit error, a
+render/quality `ERROR`, or a high-severity security finding - nothing here
+makes anything newly fatal.

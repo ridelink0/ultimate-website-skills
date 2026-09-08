@@ -13,4 +13,36 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node --test
+      # Both browser.test.mjs and measure.test.mjs guard their real assertions
+      # with { skip: !findBrowser() }, so a bare runner with no Chrome/Edge/
+      # Chromium silently skips the half of the suite that actually drives a
+      # page - the part most likely to be wrong. windows-latest ships Edge
+      # already; ubuntu-latest does not, so give it a Chromium and point
+      # inspect.mjs's findBrowser() at it the same way a developer would.
+      - uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
+        with:
+          chrome-version: stable
+      - name: fail fast if no browser is resolvable
+        shell: bash
+        env:
+          ATELIER_BROWSER: ${{ steps.setup-chrome.outputs.chrome-path }}
+        run: |
+          node -e "
+            import('./scripts/inspect.mjs').then(({ findBrowser }) => {
+              const bin = findBrowser();
+              if (!bin) { console.error('no Chrome/Edge/Chromium found - the browser half of the suite would silently skip'); process.exit(1); }
+              console.log('browser for the test run:', bin);
+            });
+          "
+      - name: node --test (browser tests must not skip)
+        shell: bash
+        env:
+          ATELIER_BROWSER: ${{ steps.setup-chrome.outputs.chrome-path }}
+        run: |
+          set -o pipefail
+          node --test --test-reporter=tap --test-reporter-destination=stdout test/*.test.mjs | tee test-output.tap
+          if grep -qE '^# skipped [1-9]' test-output.tap; then
+            echo "browser tests were skipped - a real browser must run in this job" >&2
+            exit 1
+          fi

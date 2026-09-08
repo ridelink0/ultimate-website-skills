@@ -354,3 +354,16 @@ Two rules. A secret is "remove and rotate", never "remove". And the command
 reads source: after the deploy, the three curl checks in the reference are
 what tell you whether the headers arrived and whether `/.git/HEAD` is a 404.
 Do not call a site secure because the command printed nothing.
+
+## One command for all of it
+
+`node scripts/webdesign.mjs verify <dir|url> [--json]` runs the audit, one
+browser pass covering both rendering and the quality budgets, and the
+security scan, then reports one verdict: a summary line, findings grouped by
+severity (`error`, `warning`, `low`, `note`), and one exit code - 1 exactly
+when audit, render/quality or security would already have exited 1 on their
+own. Use it as the single before-you-call-it-done check instead of running
+the four commands above separately and reconciling their output by hand;
+`--json` gives the same result as data for anything that wants to act on it.
+A URL target has no source files, so its audit and security sections come
+back marked `skipped` rather than a guess.

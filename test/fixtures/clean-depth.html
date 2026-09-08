@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>clean depth fixture</title>
+<style>body{height:2200px;margin:0}div{height:200px;margin-bottom:40px;color:#fff;display:flex;align-items:center;justify-content:center;will-change:transform}</style>
+<h1 style="position:absolute">Three planes that really move at different rates</h1>
+<div data-depth="0.2" data-rate="0.2" style="background:#7a5">Foreground</div>
+<div data-depth="0.5" data-rate="0.5" style="background:#57a">Middle</div>
+<div data-depth="0.8" data-rate="0.8" style="background:#a57">Background</div>
+<script>
+const planes = [...document.querySelectorAll('[data-rate]')].map((el) => ({ el, rate: Number(el.dataset.rate) }));
+function place() {
+  for (const { el, rate } of planes) el.style.transform = 'translateY(' + (scrollY * rate) + 'px)';
+}
+addEventListener('scroll', place);
+place();
+</script>
+</html>

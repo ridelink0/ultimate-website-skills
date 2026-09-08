@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>canvas blink fixture</title>
+<h1>Blinking canvas</h1>
+<canvas id="c" width="200" height="120"></canvas>
+<script>
+const ctx = document.querySelector('#c').getContext('2d');
+let on = false;
+function paint() {
+  on = !on;
+  ctx.fillStyle = on ? '#111111' : '#eeeeee';
+  ctx.fillRect(0, 0, 200, 120);
+}
+paint();
+// a two-state loop: two samples taken 300ms+ apart can land on the same state
+// and read as dead. That is the exact bug the multi-sample fix exists for.
+setInterval(paint, 130);
+</script>
+</html>

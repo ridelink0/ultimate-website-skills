@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>canvas painted once fixture</title>
+<h1>Static canvas</h1>
+<canvas id="c" width="200" height="120"></canvas>
+<script>
+const ctx = document.querySelector('#c').getContext('2d');
+ctx.fillStyle = '#305d89'; ctx.fillRect(0, 0, 200, 120);
+ctx.fillStyle = '#e8be64'; ctx.fillRect(30, 20, 100, 60);
+// drawn once, deliberately never touched again
+</script>
+</html>
