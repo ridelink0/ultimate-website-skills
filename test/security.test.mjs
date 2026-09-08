@@ -17,7 +17,9 @@ function site(files) {
 const texts = (r, level) => r.findings.filter((f) => !level || f.level === level).map((f) => f.text);
 
 test('a leaked live key is high, and the fix says rotate', () => {
-  const dir = site({ 'app.js': 'const stripe = "sk_live_" + "x".repeat(24) + "";' });
+  // Assembled here so no key-shaped literal is ever committed (GitHub push
+  // protection reads the diff); the fixture on disk is contiguous.
+  const dir = site({ 'app.js': 'const stripe = "' + 'sk_live_' + 'x'.repeat(24) + '";' });
   try {
     const r = securityAudit(dir);
     assert.ok(texts(r, 'high').some((t) => /Stripe live secret key/.test(t)));
