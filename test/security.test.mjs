@@ -71,7 +71,7 @@ test('CDN scripts are pinned or flagged; font CSS is exempt from integrity; impo
   ].join('\n') });
   try {
     const t = texts(securityAudit(dir));
-    assert.ok(t.some((x) => /gsap|cdn\.jsdelivr\.net without integrity/.test(x)));
+    assert.ok(t.some((x) => /without a usable integrity hash/.test(x)));
     assert.ok(t.some((x) => /integrity without crossorigin/.test(x)));
     assert.ok(t.some((x) => /import map.*no "integrity"/.test(x)));
     assert.ok(t.some((x) => /fonts served from Google/.test(x)));

@@ -46,29 +46,52 @@ export const MEASURE_INIT = `(() => {
  * frames a second. */
 const MOTION = (ms) => `(async () => {
   const canvases = [...document.querySelectorAll('canvas')];
+  // Sixteen, matching the flat-fill check. At eight, one sample cell of a
+  // 200x120 canvas was 25 by 15 pixels, so a small shape moving a few pixels
+  // a frame changed no sample at all and a perfectly live canvas reported
+  // itself dead - most easily on a loaded machine, where fewer frames run
+  // inside the window and the total movement is smallest.
+  const n = 16;
   const fingerprint = () => canvases.map((canvas) => {
     try {
       const copy = document.createElement('canvas');
-      copy.width = copy.height = 8;
+      copy.width = copy.height = n;
       const ctx = copy.getContext('2d', { willReadFrequently: true });
-      ctx.drawImage(canvas, 0, 0, 8, 8);
-      return Array.from(ctx.getImageData(0, 0, 8, 8).data).join(',');
+      ctx.drawImage(canvas, 0, 0, n, n);
+      return Array.from(ctx.getImageData(0, 0, n, n).data).join(',');
     } catch (err) { return null; }
   });
+  // Sampled through the window, not just at its ends. Two samples call a
+  // pendulum, a blink or any short loop dead whenever it happens to return to
+  // where it started - and on a loaded machine, where few frames run, that is
+  // exactly when it is most likely to.
   const before = fingerprint();
+  const samples = [before];
   const frames = [];
   await new Promise((resolve) => {
     const start = performance.now();
     let last = start;
+    let nextSample = start + ${ms} / 4;
     const tick = (now) => {
       frames.push(now - last);
       last = now;
+      if (now >= nextSample) { samples.push(fingerprint()); nextSample += ${ms} / 4; }
       if (now - start < ${ms}) requestAnimationFrame(tick);
       else resolve();
     };
     requestAnimationFrame(tick);
   });
-  const after = fingerprint();
+  samples.push(fingerprint());
+  const after = samples[samples.length - 1];
+  const moved = (i) => {
+    let seen = null;
+    for (const shot of samples) {
+      if (shot[i] === null) return null;
+      if (seen === null) seen = shot[i];
+      else if (shot[i] !== seen) return true;
+    }
+    return false;
+  };
   const timed = frames.slice(1).filter((value) => value > 0);
   const sorted = timed.slice().sort((a, b) => a - b);
   const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : null;
@@ -80,7 +103,8 @@ const MOTION = (ms) => `(async () => {
     dropped: timed.filter((value) => value > 32).length,
     canvases: canvases.map((canvas, i) => ({
       context: canvas.__inspectContext || null,
-      animating: before[i] !== null && after[i] !== null ? before[i] !== after[i] : null,
+      animating: moved(i),
+      samples: samples.length,
       width: Math.round(canvas.getBoundingClientRect().width),
     })),
     reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,

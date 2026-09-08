@@ -56,8 +56,17 @@ test('the real page is measured, not the source', { skip: !findBrowser(), timeou
       '<!doctype html><html lang="en"><meta charset="utf-8"><title>M</title><style>body{margin:0;height:3000px;font:16px system-ui}h1{font-size:64px}</style>' +
       '<h1>Measured</h1><p>' + 'word '.repeat(60) + '</p>' +
       '<canvas id="c" width="200" height="120"></canvas>' +
+      // Every frame repaints the WHOLE canvas in a different colour. The
+      // earlier fixture moved a 20px square a few pixels a frame, which on a
+      // loaded machine could move less than one sample cell in the whole
+      // record window - so the test failed for want of CPU rather than
+      // because the mechanism was broken. This asserts the mechanism.
       '<script>const x=document.getElementById("c").getContext("2d");let t=0;' +
-      '(function f(){t+=8;x.fillStyle="#123";x.fillRect(0,0,200,120);x.fillStyle="#eda";x.fillRect(t%180,10,20,20);requestAnimationFrame(f)})();<\/script></html>');
+      // Every frame a different colour, not two alternating: an even number
+      // of frames returned an alternating canvas to its starting state, which
+      // is what a loaded machine produces and is exactly the false negative
+      // the probe now samples through the window to avoid.
+      '(function f(){t++;x.fillStyle="rgb("+(t%256)+","+(t*7%256)+","+(t*13%256)+")";x.fillRect(0,0,200,120);requestAnimationFrame(f)})();<\/script></html>');
     const result = await debugSite(dir, { out: join(dir, 'out'), widths: [900], wait: 60, motion: 'normal', scrolls: [0], measured: { motionMs: 500, depthDistance: 400 } });
     const measured = result.results[0].measured;
     assert.ok(measured.motion.frames > 5, 'frames were counted');
