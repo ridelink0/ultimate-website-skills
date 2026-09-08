@@ -241,10 +241,17 @@ Rates that work, back to front: sky `-18`, far ridge `-34`, mid silhouette
 
 **When the subject is a made thing being taken apart, use real 3D.** Flat SVG
 diamonds cannot do the one thing that sells an exploded view - the layers
-moving against each other while the camera holds still. six slabs in
-`three.js` with `RoomEnvironment` lighting, scroll driving separation and a
-slow turn, HTML callouts projected onto the real world positions, and a plain
-numbered list as the fallback. `references/motion.md` has the projection math.
+moving against each other while the camera holds still. `exploded.js` builds
+the object from parts named in the markup - a ring, a dome, a disc, hands, a
+chain of links - each with a physical material (steel, brushed, gold, lacquer,
+ceramic, glass, lume), or loads a real GLB and pulls its named parts apart;
+`RoomEnvironment` lighting, scroll driving separation and a slow turn, HTML
+callouts projected onto the real world positions, and the numbered list as the
+fallback. Describe the actual object: a watch is a bezel ring, a crystal dome,
+a lacquer dial with twelve lume markers, a brushed movement, a steel case and
+a bracelet chain, taken apart sideways (`data-axis="x"`) the way a watch is
+photographed. Six anonymous slabs are the low-effort version. `references/motion.md`
+has the part syntax and the projection math.
 
 Reach for three.js beyond that only when the subject is genuinely a 3D object
 the visitor must turn - `references/motion.md` has that path and the annotation-callout
@@ -270,12 +277,23 @@ scaffolder. Use them before reaching for anything heavier.
 - **`sky.js`** - the launch-page hero itself: a WebGL sky you re-light with
   three palette dots. Not a crossfade - one weight vector, eased with
   `1 - exp(-dt * 2.2)`, barycentrically blends every sky and light colour and
-  the sun direction, so the world re-lights the way the reference does.
-  `hero-fable` uses it. Real buttons, keyboard-operable, CSS fallback.
+  the sun direction, so the world re-lights the way the reference does. In
+  the frame: cloud kept to the edges and lit from the sun's side, a crescent
+  moon top-right that is faint by day and the light by night, stars after
+  dark, and an out-of-focus branch in each lower corner with a little pointer
+  parallax - depth of field is what makes it read as a camera.
+  `data-mood="Night"` starts it in a mood. `hero-fable` uses it. Real buttons,
+  keyboard-operable, CSS fallback.
 - **`exploded.js`** - any made thing taken apart, in three.js. Reads its
-  layers from a `<ol>` in the markup, so the semantic list is also the no-JS
-  fallback. Callouts project onto each slab's real position and track it
-  through the turn.
+  parts from a `<ol>` in the markup, so the semantic list is also the no-JS
+  fallback. Each `<li>` is a shape (`ring`, `disc`, `dome`, `box`, `torus`,
+  `cone`, `sphere`, `hands`, `chain`, or the default `slab`), a size, a
+  material preset and `data-y`, its place on the axis; `data-repeat="12"`
+  puts copies round a circle for markers and screws; `data-model="thing.glb"`
+  loads a real model instead and pulls its named parts apart. `data-axis="x"`
+  takes it apart sideways. Physical materials lit by a room environment, a
+  contact shadow, a vignette, and callouts projected onto each part's real
+  position that track it through the turn.
 
 ## Reach for tools before hand-rolling
 

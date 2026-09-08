@@ -231,6 +231,34 @@ frame. Write `transform: translate3d(...)`, never `left`/`top`.
 `queryHotspot(name).canvasPosition` lets you draw your own leader lines. It has
 no exploded view and costs ~1 MB gz.
 
+### Parts and materials in exploded.js
+
+The engine reads one `<li>` per part. Bottom of the list is the bottom of the
+stack; `data-y` places a part on the axis in scene units (the default slab is
+2.5 wide), and without it parts stack on the one below.
+
+| attribute | meaning |
+|---|---|
+| `data-shape` | `slab` (default), `box`, `disc`/`cylinder`, `ring`, `dome`, `torus`, `sphere`, `cone`, `hands`, `chain` |
+| `data-r`, `data-r2`, `data-h` | radius, inner radius (ring), extent along the axis |
+| `data-w`, `data-d` | width and depth for box, slab and chain links |
+| `data-bevel` | chamfer on a ring's top edge |
+| `data-tube` | tube radius of a torus |
+| `data-count`, `data-gap`, `data-start` | chain: links per side, gap between, distance from the axis |
+| `data-repeat`, `data-ring` | copies round a circle at that radius (markers, screws); the four cardinal copies are longer |
+| `data-material` | `steel`, `brushed`, `gold`, `titanium`, `lacquer`, `ceramic`, `glass`, `matte`, `rubber`, `lume`, `wood`, `paper` |
+| `data-color`, `data-rough`, `data-metal` | overrides on top of the preset |
+| `data-rot`, `data-tilt`, `data-off` | rotate about the axis, tilt, offset `x,y,z` |
+
+On the root: `data-axis="x"` takes the thing apart sideways, `data-spread`
+is the gap per part when fully apart, `data-turn` the slow rotation in
+radians, `data-fit` gives more air round the framing, `data-model="x.glb"`
+loads a model and each `<li data-part="Bezel">` names a mesh in it.
+
+A real model beats primitives whenever one exists. Primitives beat nothing:
+a dial with twelve lume markers, a bevelled ceramic bezel and a brushed
+bracelet reads as a watch; six grey slabs read as a diagram.
+
 ## Canvas image sequences
 
 60-90 frames, not 148. 1600px wide, 40-80 KB/frame, WebP q70-80. **25-50px of

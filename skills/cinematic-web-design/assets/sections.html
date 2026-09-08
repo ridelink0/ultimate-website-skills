@@ -441,7 +441,7 @@
 <!-- @end -->
 
 
-<!-- @section exploded-3d | a made thing taken apart in three.js; the list is the fallback -->
+<!-- @section exploded-3d | a made thing taken apart in three.js: parts as shapes and materials, or a GLB; the list is the fallback -->
 <section class="section" data-tone="dark" id="inside" data-explode-track>
   <div class="wrap grid" style="align-items:center;row-gap:var(--s-9)">
     <div style="grid-column:content-start / span 4" class="stack r">
@@ -449,14 +449,17 @@
       <h2>Six parts, and four of them are invisible once it is finished.</h2>
       <p class="prose">Scroll and they come apart. Say what each one is for.</p>
     </div>
-    <div style="grid-column:span 7 / content-end" class="exploded" data-spread="0.62">
+    <div style="grid-column:span 7 / content-end" class="exploded" data-spread="0.5" data-turn="1.1" data-axis="x">
       <ol class="exploded__list">
-        <li data-color="#9aa0a8" data-metal=".85" data-rough=".34" data-t=".030">Top layer</li>
-        <li data-color="#4a423a" data-rough=".90" data-t=".046" data-lines="5">Second layer</li>
-        <li data-color="#2a2724" data-rough=".86" data-t=".026">Third layer</li>
-        <li data-color="#3d4652" data-rough=".78" data-t=".020">Fourth layer</li>
-        <li data-color="#23262b" data-rough=".55" data-t=".022">Fifth layer</li>
-        <li data-color="#8a6a42" data-rough=".92" data-t=".075" data-lines="3">The base it is all fixed to</li>
+        <li data-shape="ring" data-r="1.08" data-r2="0.86" data-h="0.16" data-bevel="0.05" data-material="ceramic" data-y="0.36">Unidirectional bezel</li>
+        <li data-shape="dome" data-r="0.82" data-h="0.10" data-material="glass" data-y="0.30">Sapphire crystal</li>
+        <li data-shape="hands" data-r="0.62" data-material="steel" data-y="0.23">Hands</li>
+        <li data-shape="box" data-w="0.05" data-h="0.02" data-d="0.14" data-repeat="12" data-ring="0.66" data-material="lume" data-y="0.205">Hour markers</li>
+        <li data-shape="disc" data-r="0.78" data-h="0.02" data-material="lacquer" data-y="0.19">Dial</li>
+        <li data-shape="disc" data-r="0.72" data-h="0.14" data-material="brushed" data-y="0.06">Movement</li>
+        <li data-shape="ring" data-r="1.0" data-r2="0.80" data-h="0.36" data-material="steel" data-y="0.0">Case</li>
+        <li data-shape="disc" data-r="0.9" data-h="0.05" data-material="steel" data-y="-0.22">Caseback</li>
+        <li data-shape="chain" data-count="5" data-w="0.86" data-h="0.11" data-d="0.30" data-start="1.02" data-material="brushed" data-y="0.0">Bracelet</li>
       </ol>
     </div>
   </div>
