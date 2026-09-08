@@ -94,6 +94,10 @@ const MOTION = (ms) => `(async () => {
 const DEPTH = (distance) => `(async () => {
   const planes = [...document.querySelectorAll('[data-depth], [data-parallax], .plane, .layer')];
   const named = (el) => (el.dataset.depth || el.dataset.parallax || el.className || el.tagName).toString().slice(0, 40);
+  // A page can have two elements called .layer that were never meant to move.
+  // Only an element that DECLARES a depth is promising anything, so only those
+  // can be accused of not delivering it; the rest are reported and not judged.
+  const declared = (el) => el.dataset.depth !== undefined || el.dataset.parallax !== undefined;
   const top = (el) => el.getBoundingClientRect().top;
   const start = window.scrollY;
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -110,6 +114,7 @@ const DEPTH = (distance) => `(async () => {
     planes: planes.map((el, i) => ({
       name: named(el),
       declared: el.dataset.depth !== undefined ? Number(el.dataset.depth) : null,
+      promises: declared(el),
       rate: Number(((before[i] - after[i]) / ${distance}).toFixed(3)),
       fixed: getComputedStyle(el).position === 'fixed',
     })),
@@ -135,7 +140,12 @@ const COST = `(() => {
     if (!active) idle.push(name);
   };
   check('GSAP', () => window.gsap, () => window.gsap.globalTimeline.getChildren(true, true, true).length || (window.ScrollTrigger && window.ScrollTrigger.getAll().length));
-  check('three.js', () => window.THREE, () => document.querySelector('canvas') && [...document.querySelectorAll('canvas')].some((c) => /webgl/.test(c.__inspectContext || '')));
+  // three is normally an ES module behind an import map, so window.THREE does
+  // not exist even when the page is 160 KB heavier for it. Ask the network log
+  // whether it was fetched instead of asking the global scope.
+  const fetched = (pattern) => resources.some((entry) => pattern.test(entry.name));
+  check('three.js', () => window.THREE || fetched(/three(\\.module)?(\\.min)?\\.js|three@/i),
+    () => [...document.querySelectorAll('canvas')].some((c) => /webgl/.test(c.__inspectContext || '')));
   check('Lenis', () => window.Lenis, () => window.__lenis || document.documentElement.classList.contains('lenis'));
   check('anime.js', () => window.anime, () => window.anime.running && window.anime.running.length);
   check('Lottie', () => window.lottie, () => window.lottie.getRegisteredAnimations && window.lottie.getRegisteredAnimations().length);
@@ -290,12 +300,18 @@ export function judge(measured, context = {}) {
     const moving = depth.planes.filter((plane) => !plane.fixed);
     const rates = moving.map((plane) => plane.rate);
     const spread = rates.length ? Math.max.apply(null, rates) - Math.min.apply(null, rates) : 0;
-    if (moving.length >= 2 && spread < BUDGETS.depthSpread) {
+    // Only planes that declared a depth are failing a promise. A page with two
+    // elements happening to be called .layer is not making one, and an ERROR
+    // there is the kind of false positive that gets a checker ignored.
+    const promised = moving.filter((plane) => plane.promises !== false);
+    if (promised.length >= 2 && spread < BUDGETS.depthSpread) {
       note(
         'error',
-        moving.length + ' declared planes all move at the same rate (' + rates[0].toFixed(2) + ')',
+        promised.length + ' declared planes all move at the same rate (' + rates[0].toFixed(2) + ')',
         'the parallax is in the markup but not on the screen'
       );
+    } else if (moving.length >= 2 && spread < BUDGETS.depthSpread) {
+      note('note', moving.length + ' layer-like elements move together; none of them declares a depth');
     } else if (moving.length >= 2) {
       note('ok', moving.length + ' planes at ' + rates.map((rate) => rate.toFixed(2)).join(' / ') + ' (1.00 is page speed)');
     }
@@ -308,15 +324,19 @@ export function judge(measured, context = {}) {
     note('warn', 'no parallax planes found', 'the house style layers foreground, middle and background');
   }
 
-  if (!cost.error) {
-    if ((cost.idleLibraries || []).length) {
-      note('error', 'loaded and never used: ' + cost.idleLibraries.join(', '), 'this is bytes in the critical path buying nothing');
+  // A probe that came back without a field is not a probe that measured zero.
+  // Reading `.length` off a missing idleLibraries threw right here, which turned
+  // an incomplete measurement into a crash instead of a quiet omission.
+  if (!cost.error && Number.isFinite(cost.requests)) {
+    const idle = cost.idleLibraries || [];
+    if (idle.length) {
+      note('error', 'loaded and never used: ' + idle.join(', '), 'this is bytes in the critical path buying nothing');
     }
     if (cost.scriptKb > BUDGETS.scriptKb) note('warn', cost.scriptKb + ' KB of script (budget ' + BUDGETS.scriptKb + ' KB)');
     if (cost.totalKb > BUDGETS.totalKb) note('warn', cost.totalKb + ' KB transferred over ' + cost.requests + ' requests');
     if (cost.longestTaskMs > BUDGETS.longestTaskMs) note('warn', 'longest main-thread task ' + cost.longestTaskMs + ' ms', 'the page cannot respond during it');
     if (cost.layoutShift > BUDGETS.layoutShift) note('warn', 'layout shift ' + cost.layoutShift + ' (budget ' + BUDGETS.layoutShift + ')');
-    if (!cost.idleLibraries.length && cost.scriptKb <= BUDGETS.scriptKb && cost.layoutShift <= BUDGETS.layoutShift) {
+    if (!idle.length && cost.scriptKb <= BUDGETS.scriptKb && cost.layoutShift <= BUDGETS.layoutShift) {
       note('ok', cost.totalKb + ' KB over ' + cost.requests + ' requests, no idle libraries, no shift');
     }
   }

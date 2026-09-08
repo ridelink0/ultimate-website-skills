@@ -1,0 +1,68 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { judge, BUDGETS } from '../scripts/measure.mjs';
+import { findBrowser } from '../scripts/inspect.mjs';
+import { debugSite } from '../scripts/debug.mjs';
+
+const clean = { motion: { frames: 100, fps: 60, worstFrameMs: 20, dropped: 2, canvases: [], reducedMotion: false },
+  depth: { planes: [] }, cost: { requests: 8, totalKb: 60, scriptKb: 20, heavy: [], idleLibraries: [], longTasks: 0, longestTaskMs: 10, layoutShift: 0.01 },
+  type: { distinctSizes: 6, largestPx: 96, scale: [96, 48, 24, 18, 16, 14], measureChars: 68, distinctTextColours: 3 } };
+const levels = (found) => found.filter((f) => f.level === 'error').map((f) => f.text);
+
+test('a page inside every budget raises nothing', () => {
+  assert.equal(levels(judge(clean)).length, 0);
+});
+
+test('a slow page is an error, and the budget is named in it', () => {
+  const found = judge({ ...clean, motion: { ...clean.motion, fps: 38 } });
+  assert.match(levels(found)[0], new RegExp('38 fps.*' + BUDGETS.fps));
+});
+
+test('a library loaded and never called is the most expensive kind of dead code', () => {
+  const found = judge({ ...clean, cost: { ...clean.cost, idleLibraries: ['GSAP', 'three.js'] } });
+  assert.match(levels(found)[0], /loaded and never used: GSAP, three\.js/);
+});
+
+// Declared planes that all move together are a promise the page does not keep.
+test('planes that declare a depth and all move together fail; unlabelled ones do not', () => {
+  const same = [{ name: 'a', declared: 0.4, promises: true, rate: 1, fixed: false },
+                { name: 'b', declared: 0.8, promises: true, rate: 1.01, fixed: false }];
+  assert.match(levels(judge({ ...clean, depth: { planes: same } }))[0], /same rate/);
+  const guessed = same.map((p) => ({ ...p, promises: false, declared: null }));
+  assert.equal(levels(judge({ ...clean, depth: { planes: guessed } })).length, 0,
+    'a class called .layer is not a promise');
+});
+
+test('under reduced motion, a canvas still animating is the defect', () => {
+  const moving = { ...clean, motion: { ...clean.motion, reducedMotion: true, canvases: [{ animating: true }] } };
+  assert.match(levels(judge(moving))[0], /still animating under prefers-reduced-motion/);
+  const still = { ...clean, motion: { ...clean.motion, reducedMotion: true, canvases: [{ animating: false }] } };
+  assert.equal(levels(judge(still)).length, 0);
+});
+
+test('a measurement that failed is reported as unmeasured, never as a pass', () => {
+  const found = judge({ motion: { error: 'timed out' }, depth: { error: 'no' }, cost: {}, type: {} });
+  assert.ok(found.some((f) => f.level === 'note' && /could not be measured/.test(f.text)));
+  assert.equal(levels(found).length, 0);
+});
+
+test('the real page is measured, not the source', { skip: !findBrowser(), timeout: 60000 }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'measure-'));
+  try {
+    writeFileSync(join(dir, 'index.html'),
+      '<!doctype html><html lang="en"><meta charset="utf-8"><title>M</title><style>body{margin:0;height:3000px;font:16px system-ui}h1{font-size:64px}</style>' +
+      '<h1>Measured</h1><p>' + 'word '.repeat(60) + '</p>' +
+      '<canvas id="c" width="200" height="120"></canvas>' +
+      '<script>const x=document.getElementById("c").getContext("2d");let t=0;' +
+      '(function f(){t+=8;x.fillStyle="#123";x.fillRect(0,0,200,120);x.fillStyle="#eda";x.fillRect(t%180,10,20,20);requestAnimationFrame(f)})();<\/script></html>');
+    const result = await debugSite(dir, { out: join(dir, 'out'), widths: [900], wait: 60, motion: 'normal', scrolls: [0], measured: { motionMs: 500, depthDistance: 400 } });
+    const measured = result.results[0].measured;
+    assert.ok(measured.motion.frames > 5, 'frames were counted');
+    assert.equal(measured.motion.canvases[0].animating, true, 'a canvas that repaints reads as alive');
+    assert.ok(measured.cost.requests >= 0 && measured.type.largestPx >= 60, JSON.stringify(measured.type));
+    assert.ok(measured.type.measureChars > 0, 'the body measure is counted in characters');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
