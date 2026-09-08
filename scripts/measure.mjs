@@ -306,11 +306,18 @@ export function judge(measured, context = {}) {
     // Only planes that declared a depth are failing a promise. A page with two
     // elements happening to be called .layer is not making one, and an ERROR
     // there is the kind of false positive that gets a checker ignored.
+    //
+    // And the verdict on the promised planes is measured on the promised
+    // planes: judging them by a spread that included the unlabelled ones let
+    // a decorative .layer that happened to move hide two declared planes that
+    // did not, and the reverse.
     const promised = moving.filter((plane) => plane.promises !== false);
-    if (promised.length >= 2 && spread < BUDGETS.depthSpread) {
+    const promisedRates = promised.map((plane) => plane.rate);
+    const promisedSpread = promisedRates.length ? Math.max.apply(null, promisedRates) - Math.min.apply(null, promisedRates) : 0;
+    if (promised.length >= 2 && promisedSpread < BUDGETS.depthSpread) {
       note(
         'error',
-        promised.length + ' declared planes all move at the same rate (' + rates[0].toFixed(2) + ')',
+        promised.length + ' declared planes all move at the same rate (' + promisedRates[0].toFixed(2) + ')',
         'the parallax is in the markup but not on the screen'
       );
     } else if (moving.length >= 2 && spread < BUDGETS.depthSpread) {

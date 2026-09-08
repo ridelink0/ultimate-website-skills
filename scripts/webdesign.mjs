@@ -194,6 +194,16 @@ ${preset.css}
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    # Enforced on its own: frame-ancestors touches nothing but embedding, so
+    # it cannot break the page, and it closes the clickjacking gap outright.
+    Content-Security-Policy = "frame-ancestors 'none'"
+    # The full policy, reporting only. The import map is an inline script to a
+    # CSP, so enforcing this as written would silence three.js; add a nonce or
+    # move to 'strict-dynamic' before promoting it. Check it with Google's CSP
+    # Evaluator, then rename the header to Content-Security-Policy.
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
 
 [[headers]]
   for = "/*.css"
@@ -478,12 +488,24 @@ function cmdAudit() {
       if (levels[i] > levels[i - 1] + 1) { W(`${n}: heading jumps h${levels[i - 1]} -> h${levels[i]}`); break; }
 
     // images
-    const imgs = [...h.matchAll(/<img\b[^>]*>/gi)].map((m) => m[0]);
+    const found = [...h.matchAll(/<img\b[^>]*>/gi)];
+    const imgs = found.map((m) => m[0]);
+    // "Below the fold" was "not the first <img>", which penalised every
+    // multi-image hero the scaffolder itself emits: a three-plane hero-depth
+    // has three images above the fold. Anything inside the opening header,
+    // or inside a parallax scene, is the fold.
+    const heroEnd = h.search(/<\/header>/i);
+    const aboveFold = (at) => (heroEnd !== -1 && at < heroEnd);
+    const inScene = (at) => {
+      const open = h.lastIndexOf('data-depth', at);
+      return open !== -1 && h.lastIndexOf('</section>', at) < open;
+    };
     let noAlt = 0, noDim = 0, noLazy = 0;
-    imgs.forEach((tag, i) => {
+    found.forEach((m, i) => {
+      const tag = m[0];
       if (!/\salt\s*=/.test(tag)) noAlt++;
       if (!/\swidth\s*=/.test(tag) || !/\sheight\s*=/.test(tag)) noDim++;
-      if (i > 0 && !/loading\s*=\s*["']lazy/.test(tag) && !/fetchpriority/.test(tag)) noLazy++;
+      if (i > 0 && !aboveFold(m.index) && !inScene(m.index) && !/loading\s*=\s*["']lazy/.test(tag) && !/fetchpriority/.test(tag)) noLazy++;
     });
     if (noAlt) E(`${n}: ${noAlt} <img> without alt`);
     if (noDim) E(`${n}: ${noDim} <img> without width/height - guaranteed layout shift`);
@@ -855,6 +877,20 @@ async function cmdQuality() {
   console.log('  Numbers are not the judgement. Open ' + result.file + ' and look at the page.');
   process.exitCode = errors ? 1 : 0;
 }
+// What the audit reads for taste, this reads for harm. Offline, over the files
+// that would be deployed; the reference lists the three checks only a served
+// site can answer. Exits 1 on high only - a checker that fails a build over a
+// console.log is a checker people turn off.
+async function cmdSecurity() {
+  const { securityAudit, formatSecurity } = await import('./security.mjs');
+  const target = resolve(positional[0] || '.');
+  if (!existsSync(target)) die(`no such path: ${target}`);
+  const result = securityAudit(target);
+  const shown = formatSecurity(result, relative(process.cwd(), target) || '.');
+  console.log(shown.text);
+  if (flag('json')) console.log(JSON.stringify(result.findings, null, 2));
+  process.exitCode = shown.high ? 1 : 0;
+}
 async function cmdVideo() {
   const { studyVideo } = await import('./video.mjs');
   if (!positional[0]) die('video needs a local video file');
@@ -876,6 +912,7 @@ switch (cmd) {
   case 'serve': cmdServe(); break;
   case 'debug': await cmdDebug(); break;
   case 'quality': case 'measure': await cmdQuality(); break;
+  case 'security': case 'secure': await cmdSecurity(); break;
   case 'video': await cmdVideo(); break;
   default:
     console.log(`cinematic-web-design
@@ -897,6 +934,7 @@ switch (cmd) {
                                   screenshots, scroll, interaction and 3D evidence in an HTML review
   quality <dir|url> [--widths 1440] [--record MS] [--travel PX] [--expect-depth] [--json]
                                   measure the running page: frame rate, real parallax rates, idle libraries, type scale
+  security <dir> [--json]         secrets, forms, CDN pins, headers config, disclosures - exits 1 on high
   video <file> [--frames 8] [--out DIR]   inspect timestamped local video frames
 `);
     process.exit(cmd ? 1 : 0);

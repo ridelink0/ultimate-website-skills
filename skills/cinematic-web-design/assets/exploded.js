@@ -318,7 +318,11 @@ for (const root of roots) {
   const tags = layers.map((p) => {
     const el = document.createElement('p');
     el.className = 'exploded__tag';
-    el.innerHTML = `<span>${(p.li ? p.li.textContent : '').trim()}</span>`;
+    // textContent in, textContent out. Read as text and written as HTML, a
+    // list item that came from a CMS could carry markup back into the page.
+    const span = document.createElement('span');
+    span.textContent = (p.li ? p.li.textContent : '').trim();
+    el.appendChild(span);
     tagLayer.appendChild(el);
     return el;
   });

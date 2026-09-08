@@ -32,7 +32,10 @@ scripts/webdesign.mjs             new / sections / add / audit / look / serve
 scripts/inspect.mjs             headless-browser render check, over CDP
 scripts/cut.py                  photograph -> parallax planes via rembg
 scripts/install.mjs             registers with both CLIs
-commands/cinematic-web-design.md             the /cinematic-web-design slash command
+commands/webdesign.md           the /cinematic-web-design:webdesign slash command
+commands/debug-website.md       /cinematic-web-design:debug-website
+commands/design-handoff.md      /cinematic-web-design:design-handoff
+commands/atelier.md             the compatibility alias for the old name
 hooks/                          UserPromptSubmit nudge
 ```
 
@@ -49,7 +52,8 @@ Constraints:
   ```
   node scripts/webdesign.mjs new /tmp/t --name "T" && node scripts/webdesign.mjs audit /tmp/t
   ```
-  A fresh scaffold is *expected* to fail on scaffold copy and the example email
-  address - that is the audit doing its job. Everything else must be clean.
+  A fresh scaffold is *expected* to fail on scaffold copy (and to warn about
+  the placeholder images it cannot find) - that is the audit doing its job.
+  Everything else must be clean.
 - Keep `SKILL.md` short. Depth belongs in `references/`, which is only read when
   needed. Frontmatter is loaded into every session; the body is not.

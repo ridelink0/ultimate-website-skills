@@ -215,3 +215,41 @@ figure is a ceiling rather than what anyone sees - the worst frame is the
 useful half of that measurement. And the numbers are not the judgement: a page
 can pass every budget and still look wrong, which is why this prints the path
 to the screenshots and tells you to open them.
+
+## Security check
+
+```
+node scripts/webdesign.mjs security <site-directory>
+```
+
+What the audit reads for taste, this reads for harm, offline, over the files
+that would be deployed:
+
+- **What must never ship** - `.env`, a `.git` directory (every secret ever
+  committed becomes downloadable), source maps, key files.
+- **Secrets** by their real shapes - AWS, Stripe live keys, GitHub, Slack,
+  Netlify and Vercel tokens, private-key blocks, and the generic
+  `api_key = "..."` assignment that catches the rest. A publishable Stripe key
+  is public by design and is not flagged; a content hash is not a key.
+- **Forms** - personal data over GET, an http action, a Netlify form without
+  a honeypot, a page that collects an email and links no privacy policy.
+- **CDN scripts** without `integrity` and `crossorigin`, and an import map
+  without its `"integrity"` block (Chrome 127+, Firefox 138+, Safari 18.4+
+  enforce it). Font CSS is generated per user agent and is exempt.
+- **Headers** - the configuration in `netlify.toml`, `_headers` or
+  `vercel.json` is source too; each missing baseline header is named. Every
+  scaffolded site now ships with `frame-ancestors 'none'` enforced, HSTS,
+  `nosniff`, a Referrer-Policy, a Permissions-Policy, and the full CSP in
+  report-only so the import map keeps working until a nonce is added.
+- **Client-side holes and disclosures** - `innerHTML` from a variable,
+  `postMessage` to `*`, a `message` listener that never checks its origin,
+  mixed content, inline handlers, `eval`, a developer's `C:\Users\<name>` in
+  a shipped file, `console.log` left on, fonts served from Google (a visitor's
+  IP goes to Google before the page paints; a German court ruled on it).
+
+It exits 1 on a high finding only. A checker that fails a build over a
+`console.log` is a checker people turn off. It also prints the three things
+only the served site can answer - whether the headers actually arrive, and
+whether `/.git/HEAD` and `/.env` are 404s - as curl commands to run after the
+deploy. See `skills/cinematic-web-design/references/security.md` for the
+reasoning behind every rule.

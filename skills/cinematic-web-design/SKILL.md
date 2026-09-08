@@ -339,3 +339,18 @@ have to carry it in your head - build, then run it.
 Run the audit; it must exit 0. Then walk `references/checklist.md`. Then look at
 the page at 360px and at 1600px - if you can drive a browser, do, and actually
 look at it. Then write your two sentences and stop.
+
+## Security, before it ships
+
+Run `node scripts/webdesign.mjs security <dir>` on the build directory before
+any deploy, and read `references/security.md` for what each finding means.
+It reads the source for what should never leave a laptop (keys, `.env`, a
+served `.git`, source maps), forms that send personal data over GET or to
+http, CDN scripts with nothing pinning them, the header configuration, and
+the quiet disclosures - a developer's username in a shipped path, fonts that
+hand every visitor's address to a third party. It exits 1 on high only.
+
+Two rules. A secret is "remove and rotate", never "remove". And the command
+reads source: after the deploy, the three curl checks in the reference are
+what tell you whether the headers arrived and whether `/.git/HEAD` is a 404.
+Do not call a site secure because the command printed nothing.
