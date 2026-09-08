@@ -43,7 +43,11 @@ const SECRETS = [
   { re: /\bvcp_[A-Za-z0-9]{20,}\b/g, level: 'high', text: 'Vercel token' },
   { re: /\bAIza[0-9A-Za-z_-]{35}\b/g, level: 'medium', text: 'Google API key (public by design, but must be referrer-restricted in the console)' },
   { re: /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY(?: BLOCK)?-----/g, level: 'high', text: 'private key block' },
-  { re: /\b(?:api[_-]?key|apikey|secret|client[_-]?secret|auth[_-]?token|access[_-]?token|password|passwd)\b\s*[:=]\s*['"][A-Za-z0-9\-_./+=]{16,}['"]/gi, level: 'medium', text: 'a secret-shaped value assigned in source' },
+  // The optional quote before the colon is what makes this work on JSON and
+  // YAML as well as JavaScript. Without it, "apiKey": "..." in a config file
+  // fell through to the entropy note - the weakest finding there is - while
+  // the same secret in a .js file was reported properly.
+  { re: /\b(?:api[_-]?key|apikey|secret|client[_-]?secret|auth[_-]?token|access[_-]?token|password|passwd)\b['"]?\s*[:=]\s*['"][A-Za-z0-9\-_./+=]{16,}['"]/gi, level: 'medium', text: 'a secret-shaped value assigned in source' },
   { re: /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g, level: 'low', text: 'a JWT in source (fine if short-lived and scoped; check its claims)' },
 ];
 
@@ -77,6 +81,14 @@ function walk(dir, out = [], depth = 0) {
 }
 
 const lineOf = (text, index) => text.slice(0, index).split('\n').length;
+
+// The attribute being present is not the same as the subresource being pinned.
+// integrity="" and integrity="notahash" both leave the browser verifying
+// nothing, and a presence-only test called both of them safe.
+function pinned(tag) {
+  const found = /\bintegrity\s*=\s*["']([^"']*)["']/i.exec(tag);
+  return Boolean(found && /\bsha(?:256|384|512)-[A-Za-z0-9+/]+={0,2}/.test(found[1]));
+}
 
 /* Shannon entropy in bits per character. A content hash, a base64 image and
  * a real key all score high, so this is a note, never a failure. */
@@ -162,6 +174,10 @@ export function securityAudit(dir) {
       // The lookahead excludes whitespace too, or \s* backtracks one space and
       // the quote check is skipped - which flagged every literal assignment.
       at(/\.(?:innerHTML|outerHTML)\s*=\s*(?![\s'"`])/g, 'high', 'innerHTML assigned from a non-literal', 'use textContent, or sanitise before assigning; anything from a URL, a form or a fetch is an injection here');
+      // A backtick was treated as a literal and skipped, so the most common
+      // way anyone actually writes an injection - `<div>${name}</div>` - was
+      // the one form the check could not see.
+      at(/\.(?:innerHTML|outerHTML)\s*=\s*`[^`]*\$\{/g, 'high', 'innerHTML assigned from a template literal with interpolation', 'the interpolated value is written as markup; use textContent for the value, or build the node and set its text');
       at(/document\.write\s*\(\s*(?![\s'"`)])/g, 'high', 'document.write with a non-literal', 'build nodes instead; this is both an injection and a CSP blocker');
       at(/postMessage\s*\([^)]*['"]\*['"]/g, 'high', 'postMessage to any origin ("*")', 'name the target origin');
       at(/addEventListener\s*\(\s*['"]message['"]/g, 'high', 'message listener with no origin check', 'compare event.origin against an allowlist before trusting event.data', { skip: (m, s) => /\.origin\b/.test(s.slice(m.index, m.index + 600)) });
@@ -192,14 +208,14 @@ export function securityAudit(dir) {
       const scripts = [...h.matchAll(/<script\b[^>]*\bsrc\s*=\s*["'](https?:)?\/\/([^"'/]+)[^"']*["'][^>]*>/gi)];
       for (const m of scripts) {
         const tag = m[0];
-        if (!/\bintegrity\s*=/.test(tag)) add('medium', e.file, lineOf(h, m.index), 'cross-origin script from ' + m[2] + ' without integrity', 'pin the exact version and add the integrity hash the CDN publishes, plus crossorigin="anonymous"');
+        if (!pinned(tag)) add('medium', e.file, lineOf(h, m.index), 'cross-origin script from ' + m[2] + ' without a usable integrity hash', 'pin the exact version and add the integrity hash the CDN publishes, plus crossorigin="anonymous"');
         else if (!/\bcrossorigin\b/.test(tag)) add('medium', e.file, lineOf(h, m.index), 'integrity without crossorigin on ' + m[2], 'add crossorigin="anonymous" or the browser cannot verify the hash');
       }
       const styles = [...h.matchAll(/<link\b[^>]*rel\s*=\s*["']stylesheet["'][^>]*href\s*=\s*["'](https?:)?\/\/([^"'/]+)[^"']*["'][^>]*>/gi)];
       for (const m of styles) {
         // Font CSS is generated per user agent and cannot carry a stable hash.
         if (/fonts\.(googleapis|bunny)\.net|fonts\.googleapis\.com|fontshare|typekit/i.test(m[2])) continue;
-        if (!/\bintegrity\s*=/.test(m[0])) add('low', e.file, lineOf(h, m.index), 'cross-origin stylesheet from ' + m[2] + ' without integrity', 'pin and add integrity, or self-host it');
+        if (!pinned(m[0])) add('low', e.file, lineOf(h, m.index), 'cross-origin stylesheet from ' + m[2] + ' without a usable integrity hash', 'pin and add integrity, or self-host it');
       }
       const map = h.match(/<script\b[^>]*type\s*=\s*["']importmap["'][^>]*>([\s\S]*?)<\/script>/i);
       if (map && /https?:\/\//.test(map[1]) && !/"integrity"\s*:/.test(map[1])) {

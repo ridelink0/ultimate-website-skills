@@ -129,3 +129,35 @@ test('the report exits on high only and always lists the live checks', () => {
     assert.match(shown.text, /\.git\/HEAD/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+// Third pass, two skeptics each. The attribute being present is not the same
+// as the subresource being pinned.
+test('an integrity attribute that is empty or not a hash is not a pin', () => {
+  const dir = site({ 'index.html': [
+    '<script src="https://cdn.jsdelivr.net/npm/a@1/a.js" integrity="" crossorigin="anonymous"></script>',
+    '<script src="https://cdn.jsdelivr.net/npm/b@1/b.js" integrity="notahash" crossorigin="anonymous"></script>',
+    '<script src="https://cdn.jsdelivr.net/npm/c@1/c.js" integrity="sha384-' + 'A'.repeat(32) + '" crossorigin="anonymous"></script>',
+  ].join('\n') });
+  try {
+    const t = texts(securityAudit(dir)).filter((x) => /usable integrity/.test(x));
+    assert.equal(t.length, 2, 'the empty and the garbage one, not the real hash');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+// The commonest way anyone writes an injection was the one form it could not see.
+test('a template literal with interpolation is an injection; without it, it is a literal', () => {
+  const dir = site({ 'app.js': 'el.innerHTML = `<div>Hello ${userName}</div>`; other.innerHTML = `<b>static</b>`;' });
+  try {
+    const t = texts(securityAudit(dir)).filter((x) => /innerHTML/.test(x));
+    assert.equal(t.length, 1, JSON.stringify(t));
+    assert.match(t[0], /template literal with interpolation/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('a secret under a quoted JSON key is a finding, not a note', () => {
+  const dir = site({ 'config.json': '{\n  "authToken": "abcdefghijklmnopqrstuvwxyz012345"\n}\n' });
+  try {
+    const r = securityAudit(dir);
+    assert.ok(texts(r, 'medium').some((x) => /secret-shaped value/.test(x)), JSON.stringify(r.findings));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
