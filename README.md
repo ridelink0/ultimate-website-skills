@@ -164,3 +164,54 @@ MIT.
 ## Website debugger
 
 Run node scripts/webdesign.mjs debug <site-directory-or-url> --out review to capture desktop/mobile, scrolling, interactions and reduced motion in an HTML gallery. Claude and Codex must open the PNGs before reporting a visual pass. See [visual debugging](skills/cinematic-web-design/references/visual-debug.md) for action files and reference-video extraction.
+
+## Measuring the page while it runs
+
+A still frame of a dead animation and a still frame of a live one are the same
+picture. So looking at screenshots, which is the other half of this, cannot
+answer the questions that actually decide whether a cinematic page is any good.
+
+```
+node scripts/webdesign.mjs quality <site-directory-or-url>
+node scripts/webdesign.mjs debug <dir> --measure     # folded into the debug pass
+```
+
+It measures four things against named budgets, in a real browser, on the
+running page:
+
+- **Does it move.** Frame timing over two seconds, and whether each canvas
+  actually changes across them - a canvas can repaint sixty times a second and
+  paint the same thing every time. Reduced motion is measured as a separate
+  pass, because a page that keeps animating when the user asked it not to is a
+  defect and it is invisible in a screenshot.
+- **Is the depth real.** Parallax as a measured rate per plane: 1.00 is page
+  speed, under it lags, over it leads. A correct three-plane hero reads
+  something like `1.03 / 0.82 / 0.62`. Three planes that all read 1.00 are a
+  flat page with extra markup, and only planes that actually declare a depth
+  are held to it.
+- **What it cost.** Bytes and requests, long tasks, layout shift - and what was
+  loaded and never called. That last one is the expensive kind of dead code,
+  because it sits in the critical path. It catches three.js loaded behind an
+  import map, where checking for a global never would.
+- **Does it read.** Distinct type sizes (a scale has a handful of steps; twenty
+  is twenty decisions nobody made together), the largest size, the body measure
+  in characters, and how many text colours are in play.
+
+```
+  ok    3 planes at 1.03 / 0.82 / 0.62 (1.00 is page speed)
+  ok    1 canvas is animating
+  warn  longest main-thread task 216 ms
+           the page cannot respond during it
+  warn  10 distinct type sizes
+           a scale has a handful of steps: 80, 46, 29, 21, 20, 17, 16, 15, 14, 13
+```
+
+The budgets live in one place, `BUDGETS` in `scripts/measure.mjs`, stated as
+numbers so they can be argued with. A report that says "feels slow" cannot be
+checked; one that says "38 fps against a budget of 55" can.
+
+Two honest notes. Headless Chrome is not locked to a display, so a frame-rate
+figure is a ceiling rather than what anyone sees - the worst frame is the
+useful half of that measurement. And the numbers are not the judgement: a page
+can pass every budget and still look wrong, which is why this prints the path
+to the screenshots and tells you to open them.

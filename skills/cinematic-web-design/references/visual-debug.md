@@ -52,3 +52,38 @@ this command; cover them with the host browser tools when applicable.
 
 Keep captures local unless publication is requested and their content is suitable
 for sharing. Do not commit authenticated pages, personal data or reference videos.
+
+## Measuring the running page
+
+`webdesign.mjs quality <dir|url>` (or `debug --measure`) measures what a
+screenshot cannot show. Run it before saying a page is finished, and read it
+alongside the pictures rather than instead of them.
+
+| Flag | What it does |
+| --- | --- |
+| `--widths 1440,390` | which viewports to measure |
+| `--record MS` | how long to watch frames for (default 1600) |
+| `--travel PX` | how far to scroll when measuring parallax (default 700) |
+| `--expect-depth` | the page is supposed to have planes; say so if it has none |
+| `--json` | the raw numbers as well as the verdicts |
+
+What each finding means, and what to do about it:
+
+- **"canvas painted once and never changed"** under normal motion. If it is
+  meant to be alive, it is not. Check the render loop is running and that the
+  element is on screen; an off-screen canvas is paused on purpose.
+- **"canvas still animating under prefers-reduced-motion"**. This is an error,
+  not a preference. Draw one frame and stop.
+- **"N declared planes all move at the same rate"**. The parallax is in the
+  markup and not on the screen. The engine is not attached, or the transform is
+  being overwritten.
+- **"loaded and never used"**. Delete the script tag, or use the library.
+- **"N distinct type sizes"**. Sizes that differ by one or two pixels are not
+  steps in a scale; collapse them.
+- **"largest type on the page is Npx"**. The house style opens at display
+  scale. A hero that tops out at 32px is not a hero.
+- **"frames cost N ms each (no vsync headless)"**. Read the worst frame, not
+  the rate: headless is uncapped, so the rate flatters.
+
+A page that passes every budget can still be wrong. The budgets catch the
+failures that a still frame hides; the still frames catch everything else.
