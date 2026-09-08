@@ -788,6 +788,27 @@ async function cmdDev() {
   console.log('\n  Save a file to re-check. Ctrl+C to stop.');
 }
 
+async function cmdDebug() {
+  const { debugSite, readActions } = await import('./debug.mjs');
+  const scroll = flag('scroll', 'auto');
+  const result = await debugSite(positional[0] || '.', {
+    out: flag('out'), widths: String(flag('widths', '1440,390')).split(',').map(Number),
+    wait: Number(flag('wait', 1800)), motion: flag('motion', 'both'), actions: readActions(flag('actions')),
+    scrolls: scroll === 'auto' ? 'auto' : String(scroll).split(',').map(Number),
+  });
+  console.log(result.text);
+  console.log('\nOpen the visual review: ' + result.file);
+  console.log('Read the screenshots before declaring the website checked.');
+  process.exitCode = result.errors ? 1 : 0;
+}
+async function cmdVideo() {
+  const { studyVideo } = await import('./video.mjs');
+  if (!positional[0]) die('video needs a local video file');
+  const frames = studyVideo(positional[0], { out: flag('out'), frames: Number(flag('frames', 8)) });
+  console.log(JSON.stringify(frames, null, 2));
+  console.log('Open these frames in timestamp order; do not infer motion from one still.');
+}
+
 /* ------------------------------------------------------------------ main -- */
 switch (cmd) {
   case 'new': cmdNew(); break;
@@ -799,6 +820,8 @@ switch (cmd) {
   case 'study': await cmdStudy(); break;
   case 'dev': await cmdDev(); break;
   case 'serve': cmdServe(); break;
+  case 'debug': await cmdDebug(); break;
+  case 'video': await cmdVideo(); break;
   default:
     console.log(`cinematic-web-design
 
@@ -815,6 +838,9 @@ switch (cmd) {
   dev <dir> [--port 4321] [--widths 1440] [--scroll 0,900]
                                   serve + watch: re-audits and re-renders on every save
   serve <dir> [--port 4321]       local preview
+  debug <dir|url> [--actions FILE] [--motion both|normal|reduce] [--wait MS] [--out DIR]
+                                  screenshots, scroll, interaction and 3D evidence in an HTML review
+  video <file> [--frames 8] [--out DIR]   inspect timestamped local video frames
 `);
     process.exit(cmd ? 1 : 0);
 }

@@ -1,5 +1,5 @@
 export function parseArgs(argv) {
-  const values = new Set(['preset', 'name', 'sections', 'to', 'port', 'widths', 'scroll', 'out', 'list', 'model']);
+  const values = new Set(['preset', 'name', 'sections', 'to', 'port', 'widths', 'scroll', 'out', 'list', 'model', 'actions', 'wait', 'motion', 'frames']);
   const flags = new Set(['no-shot', 'alpha-matting']);
   const options = {}, positional = [];
   for (let i = 1; i < argv.length; i++) {

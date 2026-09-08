@@ -20,6 +20,8 @@ inline SVG.
 
 For Claude Design work, first read `references/claude-design.md`. Use the connected service for design iteration and handoff when requested or already available. Keep its chosen direction intact. Otherwise proceed with the local house style without a separate approval pass.
 
+For website debugging or final verification, read references/visual-debug.md. Run the rendered debug command and actually open its PNGs before declaring the visual check complete.
+
 ## Fix three things before you type
 
 Hold these in your head, not on the screen: **the subject** (the actual thing,

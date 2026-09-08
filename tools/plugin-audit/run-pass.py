@@ -11,6 +11,7 @@ def add(name,repo,args):jobs.append((name,repo,args))
 add('usage','claude-code-usage-limits',['node','--test'])
 for name in ['policy','sessions','astra','build']:
  add('computer-'+name,'claude-computer-use',['node','tools/'+name+'-test.mjs'])
+add('computer-start-apps','claude-computer-use',['node','--test','tools/start-apps-test.mjs'])
 add('computer-driver','claude-computer-use',['node','--test','tools/driver-test.mjs'])
 for repo in ['atelier','cinematic-web-design']:
  files=sorted(str(p.relative_to(root/repo)) for p in (root/repo/'test').glob('*.test.mjs'))

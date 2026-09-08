@@ -42,14 +42,17 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function launch(bin) {
   const udd = mkdtempSync(join(tmpdir(), 'webdesign-cdp-'));
   const proc = spawn(bin, [
-    '--headless=new', '--disable-gpu', '--hide-scrollbars', '--mute-audio',
+    '--headless=new', '--hide-scrollbars', '--mute-audio',
     '--no-first-run', '--no-default-browser-check', '--disable-extensions',
     '--disable-background-networking', '--disable-sync', '--disable-features=Translate',
     `--user-data-dir=${udd}`, '--remote-debugging-port=0', 'about:blank',
-  ], { stdio: ['ignore', 'ignore', 'ignore'] });
+  ], { stdio: ['ignore', 'ignore', 'ignore'], windowsHide: true });
+  let launchError;
+  proc.once('error', err => { launchError = err; });
 
   const portFile = join(udd, 'DevToolsActivePort');
   for (let i = 0; i < 150; i++) {
+    if (launchError || proc.exitCode !== null) break;
     if (existsSync(portFile)) {
       const port = readFileSync(portFile, 'utf8').split('\n')[0].trim();
       if (port) return { proc, udd, port: +port };
@@ -57,13 +60,13 @@ async function launch(bin) {
     await sleep(100);
   }
   try { proc.kill(); } catch {}
-  rmSync(udd, { recursive: true, force: true });
-  throw new Error('browser did not expose a debugging port');
+  try { rmSync(udd, { recursive: true, force: true }); } catch {}
+  throw new Error(launchError ? 'Browser launch failed: ' + launchError.message : 'browser did not expose a debugging port');
 }
 
 /* ----------------------------------------------------------------- CDP ---- */
 
-class Session {
+export class Session {
   constructor(ws) { this.ws = ws; this.id = 0; this.waiting = new Map(); this.events = []; }
   static async open(port) {
     let target;
@@ -85,21 +88,29 @@ class Session {
     ws.addEventListener('message', (e) => {
       const msg = JSON.parse(e.data);
       if (msg.id && s.waiting.has(msg.id)) {
-        const { res, rej } = s.waiting.get(msg.id);
+        const { res, rej, timer } = s.waiting.get(msg.id);
+        clearTimeout(timer);
         s.waiting.delete(msg.id);
         msg.error ? rej(new Error(msg.error.message)) : res(msg.result);
-      } else if (msg.method) s.events.push(msg);
+      } else if (msg.method) { s.events.push(msg); if (s.events.length > 4000) s.events.shift(); }
     });
+    ws.addEventListener('close', () => s.failPending(new Error('CDP connection closed')));
+    ws.addEventListener('error', () => s.failPending(new Error('CDP connection failed')));
     return s;
+  }
+  failPending(error) {
+    for (const { rej, timer } of this.waiting.values()) { clearTimeout(timer); rej(error); }
+    this.waiting.clear();
   }
   send(method, params = {}) {
     const id = ++this.id;
     return new Promise((res, rej) => {
-      this.waiting.set(id, { res, rej });
-      this.ws.send(JSON.stringify({ id, method, params }));
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         if (this.waiting.has(id)) { this.waiting.delete(id); rej(new Error(method + ' timed out')); }
       }, 45000);
+      this.waiting.set(id, { res, rej, timer });
+      try { this.ws.send(JSON.stringify({ id, method, params })); }
+      catch (err) { clearTimeout(timer); this.waiting.delete(id); rej(err); }
     });
   }
   async waitForEvent(method, ms = 25000) {
@@ -111,7 +122,7 @@ class Session {
     }
     return null;
   }
-  close() { try { this.ws.close(); } catch {} }
+  close() { this.failPending(new Error('CDP session closed')); try { this.ws.close(); } catch {} }
 }
 
 /* ------------------------------------------------- the in-page analysis ---- */
@@ -326,7 +337,12 @@ const PROBE = `(() => {
 
 /* ------------------------------------------------------------- the API ---- */
 
-export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800, scrolls = [0] } = {}) {
+export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800, scrolls = [0], reducedMotion = false, actions = [] } = {}) {
+  if (typeof WebSocket === 'undefined') throw new Error('Browser inspection requires Node 22 or newer.');
+  if (!Array.isArray(widths) || !widths.length || widths.some(w => !Number.isInteger(w) || w < 240 || w > 3840)) throw new Error('Widths must be integers between 240 and 3840.');
+  if (!Number.isFinite(wait) || wait < 0 || wait > 30000) throw new Error('Wait must be between 0 and 30000 ms.');
+  if (scrolls !== 'auto' && (!Array.isArray(scrolls) || !scrolls.length || scrolls.some(y => !Number.isFinite(y) || y < 0))) throw new Error('Invalid scroll positions.');
+  if (!Array.isArray(actions) || actions.length > 40) throw new Error('At most 40 interaction steps are supported.');
   const bin = findBrowser();
   if (!bin) {
     const err = new Error(
@@ -346,6 +362,8 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
     session = await Session.open(port);
     await session.send('Page.enable');
     await session.send('Runtime.enable');
+    await session.send('Network.enable');
+    await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: reducedMotion ? 'reduce' : 'no-preference' }] });
 
     for (const w of widths) {
       const height = 1000;
@@ -354,8 +372,9 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
       });
       session.events.length = 0;
       await session.send('Log.enable').catch(() => {});
-      await session.send('Page.navigate', { url });
-      await session.waitForEvent('Page.loadEventFired');
+      const navigation = await session.send('Page.navigate', { url });
+      if (navigation.errorText) throw new Error('Navigation failed: ' + navigation.errorText);
+      if (!await session.waitForEvent('Page.loadEventFired')) throw new Error('Page load timed out; inspection is incomplete.');
       // let fonts settle and any entrance animation finish
       await session.send('Runtime.evaluate', {
         expression: 'document.fonts ? document.fonts.ready.then(()=>1) : 1', awaitPromise: true,
@@ -364,47 +383,25 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
 
       // A parallax layer that is fine at the top of the page can be sitting on
       // the headline 400px later. Probe at every requested scroll position.
-      for (const sy of scrolls) {
+      const metrics = await session.send('Runtime.evaluate', { expression: 'Math.max(0,document.documentElement.scrollHeight-innerHeight)', returnByValue: true });
+      const maximum = Number(metrics.result.value) || 0;
+      const positions = scrolls === 'auto' ? [...new Set([0, Math.round(maximum / 2), maximum])] : scrolls;
+      for (const sy of positions) {
         await session.send('Runtime.evaluate', {
           expression: `window.scrollTo({top:${sy},behavior:'instant'}); window.dispatchEvent(new Event('scroll'));`,
         });
         await sleep(sy ? 700 : 0);
         const probe = await session.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
+        if (probe.exceptionDetails || typeof probe.result?.value !== 'string') throw new Error('Page inspection failed to return a report.');
         const report = JSON.parse(probe.result.value);
+        report.reducedMotion = reducedMotion;
+        report.network = session.events.filter(e => e.method === 'Network.loadingFailed' && !e.params?.canceled)
+          .map(e => ({ error: e.params.errorText, type: e.params.type })).slice(0, 20);
+        const state = await session.send('Runtime.evaluate', { returnByValue: true, expression: '(' + canvasProbe.toString() + ')()' });
+        report.visual = state.result?.value || {};
+        report.actionErrors = [];
 
-        // A thrown exception, a failed shader compile, a 404 on a module - none
-        // of it shows in the DOM. The page just quietly does less than it should.
-        const seen = new Set();
-        report.console = [];
-        for (const e of session.events) {
-          let text = null;
-          if (e.method === 'Runtime.exceptionThrown') {
-            const d = e.params?.exceptionDetails;
-            text = d?.exception?.description || d?.text || 'uncaught exception';
-          } else if (e.method === 'Runtime.consoleAPICalled' && /error|warning|assert/.test(e.params?.type)) {
-            text = (e.params.args || []).map((a) => a.value ?? a.description ?? a.unserializableValue ?? '').join(' ').trim();
-          } else if (e.method === 'Log.entryAdded' && /error|warning/.test(e.params?.entry?.level)) {
-            const en = e.params.entry;
-            text = `${en.text}${en.url ? ' <- ' + en.url.split('/').pop() : ''}`;
-          }
-          if (!text) continue;
-          text = String(text).split('\n')[0].slice(0, 180);
-          // favicon 404s and third-party noise are not the page's bugs
-          // favicon 404s, aborted third-party requests, and the ANGLE precision
-          // note three.js emits on every Windows machine are not page bugs
-          if (/favicon|net::ERR_(BLOCKED|ABORTED)|cannot be represented accurately in double precision/i.test(text)) continue;
-          const key = text.slice(0, 90);
-          if (seen.has(key)) continue;
-          seen.add(key);
-          report.console.push({
-            level: e.method === 'Runtime.exceptionThrown' ? 'error'
-              : (e.params?.type || e.params?.entry?.level || 'warning'),
-            text,
-          });
-        }
-        // consume them, or every later scroll position re-reports the same
-        // load-time errors
-        session.events.length = 0;
+        Object.assign(report, collectEvents(session));
 
         let file = null;
         if (out) {
@@ -414,6 +411,25 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
           writeFileSync(file, Buffer.from(shot.data, 'base64'));
         }
         results.push({ width: w, scroll: sy, file, ...report });
+      }
+      for (let index = 0; index < actions.length; index++) {
+        const step = actions[index];
+        const actionErrors = [];
+        try { await performAction(session, step); } catch (err) { actionErrors.push(err.message); }
+        await sleep(200);
+        const probe = await session.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
+        if (probe.exceptionDetails || typeof probe.result?.value !== 'string') throw new Error('Interaction inspection returned no report.');
+        const report = JSON.parse(probe.result.value);
+        Object.assign(report, collectEvents(session));
+        const state = await session.send('Runtime.evaluate', { expression: '(' + canvasProbe.toString() + ')()', returnByValue: true });
+        let file = null;
+        if (out) {
+          mkdirSync(out, { recursive: true });
+          const shot = await session.send('Page.captureScreenshot', { format: 'png' });
+          file = join(out, 'w' + w + '-step' + (index + 1) + '.png');
+          writeFileSync(file, Buffer.from(shot.data, 'base64'));
+        }
+        results.push({ width: w, scroll: null, step: index + 1, action: step, file, ...report, visual: state.result?.value || {}, actionErrors, reducedMotion });
       }
     }
   } finally {
@@ -429,6 +445,12 @@ export function formatReport(results) {
   let errors = 0, warns = 0;
   for (const r of results) {
     lines.push(`\n  ${r.width}px${r.scroll ? ' scrolled ' + r.scroll + 'px' : ''}  (${r.stats.textElements} text elements, page ${r.stats.scrollHeight}px tall)`);
+    for (const error of r.actionErrors || []) { errors++; lines.push('  ERROR interaction: ' + error); }
+    for (const failure of r.network || []) { errors++; lines.push('  ERROR network: ' + failure.error + ' (' + failure.type + ')'); }
+    for (const canvas of r.visual?.canvases || []) {
+      if (canvas.width === 0 || canvas.height === 0) { errors++; lines.push('  ERROR canvas has zero visible size'); }
+      else if (canvas.uniform) { warns++; lines.push('  warn  canvas appears blank or uniform; inspect its screenshot and loading state'); }
+    }
     if (r.file) lines.push(`  shot: ${r.file}`);
 
     if (r.overlaps.length) {
@@ -451,4 +473,80 @@ export function formatReport(results) {
     for (const t of r.tiny) { warns++; lines.push(`  warn  tap target ${t.w}x${t.h}px (needs 24): ${t.el}`); }
   }
   return { text: lines.join('\n'), errors, warns };
+}
+
+function collectEvents(session) {
+  const report = {};
+  const network = session.events.filter(e => (e.method === "Network.loadingFailed" && !e.params?.canceled) || (e.method === "Network.responseReceived" && e.params?.response?.status >= 400 && !/favicon\.ico(?:$|\?)/.test(e.params.response.url)))
+    .map(e => ({ error: e.params.errorText || ("HTTP " + e.params.response.status + " " + e.params.response.url), type: e.params.type })).slice(0, 20);
+  // A thrown exception, a failed shader compile, a 404 on a module - none
+  // of it shows in the DOM. The page just quietly does less than it should.
+  const seen = new Set();
+  report.console = [];
+  for (const e of session.events) {
+    let text = null;
+    if (e.method === 'Runtime.exceptionThrown') {
+      const d = e.params?.exceptionDetails;
+      text = d?.exception?.description || d?.text || 'uncaught exception';
+    } else if (e.method === 'Runtime.consoleAPICalled' && /error|warning|assert/.test(e.params?.type)) {
+      text = (e.params.args || []).map((a) => a.value ?? a.description ?? a.unserializableValue ?? '').join(' ').trim();
+    } else if (e.method === 'Log.entryAdded' && /error|warning/.test(e.params?.entry?.level)) {
+      const en = e.params.entry;
+      text = `${en.text}${en.url ? ' <- ' + en.url.split('/').pop() : ''}`;
+    }
+    if (!text) continue;
+    text = String(text).split('\n')[0].slice(0, 180);
+    // favicon 404s and third-party noise are not the page's bugs
+    // favicon 404s, aborted third-party requests, and the ANGLE precision
+    // note three.js emits on every Windows machine are not page bugs
+    if (/favicon|net::ERR_(BLOCKED|ABORTED)|cannot be represented accurately in double precision/i.test(text)) continue;
+    const key = text.slice(0, 90);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    report.console.push({
+      level: e.method === 'Runtime.exceptionThrown' ? 'error'
+        : (e.params?.type || e.params?.entry?.level || 'warning'),
+      text,
+    });
+  }
+  // consume them, or every later scroll position re-reports the same
+  // load-time errors
+  session.events.length = 0;
+
+  report.network = network;
+  return report;
+}
+
+function canvasProbe() {
+  const canvases = [...document.querySelectorAll('canvas')].map(canvas => {
+    const rect = canvas.getBoundingClientRect();
+    let uniform = null;
+    try {
+      const copy = document.createElement('canvas'); copy.width = copy.height = 8;
+      const ctx = copy.getContext('2d'); ctx.drawImage(canvas, 0, 0, 8, 8);
+      const pixels = ctx.getImageData(0, 0, 8, 8).data;
+      uniform = true;
+      for (let i = 4; i < pixels.length; i++) if (pixels[i] !== pixels[i % 4]) { uniform = false; break; }
+    } catch {}
+    return { width: Math.round(rect.width), height: Math.round(rect.height), uniform };
+  });
+  return { canvases, reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+    webglSections: [...document.querySelectorAll('.exploded')].map(el => ({ live: el.classList.contains('is-live'), model: Boolean(el.dataset.model) })) };
+}
+
+async function performAction(session, step) {
+  if (!step || !['click', 'hover', 'focus', 'expect-visible', 'expect-text'].includes(step.type) || typeof step.selector !== 'string')
+    throw new Error('Each step needs a supported type and CSS selector.');
+  if (step.type === 'expect-text' && typeof step.text !== 'string') throw new Error('expect-text needs a text string.');
+  const encoded = JSON.stringify(step);
+  const response = await session.send('Runtime.evaluate', { returnByValue: true, expression: '(() => { const step = ' + encoded + '; const el = document.querySelector(step.selector); if (!el) return {error:"Element not found: "+step.selector}; el.scrollIntoView({block:"center",behavior:"instant"}); const r=el.getBoundingClientRect(); const style=getComputedStyle(el); const visible=r.width>0 && r.height>0 && style.visibility!=="hidden" && style.display!=="none" && (!el.checkVisibility || el.checkVisibility({opacityProperty:true,visibilityProperty:true})); if(step.type==="expect-visible") return visible ? {} : {error:"Element is not visible: "+step.selector}; if(step.type==="expect-text") return visible && el.textContent.includes(step.text) ? {} : {error:"Expected text missing: "+step.selector}; if(step.type==="focus"){ el.focus(); return document.activeElement===el ? {} : {error:"Element could not receive focus"}; } const x=r.left+r.width/2,y=r.top+r.height/2; const hit=document.elementFromPoint(x,y); if(!visible || !(hit===el || el.contains(hit))) return {error:"Element is hidden or covered: "+step.selector}; return {x,y}; })()' });
+  if (response.exceptionDetails) throw new Error(response.exceptionDetails.text || 'Interaction evaluation failed');
+  const result = response.result?.value;
+  if (!result || result.error) throw new Error(result?.error || 'Interaction returned no result');
+  if (!['click', 'hover'].includes(step.type)) return;
+  await session.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: result.x, y: result.y });
+  if (step.type === 'click') {
+    await session.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: result.x, y: result.y, button: 'left', clickCount: 1 });
+    await session.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: result.x, y: result.y, button: 'left', clickCount: 1 });
+  }
 }

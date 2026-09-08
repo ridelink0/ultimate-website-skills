@@ -160,3 +160,7 @@ The specific numbers - `line-height: 0.92` on the hero, `-0.030em` tracking,
 ten-stop eased scrim - are in the reference files with their reasoning.
 
 MIT.
+
+## Website debugger
+
+Run node scripts/webdesign.mjs debug <site-directory-or-url> --out review to capture desktop/mobile, scrolling, interactions and reduced motion in an HTML gallery. Claude and Codex must open the PNGs before reporting a visual pass. See [visual debugging](skills/cinematic-web-design/references/visual-debug.md) for action files and reference-video extraction.
