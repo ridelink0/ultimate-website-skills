@@ -795,11 +795,47 @@ async function cmdDebug() {
     out: flag('out'), widths: String(flag('widths', '1440,390')).split(',').map(Number),
     wait: Number(flag('wait', 1800)), motion: flag('motion', 'both'), actions: readActions(flag('actions')),
     scrolls: scroll === 'auto' ? 'auto' : String(scroll).split(',').map(Number),
+    measured: Boolean(flag('measure')),
   });
   console.log(result.text);
   console.log('\nOpen the visual review: ' + result.file);
   console.log('Read the screenshots before declaring the website checked.');
   process.exitCode = result.errors ? 1 : 0;
+}
+
+// The other half of "does it look right": does it move right, cost right and
+// read right. A still frame of a dead animation and a still frame of a live one
+// are the same picture, so this measures the running page instead of looking at
+// it - frame rate, whether each plane really travels at its own speed, what was
+// loaded and never called, and whether the type is a scale or a pile.
+async function cmdQuality() {
+  const { debugSite } = await import('./debug.mjs');
+  const { judge, formatQuality, BUDGETS } = await import('./measure.mjs');
+  const result = await debugSite(positional[0] || '.', {
+    out: flag('out'), widths: String(flag('widths', '1440')).split(',').map(Number),
+    wait: Number(flag('wait', 2200)),
+    // Both, because reduced motion is a requirement and not a variant: a page
+    // that keeps animating when the user asked it not to is a defect, and it
+    // is invisible unless the same page is measured twice.
+    motion: flag('motion', 'both'),
+    scrolls: [0],
+    measured: { motionMs: Number(flag('record', 1600)), depthDistance: Number(flag('travel', 700)) },
+  });
+  let errors = 0, warns = 0;
+  for (const frame of result.results) {
+    if (!frame.measured) continue;
+    const found = judge(frame.measured, { expectDepth: Boolean(flag('expect-depth')) });
+    const shown = formatQuality(frame.measured, found);
+    errors += shown.errors;
+    warns += shown.warns;
+    console.log('\n  ' + frame.width + 'px, ' + (frame.reducedMotion ? 'reduced motion' : 'normal motion'));
+    console.log(shown.lines || '  nothing measurable');
+    if (Boolean(flag('json'))) console.log('  ' + JSON.stringify(frame.measured));
+  }
+  console.log('\n  ' + errors + ' over budget, ' + warns + ' worth looking at. Budgets: ' +
+    BUDGETS.fps + ' fps, ' + BUDGETS.scriptKb + ' KB of script, ' + BUDGETS.distinctSizes + ' type sizes.');
+  console.log('  Numbers are not the judgement. Open ' + result.file + ' and look at the page.');
+  process.exitCode = errors ? 1 : 0;
 }
 async function cmdVideo() {
   const { studyVideo } = await import('./video.mjs');
@@ -821,6 +857,7 @@ switch (cmd) {
   case 'dev': await cmdDev(); break;
   case 'serve': cmdServe(); break;
   case 'debug': await cmdDebug(); break;
+  case 'quality': case 'measure': await cmdQuality(); break;
   case 'video': await cmdVideo(); break;
   default:
     console.log(`cinematic-web-design
@@ -840,6 +877,8 @@ switch (cmd) {
   serve <dir> [--port 4321]       local preview
   debug <dir|url> [--actions FILE] [--motion both|normal|reduce] [--wait MS] [--out DIR]
                                   screenshots, scroll, interaction and 3D evidence in an HTML review
+  quality <dir|url> [--widths 1440] [--record MS] [--travel PX] [--expect-depth] [--json]
+                                  measure the running page: frame rate, real parallax rates, idle libraries, type scale
   video <file> [--frames 8] [--out DIR]   inspect timestamped local video frames
 `);
     process.exit(cmd ? 1 : 0);

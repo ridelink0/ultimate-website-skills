@@ -58,3 +58,20 @@ test('post-click exceptions, HTTP errors and visually hidden assertions fail the
     assert.ok(result.errors >= 3);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+// The fixture above asks for preserveDrawingBuffer itself, which is why the
+// check passed while every real three.js hero read as blank: no library sets
+// that flag, and a composited drawing buffer reads back as transparent black.
+test('a WebGL canvas that never asked for a preserved buffer still reads as rendered', { skip: !findBrowser(), timeout: 30000 }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'visual-webgl-'));
+  try {
+    writeFileSync(join(dir, 'index.html'), '<!doctype html><html lang="en"><meta charset="utf-8"><style>canvas{display:block;width:300px;height:200px}</style><h1>WebGL</h1><canvas id="live" width="300" height="200"></canvas><canvas id="dead" width="300" height="200"></canvas><script>const gl=document.querySelector("#live").getContext("webgl");gl.clearColor(0.1,0.2,0.4,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.enable(gl.SCISSOR_TEST);gl.scissor(40,30,120,90);gl.clearColor(0.9,0.7,0.3,1);gl.clear(gl.COLOR_BUFFER_BIT);</script></html>');
+    const result = await debugSite(dir, { out: join(dir, 'review'), widths: [800], wait: 60, motion: 'normal', scrolls: [0] });
+    const canvases = result.results[0].visual.canvases;
+    const live = canvases.find(c => c.context === 'webgl' && c.uniform === false);
+    assert.ok(live, 'a painted WebGL canvas must not read as a flat fill: ' + JSON.stringify(canvases));
+    assert.ok(live.spread > 20, 'spread should measure the real range, got ' + live.spread);
+    assert.equal(canvases.filter(c => c.uniform === true).length, 1, 'the untouched canvas must still be reported flat');
+    assert.ok(canvases.every(c => c.readable === true));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});

@@ -1,6 +1,6 @@
 export function parseArgs(argv) {
-  const values = new Set(['preset', 'name', 'sections', 'to', 'port', 'widths', 'scroll', 'out', 'list', 'model', 'actions', 'wait', 'motion', 'frames']);
-  const flags = new Set(['no-shot', 'alpha-matting']);
+  const values = new Set(['preset', 'name', 'sections', 'to', 'port', 'widths', 'scroll', 'out', 'list', 'model', 'actions', 'wait', 'motion', 'frames', 'record', 'travel']);
+  const flags = new Set(['no-shot', 'alpha-matting', 'measure', 'expect-depth', 'json']);
   const options = {}, positional = [];
   for (let i = 1; i < argv.length; i++) {
     const arg = argv[i];

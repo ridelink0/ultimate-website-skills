@@ -6,7 +6,7 @@ import { startServer } from './preview-server.mjs';
 import { inspect } from './inspect.mjs';
 import { writeReview } from './review.mjs';
 
-export async function debugSite(target, { out, widths = [1440, 390], wait = 1800, motion = 'both', actions = [], scrolls = 'auto' } = {}) {
+export async function debugSite(target, { out, widths = [1440, 390], wait = 1800, motion = 'both', actions = [], scrolls = 'auto', measured = false } = {}) {
   if (!['normal', 'reduce', 'both'].includes(motion)) throw new Error('Motion must be normal, reduce or both.');
   const destination = resolve(out || mkdtempSync(join(tmpdir(), 'webdesign-review-')));
   let server, url = target;
@@ -20,7 +20,7 @@ export async function debugSite(target, { out, widths = [1440, 390], wait = 1800
   const results = [];
   try {
     for (const reduce of motion === 'both' ? [false, true] : [motion === 'reduce']) {
-      results.push(...await inspect(url, { widths, wait, scrolls, actions, reducedMotion: reduce, out: join(destination, reduce ? 'reduced' : 'normal') }));
+      results.push(...await inspect(url, { widths, wait, scrolls, actions, measured, reducedMotion: reduce, out: join(destination, reduce ? 'reduced' : 'normal') }));
     }
     return { ...writeReview(results, destination, target), results, out: destination };
   } finally { if (server) await new Promise(resolve => server.close(resolve)); }

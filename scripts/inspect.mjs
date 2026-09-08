@@ -13,6 +13,7 @@ import { spawn } from 'node:child_process';
 import { mkdtempSync, existsSync, readFileSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { MEASURE_INIT, measure, judge, formatQuality } from './measure.mjs';
 
 /* ------------------------------------------------------------- browser ---- */
 
@@ -124,6 +125,22 @@ export class Session {
   }
   close() { this.failPending(new Error('CDP session closed')); try { this.ws.close(); } catch {} }
 }
+
+/* Installed before any document runs. Two jobs: keep WebGL drawing buffers
+   readable so the blank-canvas check is measuring the render and not the
+   compositor, and remember which context type each canvas took. */
+const CANVAS_INIT = `(() => {
+  const proto = HTMLCanvasElement.prototype;
+  const original = proto.getContext;
+  if (!original || proto.__inspectPatched) return;
+  Object.defineProperty(proto, '__inspectPatched', { value: true });
+  proto.getContext = function (type, attributes) {
+    const isGL = typeof type === 'string' && /^(webgl2?|experimental-webgl)$/i.test(type);
+    const context = original.call(this, type, isGL ? Object.assign({}, attributes, { preserveDrawingBuffer: true }) : attributes);
+    if (context) { try { this.__inspectContext = String(type).toLowerCase(); } catch (err) {} }
+    return context;
+  };
+})()`;
 
 /* ------------------------------------------------- the in-page analysis ---- */
 /* Runs inside the page. Everything it needs must be self-contained. */
@@ -337,7 +354,7 @@ const PROBE = `(() => {
 
 /* ------------------------------------------------------------- the API ---- */
 
-export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800, scrolls = [0], reducedMotion = false, actions = [] } = {}) {
+export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800, scrolls = [0], reducedMotion = false, actions = [], measured = false } = {}) {
   if (typeof WebSocket === 'undefined') throw new Error('Browser inspection requires Node 22 or newer.');
   if (!Array.isArray(widths) || !widths.length || widths.some(w => !Number.isInteger(w) || w < 240 || w > 3840)) throw new Error('Widths must be integers between 240 and 3840.');
   if (!Number.isFinite(wait) || wait < 0 || wait > 30000) throw new Error('Wait must be between 0 and 30000 ms.');
@@ -363,6 +380,15 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
     await session.send('Page.enable');
     await session.send('Runtime.enable');
     await session.send('Network.enable');
+    // A WebGL drawing buffer is cleared the moment it is composited, so
+    // drawImage() from one reads back transparent black and every three.js
+    // hero looked "blank". Ask for the buffer to be preserved before any
+    // document runs, and record which kind of context each canvas took so a
+    // reading that still comes back flat means something.
+    await session.send('Page.addScriptToEvaluateOnNewDocument', { source: CANVAS_INIT }).catch(() => {});
+    // Long tasks and layout shifts have to be observed from the first frame,
+    // not from whenever the probe arrives.
+    await session.send('Page.addScriptToEvaluateOnNewDocument', { source: MEASURE_INIT }).catch(() => {});
     await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: reducedMotion ? 'reduce' : 'no-preference' }] });
 
     for (const w of widths) {
@@ -410,7 +436,15 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
           file = join(out, `w${w}${sy ? '-y' + sy : ''}.png`);
           writeFileSync(file, Buffer.from(shot.data, 'base64'));
         }
-        results.push({ width: w, scroll: sy, file, ...report });
+        // Once per width, at the top of the page, because the frame rate and
+        // the load cost are properties of the page rather than of a scroll
+        // position, and measuring them three times says the same thing three
+        // times at three times the cost.
+        if (measured && sy === positions[0]) {
+          results.push({ width: w, scroll: sy, file, ...report, measured: await measure(session, measured === true ? {} : measured) });
+        } else {
+          results.push({ width: w, scroll: sy, file, ...report });
+        }
       }
       for (let index = 0; index < actions.length; index++) {
         const step = actions[index];
@@ -448,8 +482,17 @@ export function formatReport(results) {
     for (const error of r.actionErrors || []) { errors++; lines.push('  ERROR interaction: ' + error); }
     for (const failure of r.network || []) { errors++; lines.push('  ERROR network: ' + failure.error + ' (' + failure.type + ')'); }
     for (const canvas of r.visual?.canvases || []) {
-      if (canvas.width === 0 || canvas.height === 0) { errors++; lines.push('  ERROR canvas has zero visible size'); }
-      else if (canvas.uniform) { warns++; lines.push('  warn  canvas appears blank or uniform; inspect its screenshot and loading state'); }
+      const kind = canvas.context ? canvas.context.replace('experimental-', '') + ' canvas' : 'canvas';
+      if (canvas.width === 0 || canvas.height === 0) { errors++; lines.push(`  ERROR ${kind} has zero visible size`); }
+      else if (canvas.readable === false) lines.push(`  note  ${kind} pixels could not be read (offscreen or cross-origin); judge it from the screenshot`);
+      else if (canvas.uniform) { warns++; lines.push(`  warn  ${kind} rendered a flat fill; inspect its screenshot and loading state`); }
+    }
+    if (r.measured) {
+      const found = judge(r.measured, { expectDepth: false });
+      const shown = formatQuality(r.measured, found);
+      errors += shown.errors;
+      warns += shown.warns;
+      if (shown.lines) lines.push(shown.lines);
     }
     if (r.file) lines.push(`  shot: ${r.file}`);
 
@@ -520,15 +563,31 @@ function collectEvents(session) {
 function canvasProbe() {
   const canvases = [...document.querySelectorAll('canvas')].map(canvas => {
     const rect = canvas.getBoundingClientRect();
-    let uniform = null;
+    let uniform = null, readable = false, spread = null;
     try {
-      const copy = document.createElement('canvas'); copy.width = copy.height = 8;
-      const ctx = copy.getContext('2d'); ctx.drawImage(canvas, 0, 0, 8, 8);
-      const pixels = ctx.getImageData(0, 0, 8, 8).data;
-      uniform = true;
-      for (let i = 4; i < pixels.length; i++) if (pixels[i] !== pixels[i % 4]) { uniform = false; break; }
-    } catch {}
-    return { width: Math.round(rect.width), height: Math.round(rect.height), uniform };
+      const n = 16;
+      const copy = document.createElement('canvas'); copy.width = copy.height = n;
+      const ctx = copy.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(canvas, 0, 0, n, n);
+      const pixels = ctx.getImageData(0, 0, n, n).data;
+      readable = true;
+      // Widest spread on any channel across the sampled grid. Exact equality
+      // called a dithered gradient "varied" and a 1-bit difference "alive";
+      // a spread of a couple of levels is a flat fill either way.
+      const lo = [255, 255, 255, 255], hi = [0, 0, 0, 0];
+      for (let i = 0; i < pixels.length; i++) {
+        const c = i % 4;
+        if (pixels[i] < lo[c]) lo[c] = pixels[i];
+        if (pixels[i] > hi[c]) hi[c] = pixels[i];
+      }
+      spread = Math.max(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2], hi[3] - lo[3]);
+      uniform = spread <= 2;
+    } catch (err) { uniform = null; }
+    return {
+      width: Math.round(rect.width), height: Math.round(rect.height),
+      uniform, readable, spread,
+      context: canvas.__inspectContext || null,
+    };
   });
   return { canvases, reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
     webglSections: [...document.querySelectorAll('.exploded')].map(el => ({ live: el.classList.contains('is-live'), model: Boolean(el.dataset.model) })) };
