@@ -557,7 +557,7 @@ export function sampleImageContrast(png, candidates) {
 
 /* ------------------------------------------------------------- the API ---- */
 
-export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800, scrolls = [0], reducedMotion = false, actions = [], measured = false } = {}) {
+export async function inspect(url, { widths = [1440, 390], out = null, full = false, wait = 1800, scrolls = [0], reducedMotion = false, actions = [], measured = false, interact = false, baseline = null } = {}) {
   if (typeof WebSocket === 'undefined') throw new Error('Browser inspection requires Node 22 or newer.');
   if (!Array.isArray(widths) || !widths.length || widths.some(w => !Number.isInteger(w) || w < 240 || w > 3840)) throw new Error('Widths must be integers between 240 and 3840.');
   if (!Number.isFinite(wait) || wait < 0 || wait > 30000) throw new Error('Wait must be between 0 and 30000 ms.');
@@ -576,6 +576,10 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
   }
 
   const { proc, udd, port } = await launch(bin);
+  // Same-origin test for the hung-request check. A URL that will not parse is
+  // not a reason to fail the run; it just means the check cannot narrow.
+  let origin = null;
+  try { origin = new URL(url).origin; } catch { origin = null; }
   const results = [];
   let session;
   try {
@@ -624,13 +628,14 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
         if (probe.exceptionDetails || typeof probe.result?.value !== 'string') throw new Error('Page inspection failed to return a report.');
         const report = JSON.parse(probe.result.value);
         report.reducedMotion = reducedMotion;
-        report.network = session.events.filter(e => e.method === 'Network.loadingFailed' && !e.params?.canceled)
-          .map(e => ({ error: e.params.errorText, type: e.params.type })).slice(0, 20);
         const state = await session.send('Runtime.evaluate', { returnByValue: true, expression: '(' + canvasProbe.toString() + ')()' });
         report.visual = state.result?.value || {};
         report.actionErrors = [];
 
-        Object.assign(report, collectEvents(session));
+        // report.network used to be assigned here from a loadingFailed filter
+        // and then immediately overwritten by collectEvents' own, better one.
+        // Dead code that duplicated the 404 logic; removed.
+        Object.assign(report, collectEvents(session, { origin }));
 
         let file = null;
         // A screenshot is captured for the imageCandidates the probe found
@@ -664,9 +669,28 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
         // position, and measuring them three times says the same thing three
         // times at three times the cost.
         if (measured && sy === positions[0]) {
-          results.push({ width: w, scroll: sy, file, ...report, measured: await measure(session, measured === true ? {} : measured) });
+          // reducedMotion tells measure() which media this pass NAVIGATED
+          // with, which is the only authoritative answer to "does the page
+          // honour it"; baseline carries what the no-preference pass saw so
+          // the reduce pass can say what changed rather than only what is.
+          const opts = { ...(measured === true ? {} : measured), reducedMotion, baseline: baseline?.[w] || null };
+          results.push({ width: w, scroll: sy, file, ...report, measured: await measure(session, opts) });
         } else {
           results.push({ width: w, scroll: sy, file, ...report });
+        }
+      }
+      // Every interactive element on the page, exercised. Runs after the
+      // scroll probes so nothing it clicks can change what they measured, and
+      // before the scripted actions so a hand-written flow still starts from
+      // the page as authored.
+      if (interact) {
+        const sweep = await sweepInteractive(session, { origin }).catch((err) => ({ error: err.message, clicks: [], focus: [], shifted: [] }));
+        const last = results[results.length - 1];
+        if (last) {
+          last.interact = sweep.clicks || [];
+          last.focus = sweep.focus || [];
+          last.shifted = sweep.shifted || [];
+          if (sweep.error) last.actionErrors = [...(last.actionErrors || []), 'interaction sweep: ' + sweep.error];
         }
       }
       for (let index = 0; index < actions.length; index++) {
@@ -677,7 +701,7 @@ export async function inspect(url, { widths = [1440, 390], out = null, full = fa
         const probe = await session.send('Runtime.evaluate', { expression: PROBE, returnByValue: true });
         if (probe.exceptionDetails || typeof probe.result?.value !== 'string') throw new Error('Interaction inspection returned no report.');
         const report = JSON.parse(probe.result.value);
-        Object.assign(report, collectEvents(session));
+        Object.assign(report, collectEvents(session, { origin }));
         const state = await session.send('Runtime.evaluate', { expression: '(' + canvasProbe.toString() + ')()', returnByValue: true });
         let file = null;
         if (out || report.imageCandidates?.length) {
@@ -715,7 +739,14 @@ export function formatReport(results) {
   for (const r of results) {
     lines.push(`\n  ${r.width}px${r.scroll ? ' scrolled ' + r.scroll + 'px' : ''}  (${r.stats.textElements} text elements, page ${r.stats.scrollHeight}px tall)`);
     for (const error of r.actionErrors || []) { errors++; lines.push('  ERROR interaction: ' + error); }
-    for (const failure of r.network || []) { errors++; lines.push('  ERROR network: ' + failure.error + ' (' + failure.type + ')'); }
+    for (const failure of r.network || []) {
+      errors++;
+      lines.push('  ERROR network: ' + failure.error + ' (' + failure.type + ')' + (failure.blockedReason ? ' blocked: ' + failure.blockedReason : ''));
+    }
+    for (const h of r.hung || []) { errors++; lines.push(`  ERROR request never resolved after ${h.ms}ms: ${h.url} (${h.type})`); }
+    for (const c of r.interact || []) { errors++; lines.push(`  ERROR clicking ${c.el} threw: ${c.error}`); }
+    for (const s of r.shifted || []) { warns++; lines.push(`  warn  ${s.el} moved out from under the pointer when ${s.clicked} was clicked`); }
+    for (const f of r.focus || []) { warns++; lines.push(`  warn  no visible focus indicator on ${f.el}`); }
     for (const canvas of r.visual?.canvases || []) {
       const kind = canvas.context ? canvas.context.replace('experimental-', '') + ' canvas' : 'canvas';
       if (canvas.width === 0 || canvas.height === 0) { errors++; lines.push(`  ERROR ${kind} has zero visible size`); }
@@ -757,10 +788,75 @@ export function formatReport(results) {
   return { text: lines.join('\n'), errors, warns };
 }
 
-function collectEvents(session) {
+/* A request that is still outstanding this long after it was sent has not
+   failed and has not 404'd - it has simply never resolved, which is the one
+   asset failure that produces no event at all today. Deliberately generous:
+   the cost of calling a merely slow asset "hung" is a false positive, and a
+   false positive is worse than no check. */
+const HUNG_MS = 3000;
+const HUNG_TYPES = new Set(['Script', 'Stylesheet', 'Font', 'Image']);
+
+function collectEvents(session, options = {}) {
   const report = {};
-  const network = session.events.filter(e => (e.method === "Network.loadingFailed" && !e.params?.canceled) || (e.method === "Network.responseReceived" && e.params?.response?.status >= 400 && !/favicon\.ico(?:$|\?)/.test(e.params.response.url)))
-    .map(e => ({ error: e.params.errorText || ("HTTP " + e.params.response.status + " " + e.params.response.url), type: e.params.type })).slice(0, 20);
+  // ONE request, ONE finding. A missing script emits BOTH
+  // Network.responseReceived status 404 AND Network.loadingFailed
+  // net::ERR_ABORTED for the same requestId; MEASURED on Chromium 152, that
+  // follow-up failure carries canceled:true, so the !canceled filter already
+  // hid it and keying by requestId is belt-and-braces rather than the fix.
+  // The duplicate that was really being printed is the Log.entryAdded
+  // "Failed to load resource" echo further down, which is now dropped in
+  // favour of the network entry - that one is the report the fixture proves.
+  // requestId is kept as the key regardless: it is the only identity that is
+  // genuinely one per request, so a browser that does not mark the abort
+  // canceled cannot reintroduce the double.
+  const byRequest = new Map();
+  for (const e of session.events) {
+    const id = e.params?.requestId;
+    if (!id) continue;
+    if (e.method === 'Network.responseReceived' && e.params.response?.status >= 400) {
+      if (/favicon\.ico(?:$|\?)/.test(e.params.response.url)) continue;
+      byRequest.set(id, { error: 'HTTP ' + e.params.response.status + ' ' + e.params.response.url, type: e.params.type, blockedReason: null });
+    } else if (e.method === 'Network.loadingFailed' && !e.params.canceled) {
+      // blockedReason (csp, mixed-content, inspector) was being discarded
+      // while the console filter below suppresses the net::ERR_BLOCKED text
+      // it produces - between the two, a script blocked by policy was
+      // reported nowhere at all.
+      const blockedReason = e.params.blockedReason || null;
+      if (byRequest.has(id) && !blockedReason) continue; // the 404 above already said it
+      byRequest.set(id, { error: e.params.errorText || 'request failed', type: e.params.type, blockedReason });
+    }
+  }
+  const network = [...byRequest.values()].slice(0, 20);
+
+  // Requests that never resolved either way. Tracked across calls because
+  // session.events is drained at the end of this function.
+  if (!session.pending) session.pending = new Map();
+  for (const e of session.events) {
+    const id = e.params?.requestId;
+    if (!id) continue;
+    if (e.method === 'Network.requestWillBeSent') {
+      // wallTime, not Date.now(): these events are read in a batch long after
+      // they happened, so stamping them on arrival made every request look
+      // brand new and nothing could ever be old enough to count as hung.
+      const at = Number.isFinite(e.params.wallTime) ? e.params.wallTime * 1000 : Date.now();
+      session.pending.set(id, { url: String(e.params.request?.url || ''), type: e.params.type || null, at });
+    } else if (e.method === 'Network.loadingFinished' || e.method === 'Network.loadingFailed') {
+      session.pending.delete(id);
+    }
+  }
+  const now = Date.now();
+  const origin = options.origin || null;
+  report.hung = [];
+  for (const [id, req] of session.pending) {
+    if (now - req.at < HUNG_MS) continue;
+    // Only same-origin, and only a type the page needs in order to render: an
+    // analytics beacon left open forever is not this page's bug.
+    if (!HUNG_TYPES.has(req.type)) continue;
+    if (origin && !req.url.startsWith(origin)) continue;
+    report.hung.push({ url: req.url.slice(0, 120), type: req.type, ms: now - req.at });
+    session.pending.delete(id); // reported once, not at every later scroll position
+    if (report.hung.length >= 8) break;
+  }
   // A thrown exception, a failed shader compile, a 404 on a module - none
   // of it shows in the DOM. The page just quietly does less than it should.
   const seen = new Set();
@@ -774,6 +870,12 @@ function collectEvents(session) {
       text = (e.params.args || []).map((a) => a.value ?? a.description ?? a.unserializableValue ?? '').join(' ').trim();
     } else if (e.method === 'Log.entryAdded' && /error|warning/.test(e.params?.entry?.level)) {
       const en = e.params.entry;
+      // A 404 emits a network Log entry AS WELL AS the responseReceived the
+      // network list above is built from, so one missing asset was being
+      // reported twice in two different vocabularies. The network list is the
+      // better of the two - it carries the status and the full URL - so the
+      // echo is dropped rather than the entry.
+      if (en.source === 'network' && /^Failed to load resource/.test(en.text || '')) continue;
       text = `${en.text}${en.url ? ' <- ' + en.url.split('/').pop() : ''}`;
     }
     if (!text) continue;
@@ -832,6 +934,193 @@ function canvasProbe() {
     webglSections: [...document.querySelectorAll('.exploded')].map(el => ({ live: el.classList.contains('is-live'), model: Boolean(el.dataset.model) })) };
 }
 
+/* ------------------------------------------------- the interaction sweep --- */
+/* Check 6 extends performAction rather than sitting beside it: the same
+   selector-resolve / elementFromPoint hit-test / Input.dispatchMouseEvent
+   sequence, fed by an auto-enumerated element list instead of a hand-written
+   JSON file. Three defects are looked for, and each has a guard that cost a
+   real false positive to learn. */
+
+const SWEEP_CAP = 16;
+
+/* Marks the elements to exercise and hands back their labels. Every skip here
+   is guard (d): one stray <a href> turns a debug pass into a site crawl. */
+const SWEEP_LIST = `(() => {
+  const here = location.href.split('#')[0];
+  const out = [];
+  for (const el of document.querySelectorAll('a, button, input, select, textarea, [role=button]')) {
+    if (out.length >= ${SWEEP_CAP}) break;
+    const r = el.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) continue;
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity === 0) continue;
+    if (el.disabled) continue;
+    if (el.tagName === 'A' && el.href && el.href.split('#')[0] !== here) continue;
+    if (el.tagName === 'INPUT' && /^(file|submit|reset|image)$/i.test(el.type)) continue;
+    const id = el.id ? '#' + el.id : '';
+    const txt = (el.textContent || el.value || '').trim().replace(/\\s+/g, ' ').slice(0, 28);
+    el.setAttribute('data-uws-probe', String(out.length));
+    out.push({ i: out.length, el: el.tagName.toLowerCase() + id + (txt ? ' "' + txt + '"' : '') });
+  }
+  return JSON.stringify(out);
+})()`;
+
+const SWEEP_CLEANUP = `(() => {
+  for (const el of document.querySelectorAll('[data-uws-probe]')) el.removeAttribute('data-uws-probe');
+  return JSON.stringify({ href: location.href });
+})()`;
+
+/* Focus, driven by real Tab keys. MEASURED GOTCHA: a programmatic el.focus()
+   inherits the previous input modality, so :focus-visible came back true on an
+   element focused by script straight after a mouse click. Judging focus from
+   el.focus() is therefore unsound - the only honest way to ask "would a
+   keyboard user see where they are" is to press Tab. */
+/* One fingerprint function, shared verbatim by the snapshot and the read-back
+   so the two can never drift. It reads the element, its ::before and ::after,
+   its PARENT (a :focus-within wrapper is where a whole class of design systems
+   draws the ring) and its first few descendants (an inner span is the other).
+   getComputedStyle(el) with no second argument sees none of those, so a ring
+   drawn on ::after produced an identical string focused and unfocused and a
+   correct, extremely common pattern was accused of having no focus indicator
+   on every button on every page. */
+const FOCUS_FINGERPRINT = `((el) => {
+  const props = (cs) => [cs.outlineWidth, cs.outlineStyle, cs.outlineColor, cs.outlineOffset, cs.boxShadow,
+    cs.borderColor, cs.borderWidth, cs.borderStyle, cs.backgroundColor, cs.backgroundImage, cs.color,
+    cs.filter, cs.transform, cs.opacity, cs.textDecorationLine, cs.textDecorationColor].join(',');
+  const pseudo = (node, which) => {
+    try { const cs = getComputedStyle(node, which); return cs.content + ',' + cs.width + ',' + cs.height + ',' + props(cs); }
+    catch (err) { return ''; }
+  };
+  const nodes = [el];
+  if (el.parentElement) nodes.push(el.parentElement);
+  for (const d of el.querySelectorAll('*')) { if (nodes.length >= 8) break; nodes.push(d); }
+  const parts = [];
+  for (const n of nodes) parts.push(props(getComputedStyle(n)) + '|' + pseudo(n, '::before') + '|' + pseudo(n, '::after'));
+  return parts.join('||');
+})`;
+
+const FOCUS_SNAP = `(() => {
+  const fingerprint = ${FOCUS_FINGERPRINT};
+  const el = document.activeElement;
+  const f = window.__uwsFocus;
+  // Landing on the body is "the tab order wrapped round", not "there is
+  // nothing here". Sequential focus navigation starts from whatever was last
+  // focused - and the click sweep above focused the LAST button on the page -
+  // so the very first Tab legitimately falls off the end. Treating that as the
+  // end of the sweep is why this check silently found nothing on every page.
+  if (!el || el === document.body || el === document.documentElement) return JSON.stringify({ wrapped: true });
+  if (f.els.indexOf(el) !== -1) return JSON.stringify({ done: true });
+  const id = el.id ? '#' + el.id : '';
+  const txt = (el.textContent || el.value || '').trim().replace(/\\s+/g, ' ').slice(0, 28);
+  f.els.push(el);
+  f.seen.push({
+    el: el.tagName.toLowerCase() + id + (txt ? ' "' + txt + '"' : ''),
+    // Guard (b): outline:none with a box-shadow ring is a correct and common
+    // style, so no single property can decide this. Everything a focus ring is
+    // ever drawn with, ON EVERY BOX IT CAN BE DRAWN ON, is compared - and only
+    // an element where ALL of it is identical focused and unfocused has no
+    // indicator at all.
+    style: fingerprint(el),
+  });
+  return JSON.stringify({ done: false });
+})()`;
+
+const FOCUS_READ = `(() => {
+  const fingerprint = ${FOCUS_FINGERPRINT};
+  const f = window.__uwsFocus;
+  if (!f) return JSON.stringify([]);
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  const out = [];
+  for (let i = 0; i < f.els.length; i++) {
+    if (fingerprint(f.els[i]) === f.seen[i].style) out.push({ el: f.seen[i].el });
+  }
+  delete window.__uwsFocus;
+  return JSON.stringify(out);
+})()`;
+
+async function evalJson(session, expression) {
+  const r = await session.send('Runtime.evaluate', { expression, returnByValue: true });
+  if (r.exceptionDetails) throw new Error(r.exceptionDetails.text || 'sweep evaluation failed');
+  return JSON.parse(r.result?.value ?? 'null');
+}
+
+export async function sweepInteractive(session, { origin = null } = {}) {
+  const clicks = [], shifted = [];
+  const list = await evalJson(session, SWEEP_LIST) || [];
+  const startHref = (await evalJson(session, `JSON.stringify(location.href)`)) || '';
+  for (const item of list) {
+    const from = session.events.length;
+    // ABSOLUTE index into the shift-source buffer, not an array offset: the
+    // buffer drops its oldest entries once it is full, so a raw length taken
+    // now would point at the wrong element by the time the click is read back.
+    const shiftsBefore = await evalJson(session, `JSON.stringify((() => { const m = window.__measure || {}; return (m.shiftSources || []).length + (m.shiftDropped || 0); })())`);
+    let point = null;
+    try {
+      point = await performAction(session, { type: 'click', selector: '[data-uws-probe="' + item.i + '"]' });
+    } catch (err) {
+      // "hidden or covered" is not a defect of the element, it is the sweep
+      // failing to reach it. Silently skipped: an unreachable element cannot
+      // be judged, and guessing is how a checker earns its reputation.
+      continue;
+    }
+    await sleep(160);
+    for (const e of session.events.slice(from)) {
+      if (e.method !== 'Runtime.exceptionThrown') continue;
+      const d = e.params?.exceptionDetails;
+      const text = String(d?.exception?.description || d?.text || 'uncaught exception').split('\n')[0].slice(0, 140);
+      clicks.push({ el: item.el, error: text });
+      break;
+    }
+    // Guard (c): a layout shift after a click is usually intentional - an
+    // accordion opening, a panel growing below. Only a shift whose SOURCE rect
+    // contained the click point is reported, because "the thing moved out from
+    // under the pointer" is the defect and "the page grew underneath" is not.
+    if (point && Number.isFinite(point.x)) {
+      const moved = await evalJson(session, `(() => {
+        const m = window.__measure || {};
+        const all = m.shiftSources || [];
+        const fresh = all.slice(Math.max(0, ${shiftsBefore || 0} - (m.shiftDropped || 0)));
+        const x = ${point.x}, y = ${point.y};
+        const inside = (r) => Boolean(r) && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
+        // Both halves, or this is not the defect it claims to be. "The click
+        // point was inside the OLD rect" alone names any control that resizes
+        // itself: every Play/Pause, Show/Hide and Copy/Copied toggle in a
+        // centred or right-aligned row moves its own start point while the
+        // pointer never leaves it, and each one was a standing warning. The
+        // pointer has to have started on it AND no longer be on it. Where the
+        // new rect is unknown nothing is said - an unmeasurable shift cannot
+        // be judged.
+        const hit = fresh.filter((s) => s.node && inside(s.from) && s.to && !inside(s.to));
+        return JSON.stringify([...new Set(hit.map((s) => s.node))].slice(0, 2));
+      })()`);
+      for (const el of moved || []) shifted.push({ el, clicked: item.el });
+    }
+    const href = await evalJson(session, `JSON.stringify(location.href)`);
+    // Guard (d) again, this time after the fact: if a click navigated anyway,
+    // everything measured after it would describe a different page.
+    if (href !== startHref) break;
+  }
+  await evalJson(session, SWEEP_CLEANUP).catch(() => null);
+
+  // Focus is swept separately and last: it needs keyboard modality, which the
+  // clicks above destroy, and real Tab keys are what re-establish it.
+  // A headless page is not the focused window, so sequential focus navigation
+  // goes nowhere until focus is emulated - without this the Tab sweep silently
+  // finds no elements and every page reports a perfect focus story.
+  await session.send('Emulation.setFocusEmulationEnabled', { enabled: true }).catch(() => {});
+  await evalJson(session, `(() => { window.__uwsFocus = { els: [], seen: [] }; if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); window.scrollTo({ top: 0, behavior: 'instant' }); return JSON.stringify(1); })()`);
+  let wrapped = 0;
+  for (let i = 0; i < SWEEP_CAP + 2; i++) {
+    await session.send('Input.dispatchKeyEvent', { type: 'rawKeyDown', windowsVirtualKeyCode: 9, nativeVirtualKeyCode: 9, key: 'Tab', code: 'Tab' });
+    await session.send('Input.dispatchKeyEvent', { type: 'keyUp', windowsVirtualKeyCode: 9, nativeVirtualKeyCode: 9, key: 'Tab', code: 'Tab' });
+    const step = await evalJson(session, FOCUS_SNAP);
+    if (!step || step.done) break;
+    if (step.wrapped) { wrapped++; if (wrapped > 1) break; }
+  }
+  const focus = await evalJson(session, FOCUS_READ) || [];
+  return { clicks, focus, shifted };
+}
+
 async function performAction(session, step) {
   if (!step || !['click', 'hover', 'focus', 'expect-visible', 'expect-text'].includes(step.type) || typeof step.selector !== 'string')
     throw new Error('Each step needs a supported type and CSS selector.');
@@ -841,10 +1130,12 @@ async function performAction(session, step) {
   if (response.exceptionDetails) throw new Error(response.exceptionDetails.text || 'Interaction evaluation failed');
   const result = response.result?.value;
   if (!result || result.error) throw new Error(result?.error || 'Interaction returned no result');
-  if (!['click', 'hover'].includes(step.type)) return;
+  if (!['click', 'hover'].includes(step.type)) return result;
   await session.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: result.x, y: result.y });
   if (step.type === 'click') {
     await session.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: result.x, y: result.y, button: 'left', clickCount: 1 });
     await session.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: result.x, y: result.y, button: 'left', clickCount: 1 });
   }
+  // The click point, so a caller can ask what moved under it.
+  return result;
 }

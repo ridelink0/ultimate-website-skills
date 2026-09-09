@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>script-driven motion honours reduced motion fixture</title>
+<style>body{margin:0;font:18px system-ui}h1{font-size:48px;margin:0 0 24px}
+#mark{width:120px;height:120px;background:#1d3312}</style>
+<h1>The same loop, asked before it starts</h1>
+<div id="mark"></div>
+<script>
+// The control. Identical motion, identical mechanism, one question asked
+// first - so a probe that samples the page must stay silent here.
+const el = document.getElementById('mark');
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let t = 0;
+(function loop() { if (still) return; t += 0.06; el.style.transform = 'translateX(' + (60 + 60 * Math.sin(t)) + 'px)'; requestAnimationFrame(loop); })();
+</script>
+</html>

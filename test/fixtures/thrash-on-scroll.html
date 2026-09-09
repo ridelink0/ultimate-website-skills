@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>layout thrash on scroll fixture</title>
+<style>body{margin:0;font:16px/1.5 system-ui}h1{font-size:48px;margin:0 0 16px}
+.row{height:24px;background:#e6e2d8;margin-bottom:4px}</style>
+<h1>Read then write, once per row, on every scroll event</h1>
+<div id="rows"></div>
+<script>
+const host = document.getElementById('rows');
+for (let i = 0; i < 300; i++) { const d = document.createElement('div'); d.className = 'row'; host.appendChild(d); }
+const rows = [...document.querySelectorAll('.row')];
+// The defect, on purpose: reading a geometry property and then writing a style
+// inside the same loop forces a synchronous layout per row per scroll event.
+addEventListener('scroll', () => {
+  for (const row of rows) {
+    const top = row.getBoundingClientRect().top;
+    row.style.width = (60 + (top % 40)) + '%';
+  }
+});
+</script>
+</html>

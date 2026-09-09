@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>clean scroll fixture</title>
+<style>body{margin:0;font:16px/1.5 system-ui}h1{font-size:48px;margin:0 0 16px}
+.row{height:24px;background:#e6e2d8;margin-bottom:4px;width:calc(60% + var(--w, 0px))}</style>
+<h1>The same three hundred rows, written without reading</h1>
+<div id="rows"></div>
+<script>
+const host = document.getElementById('rows');
+for (let i = 0; i < 300; i++) { const d = document.createElement('div'); d.className = 'row'; host.appendChild(d); }
+// The control: a passive listener that writes one custom property and reads no
+// geometry at all. Identical page, identical gesture, no forced layout.
+addEventListener('scroll', () => {
+  document.documentElement.style.setProperty('--w', (scrollY % 40) + 'px');
+}, { passive: true });
+</script>
+</html>

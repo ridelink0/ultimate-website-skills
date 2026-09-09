@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>script-driven motion ignores reduced motion fixture</title>
+<style>body{margin:0;font:18px system-ui}h1{font-size:48px;margin:0 0 24px}
+#mark{width:120px;height:120px;background:#33141d}</style>
+<h1>Script-driven motion with no reduced-motion query anywhere</h1>
+<div id="mark"></div>
+<script>
+// No Animation object exists for this, so document.getAnimations() is empty
+// and the reduced-motion check saw a perfectly clean page. This is how every
+// hand-written rAF loop is driven, this plugin's own motion.js included.
+const el = document.getElementById('mark');
+let t = 0;
+(function loop() { t += 0.06; el.style.transform = 'translateX(' + (60 + 60 * Math.sin(t)) + 'px)'; requestAnimationFrame(loop); })();
+</script>
+</html>

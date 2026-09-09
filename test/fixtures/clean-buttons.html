@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>clean buttons fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}
+h1{font-size:48px;margin:0 0 24px}
+button{display:block;margin:0 0 20px;padding:14px 20px;font:inherit;background:#e6e2d8;color:#1a1a1a;border:1px solid #1a1a1a}
+/* outline:none with a box-shadow ring is a correct, common style. This is the
+   specific case the focus check's "compare every property" guard exists for. */
+#ring{outline:none}
+#ring:focus-visible{outline:none;box-shadow:0 0 0 3px #b45309}</style>
+<h1>The same three buttons, correct</h1>
+<div id="above"></div>
+<button id="quiet">Returns cleanly</button>
+<button id="ring">Focus ring drawn with a box-shadow</button>
+<button id="grows">Expands downward</button>
+<script>
+document.getElementById('quiet').onclick = () => { document.title = 'clicked'; };
+document.getElementById('grows').onclick = () => {
+  const block = document.createElement('div');
+  block.style.cssText = 'height:160px;background:#1d3312';
+  document.getElementById('grows').after(block);
+};
+</script>
+</html>

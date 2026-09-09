@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wheel-driven planes fixture</title>
+<style>body{height:2200px;margin:0}h1{font-size:48px;margin:0 0 24px}
+div[data-depth]{height:200px;margin-bottom:40px;color:#f7f7f7;display:flex;align-items:center;justify-content:center;will-change:transform}</style>
+<h1>Parallax driven by the wheel, not by scrollTo</h1>
+<div data-depth="0.2" data-rate="0.2" style="background:#1d3312">Foreground</div>
+<div data-depth="0.5" data-rate="0.5" style="background:#141d33">Middle</div>
+<div data-depth="0.8" data-rate="0.8" style="background:#33141d">Background</div>
+<script>
+// The whole point of this fixture: the engine listens for wheel input, the way
+// a smooth-scroll library does, so a probe that teleports with window.scrollTo
+// sees three planes sitting at one rate and calls a working parallax broken.
+const planes = [...document.querySelectorAll('[data-rate]')].map((el) => ({ el, rate: Number(el.dataset.rate) }));
+let travelled = 0;
+addEventListener('wheel', (e) => {
+  travelled += e.deltaY;
+  for (const { el, rate } of planes) el.style.transform = 'translateY(' + (travelled * rate) + 'px)';
+}, { passive: true });
+</script>
+</html>

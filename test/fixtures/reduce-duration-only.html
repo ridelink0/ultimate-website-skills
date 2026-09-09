@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>reduced motion by duration collapse fixture</title>
+<style>body{margin:0;font:18px system-ui}h1{font-size:48px;margin:0 0 24px}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(120px)}}
+.mark{width:120px;height:120px;background:#1d3312;animation:drift 1.2s linear infinite alternate}
+/* The framework reset every accessibility checklist ships, minus the
+   iteration-count line. The animation is still infinite and still "running",
+   but each pass covers a hundredth of a millisecond, so nothing moves. */
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}}</style>
+<h1>Reduced motion honoured by collapsing the duration</h1>
+<div class="mark"></div>
+</html>

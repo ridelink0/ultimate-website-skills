@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>clean late request fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}h1{font-size:48px;margin:0 0 16px}p{max-width:60ch;margin:0}</style>
+<h1>The same late request, answered</h1>
+<p>Requested after load in exactly the same way, from a file that exists, so it resolves in milliseconds and there is nothing to report.</p>
+<script>
+addEventListener('load', () => {
+  const s = document.createElement('script');
+  s.src = 'noop.js';
+  document.head.appendChild(s);
+});
+</script>
+</html>

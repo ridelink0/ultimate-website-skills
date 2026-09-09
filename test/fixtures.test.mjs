@@ -7,6 +7,7 @@
    finding it is named for, and nothing else. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { findBrowser, inspect } from '../scripts/inspect.mjs';
@@ -47,6 +48,14 @@ const findings = (r) => [
   ...r.collapsed.map((c) => 'layout: collapsed - ' + c.el),
   ...r.broken.map((b) => 'asset: broken - ' + b.el),
   ...r.tiny.map((t) => 'layout: tap target - ' + t.el),
+  // The event half of the corpus. It was missing entirely, which is how a
+  // fixture could 404 an asset and still read as clean here.
+  ...(r.network || []).map((n) => 'network: ' + n.error + (n.blockedReason ? ' [' + n.blockedReason + ']' : '')),
+  ...(r.console || []).map((c) => 'console: ' + c.text),
+  ...(r.hung || []).map((h) => 'asset: never resolved - ' + h.url),
+  ...(r.interact || []).map((c) => 'interaction: threw - ' + c.el),
+  ...(r.shifted || []).map((s) => 'interaction: shifted under the pointer - ' + s.el),
+  ...(r.focus || []).map((f) => 'a11y: no focus ring - ' + f.el),
   ...judge(r.measured).filter((f) => f.level !== 'ok').map((f) => f.level + ': ' + f.text),
 ].sort();
 
@@ -137,6 +146,146 @@ test('a page with nothing wrong raises nothing', { skip, timeout: 30000 }, async
   raises(r);
 });
 
+/* ------------------------------------------------------- the driven run --- */
+/* Checks 1, 2 and 5 share one gesture, so they share their fixtures too. */
+
+test('a read-then-write scroll handler is caught, and the identical page without the read is not', { skip, timeout: 60000 }, async () => {
+  const bad = await measured('thrash-on-scroll.html');
+  // Judged on the layout COUNT, which is a property of the code and reproduces
+  // on any machine. Every millisecond figure is detail, never the trigger.
+  raises(bad, /^error: scrolling forces \d+(\.\d+)? layouts per scroll event \(budget 4\)$/);
+  const error = judge(bad.measured).find((f) => f.level === 'error');
+  // Check 5: attribution is a detail line on this finding, not a finding of
+  // its own. It must name the file and the invoker LoAF actually reported.
+  assert.match(error.detail, /thrash-on-scroll\.html \[event-listener\]/);
+  assert.ok(bad.measured.run.loaf.forcedMs > 0, 'forced synchronous layout should be measured: ' + JSON.stringify(bad.measured.run.loaf));
+  assert.ok(bad.measured.run.layoutsPerScroll > BUDGETS.layoutsPerScroll * 5);
+  // The control is the same 300 rows and the same gesture with a passive
+  // listener that reads no geometry. If this ever speaks, the check is
+  // measuring the machine rather than the page.
+  const good = await measured('clean-scroll.html');
+  raises(good);
+  assert.equal(good.measured.run.loaf.count, 0);
+  assert.ok(good.measured.run.layoutsPerScroll <= BUDGETS.layoutsPerScroll);
+});
+
+// The most valuable fixture in the set, because it proves the probe by
+// REMOVING a false failure: three planes moved by a wheel listener never move
+// under window.scrollTo, so the teleporting probe read them as three planes at
+// one rate and raised "the parallax is in the markup but not on the screen"
+// against a page whose parallax is fine.
+test('planes driven by the wheel read three distinct rates under a real gesture', { skip, timeout: 60000 }, async () => {
+  const r = await measured('planes-wheel-only.html');
+  assert.equal(r.measured.depth.source, 'gesture', 'the rates must come from the driven scroll, not the teleport');
+  const rates = r.measured.depth.planes.map((p) => p.rate);
+  assert.equal(rates.length, 3);
+  assert.ok(Math.max(...rates) - Math.min(...rates) > 0.4, 'a real gesture should separate the planes: ' + JSON.stringify(rates));
+  raises(r);
+  assert.ok(r.measured.run.samples >= 8 && r.measured.run.travel >= 400, JSON.stringify(r.measured.run));
+});
+
+test('a shift after load is attributed to the elements that actually moved', { skip, timeout: 60000 }, async () => {
+  const r = await measured('shift-on-load.html', { wait: 900 });
+  raises(r, /^warn: layout shift 0\.\d+ \(budget 0\.1\)$/);
+  const warn = judge(r.measured).find((f) => /layout shift/.test(f.text));
+  assert.match(warn.detail, /H1#f/, 'the shift finding must name what moved: ' + JSON.stringify(warn));
+  // The control attributes nothing because there is nothing to attribute.
+  const clean = await measured('clean-basic.html');
+  raises(clean);
+  assert.deepEqual(clean.measured.cost.shiftSources, []);
+});
+
+/* ------------------------------------------------------ prefers-reduced --- */
+
+test('a looping animation with no reduced-motion query is caught; the same animation behind the query is not', { skip, timeout: 60000 }, async () => {
+  raises(await measured('motion-ignores-reduce.html', { reducedMotion: true }),
+    /^error: 1 looping animation still running under prefers-reduced-motion$/);
+  raises(await measured('motion-honours-reduce.html', { reducedMotion: true }));
+  // Guard (a): a page with no motion at all must not read as "ignored the
+  // setting". There has to be something to stop before anything is said.
+  raises(await measured('clean-basic.html', { reducedMotion: true }));
+});
+
+// Guard (c), the one the live flip cannot see. This page honours the setting
+// perfectly by reading matchMedia once at boot - and because it never
+// re-evaluates, flipping the media mid-life leaves it animating. A checker
+// that reported that negative would condemn correct code.
+test('a page that reads matchMedia once at boot is never condemned by the live flip', { skip, timeout: 60000 }, async () => {
+  const normal = await measured('motion-honours-reduce-via-js.html');
+  assert.equal(normal.measured.reduce.liveFlip, true);
+  assert.equal(normal.measured.reduce.runningUnderLiveFlip, 1, 'the live flip must genuinely still see it animating');
+  raises(normal);
+  raises(await measured('motion-honours-reduce-via-js.html', { reducedMotion: true }));
+  // And the honest converse: the page that really does ignore the setting is
+  // also silent on the no-preference pass. Only a pass that NAVIGATED under
+  // the emulated media can produce the finding.
+  raises(await measured('motion-ignores-reduce.html'));
+});
+
+/* ------------------------------------------------------------ page errors --- */
+
+test('a page that screenshots perfectly while failing underneath reports exactly what failed, once each', { skip, timeout: 60000 }, async () => {
+  const r = await measured('broken-underneath.html');
+  raises(r,
+    /^console: TypeError: Cannot read properties of null/,
+    /^network: HTTP 404 .*missing-face\.woff2$/,
+    /^network: HTTP 404 .*missing-module\.js$/);
+  // The specific defect this fixture exists for: one missing asset used to be
+  // reported twice - once as a network entry and once as the console echo of
+  // the same 404 - so a page with two broken assets and one thrown error read
+  // as five problems. Two assets, two network findings, and the thrown error.
+  // (Chromium also emits a loadingFailed net::ERR_ABORTED per 404, but marks
+  // it canceled, so the network list was already free of that second copy.)
+  assert.equal(r.network.length, 2, 'two missing assets, two findings: ' + JSON.stringify(r.network));
+  raises(await measured('clean-basic.html'));
+});
+
+test('a same-origin request that never resolves is reported; the same request answered is not', { skip, timeout: 90000 }, async () => {
+  const { createServer } = await import('node:http');
+  const sockets = new Set();
+  const stall = createServer((req, res) => {
+    // /hang.js is answered by never answering. This is the one asset failure
+    // that produces no 404 and no loadingFailed, so nothing else can see it.
+    if (req.url.startsWith('/hang.js')) return;
+    try {
+      const body = readFileSync(join(FIXTURES, req.url.replace(/^\//, '').split('?')[0]));
+      res.writeHead(200, { 'content-type': req.url.endsWith('.js') ? 'text/javascript' : 'text/html; charset=utf-8' });
+      res.end(body);
+    } catch { res.writeHead(404); res.end('missing'); }
+  });
+  stall.on('connection', (s) => { sockets.add(s); s.on('close', () => sockets.delete(s)); });
+  stall.listen(0, '127.0.0.1');
+  await new Promise((resolve) => stall.once('listening', resolve));
+  const root = 'http://127.0.0.1:' + stall.address().port + '/';
+  try {
+    // Longer than the 3 s the check waits before calling a request hung: the
+    // cost of that threshold is exactly this, and calling a merely slow asset
+    // hung would be worse than not checking at all.
+    const opts = { widths: [800], wait: 3400, scrolls: [0], measured: true };
+    const [bad] = await inspect(root + 'hung-script.html', opts);
+    raises(bad, /^asset: never resolved - .*hang\.js$/);
+    const [good] = await inspect(root + 'clean-script.html', opts);
+    raises(good);
+  } finally {
+    for (const s of sockets) s.destroy();
+    await new Promise((resolve) => stall.close(resolve));
+  }
+});
+
+/* ---------------------------------------------------------- interactions --- */
+
+test('three buttons with one defect each raise one finding each; the correct three raise none', { skip, timeout: 60000 }, async () => {
+  const r = await measured('click-defects.html', { interact: true });
+  raises(r,
+    /^a11y: no focus ring - button#noring/,
+    /^interaction: shifted under the pointer - BUTTON#jumps$/,
+    /^interaction: threw - button#throws/);
+  // The clean control is the guard list in one page: a handler that returns,
+  // a focus ring drawn with a box-shadow rather than an outline, and a button
+  // that grows DOWNWARD so the layout changes without moving under the pointer.
+  raises(await measured('clean-buttons.html', { interact: true }));
+});
+
 /* ------------------------------------------------ design parity fixtures --- */
 /* Same discipline as the corpus above: one artboard, two implementations, and
    an assertion on the COMPLETE finding set. The match fixture is the important
@@ -220,4 +369,102 @@ test('a bare .dc.html is refused rather than measured', { skip, timeout: 30000 }
   await assert.rejects(
     () => runParity(join(DESIGN, 'match'), join(DESIGN, 'Main.dc.html'), { wait: 200 }),
     /not a renderable page/);
+});
+
+/* ------------------------------------------- the deepened-debugger round --- */
+/* Each of these pairs a page broken in exactly the way one check targets with
+   a control that must NOT trip it. Several of the controls are the whole
+   point: they are the correct, common patterns the checks were accusing. */
+
+test('a control that resizes itself under the pointer is not "moved out from under the pointer"', { skip, timeout: 60000 }, async () => {
+  // Two toggles in a centred flex row. Changing the label moves each button's
+  // own start point, so the layout-shift API reports it as an unstable element
+  // whose PREVIOUS rect contained the click - which is all the check used to
+  // ask. The pointer never left either one.
+  raises(await measured('clean-toggle-center.html', { interact: true }));
+  // The true positive is unchanged: this button grows a spacer ABOVE itself,
+  // so the click point really is outside its new rect.
+  const bad = await measured('click-defects.html', { interact: true });
+  assert.deepEqual((bad.shifted || []).map((s) => s.el), ['BUTTON#jumps']);
+});
+
+test('a focus ring drawn on a pseudo element, an inner span or a :focus-within wrapper is seen', { skip, timeout: 60000 }, async () => {
+  // getComputedStyle(el) with no second argument sees none of these three, so
+  // all three read as "no visible focus indicator" - an accusation against
+  // what most design systems actually ship.
+  raises(await measured('focus-pseudo.html', { interact: true }));
+  // And the element that genuinely has no indicator is still named.
+  const bad = await measured('click-defects.html', { interact: true });
+  assert.deepEqual((bad.focus || []).map((f) => f.el), ['button#noring "No focus ring at all"']);
+});
+
+test('a one-off lazy measurement is not reported as per-scroll-event thrash', { skip, timeout: 60000 }, async () => {
+  const r = await measured('lazy-measure-once.html');
+  const run = r.measured.run;
+  // Non-vacuous, and this is the whole discrimination: the ratio IS over
+  // budget - the old rule would have fired - and the cost is one frame, so
+  // there is no per-event thrash to describe.
+  assert.ok(run.layoutsPerScroll > BUDGETS.layoutsPerScroll,
+    'the fixture must still exceed the ratio budget or it proves nothing: ' + JSON.stringify(run.layoutsPerScroll));
+  assert.ok(run.loaf.count < BUDGETS.thrashFrames,
+    'the fixture is a single burst by construction: ' + JSON.stringify(run.loaf));
+  assert.equal(judge(r.measured).filter((f) => /layouts per scroll event/.test(f.text)).length, 0);
+  // The real thrash still recurs across the gesture, which is the signal that
+  // separates them.
+  const bad = await measured('thrash-on-scroll.html');
+  assert.ok(bad.measured.run.loaf.count >= BUDGETS.thrashFrames,
+    'a real scroll thrash produces a long frame per handled event: ' + JSON.stringify(bad.measured.run.loaf));
+  raises(bad, /^error: scrolling forces \d+(\.\d+)? layouts per scroll event \(budget 4\)$/);
+});
+
+test('collapsing animation-duration under reduced motion is honouring it, not ignoring it', { skip, timeout: 60000 }, async () => {
+  // The framework reset, written the third of the three canonical ways. The
+  // animation is still infinite and still "running"; each pass covers a
+  // hundredth of a millisecond.
+  raises(await measured('reduce-duration-only.html', { reducedMotion: true }));
+  // The page that really does ignore the setting is unaffected.
+  raises(await measured('motion-ignores-reduce.html', { reducedMotion: true }),
+    /^error: 1 looping animation still running under prefers-reduced-motion$/);
+});
+
+test('a declared progress indicator is not condemned for spinning under reduced motion', { skip, timeout: 60000 }, async () => {
+  raises(await measured('spinner.html', { reducedMotion: true }));
+  // Same infinite rotation with no role on it is still judged, so the
+  // exemption is the declaration and not the shape.
+  raises(await measured('motion-ignores-reduce.html', { reducedMotion: true }),
+    /^error: 1 looping animation still running under prefers-reduced-motion$/);
+});
+
+test('requestAnimationFrame motion that ignores reduced motion is caught, and the same loop asked first is not', { skip, timeout: 90000 }, async () => {
+  // The hole this closes: a rAF loop creates no Animation object, so
+  // getAnimations() was empty and a page that flatly ignores the setting
+  // reported clean. Every animation in this plugin's own house style is one.
+  const bad = await measured('raf-ignores-reduce.html', { reducedMotion: true });
+  assert.deepEqual(bad.measured.reduce.rafMoving, ['DIV#mark']);
+  raises(bad, /^error: 1 element still moving under prefers-reduced-motion$/);
+  raises(await measured('raf-honours-reduce.html', { reducedMotion: true }));
+  // And it says nothing on the pass that did not navigate under the media, on
+  // the same terms as the getAnimations half.
+  raises(await measured('raf-ignores-reduce.html'));
+  // A CSS animation is already accounted for by getAnimations(), so it is
+  // never named twice.
+  const css = await measured('motion-ignores-reduce.html', { reducedMotion: true });
+  assert.deepEqual(css.measured.reduce.rafMoving, []);
+});
+
+test('the shift-source buffer still answers on a page that shifts a thousand times', { skip, timeout: 90000 }, async () => {
+  // The buffer had a hard 80-entry ceiling that was never released, and every
+  // reader takes an offset into it - so on a page that shifts a lot the click
+  // check went permanently empty and reported nothing, which reads as "no
+  // defect". This page pushes well over a thousand sources during the scroll
+  // gesture before the sweep ever clicks anything.
+  const r = await measured('shift-noisy-click.html', { interact: true });
+  assert.ok(r.measured.run.shiftSources.length > 0, 'the gesture must produce shift sources: ' + JSON.stringify(r.measured.run.shiftSources.length));
+  // Asserted on the sweep rather than through raises(): this page trips the
+  // layout-shift budget too, on purpose, and that is not what is under test.
+  assert.deepEqual((r.shifted || []).map((s) => s.el), ['BUTTON#jumps']);
+  // The quiet control carrying the identical defect, which is what proves the
+  // difference is the noise and not the button.
+  const quiet = await measured('click-defects.html', { interact: true });
+  assert.deepEqual((quiet.shifted || []).map((s) => s.el), ['BUTTON#jumps']);
 });

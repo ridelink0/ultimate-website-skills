@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>self-resizing toggle fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}
+h1{font-size:48px;margin:0 0 24px}
+.row{display:flex;justify-content:center;margin:0 0 20px}
+button{padding:14px 20px;font:inherit;background:#e6e2d8;color:#1a1a1a;border:1px solid #1a1a1a}
+button:focus-visible{outline:3px solid #b45309}</style>
+<h1>Controls that resize themselves</h1>
+<div class="row"><button id="play">Play</button></div>
+<div class="row"><button id="copy">Copy</button></div>
+<script>
+// Both of these change their own label length inside a centred row, so the
+// button's own start point moves left while the pointer never leaves it. The
+// layout-shift API reports the button as an unstable element, and reading that
+// as "moved out from under the pointer" is what put a standing warning on
+// every Play/Pause, Show/Hide and Copy/Copied toggle on real sites.
+document.getElementById('play').onclick = (e) => { e.currentTarget.textContent = 'Pause the whole thing'; };
+document.getElementById('copy').onclick = (e) => { e.currentTarget.textContent = 'Copied to the clipboard'; };
+</script>
+</html>

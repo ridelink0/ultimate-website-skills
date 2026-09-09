@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>hung request fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}h1{font-size:48px;margin:0 0 16px}p{max-width:60ch;margin:0}</style>
+<h1>A request that never resolves</h1>
+<p>Requested after load so nothing is blocked: the page finishes, looks finished, and one same-origin script is still in flight forever. It produces no 404 and no failure event, which is why nothing sees it today.</p>
+<script>
+addEventListener('load', () => {
+  const s = document.createElement('script');
+  s.src = 'hang.js';
+  document.head.appendChild(s);
+});
+</script>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>shifting page with a jumping button fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}
+h1{font-size:48px;margin:0 0 24px}
+button{display:block;margin:0 0 20px;padding:14px 20px;font:inherit;background:#e6e2d8;color:#1a1a1a;border:1px solid #1a1a1a}
+button:focus-visible{outline:3px solid #b45309}
+.noise{height:24px;background:#e6e2d8;margin:0 0 8px}
+.tall{height:1800px}</style>
+<h1>The same defect, on a page that shifts constantly</h1>
+<div id="above"></div>
+<button id="jumps">Buy</button>
+<div id="noise"></div>
+<div class="tall"></div>
+<script>
+const host = document.getElementById('noise');
+for (let i = 0; i < 40; i++) { const d = document.createElement('div'); d.className = 'noise'; host.appendChild(d); }
+const rows = [...document.querySelectorAll('.noise')];
+// Forty rows whose height changes on every scroll event. Each one is a
+// layout-shift source, so the scroll gesture alone pushes well over a thousand
+// entries into the source buffer before the click sweep ever runs.
+addEventListener('scroll', () => {
+  const h = 16 + (Math.floor(scrollY / 8) % 24);
+  for (const row of rows) row.style.height = h + 'px';
+}, { passive: true });
+// The defect under test, identical to click-defects.html: the button grows a
+// spacer ABOVE itself, so the button the pointer is on is the thing that moves.
+document.getElementById('jumps').onclick = () => {
+  const block = document.createElement('div');
+  block.style.cssText = 'height:160px;background:#33141d';
+  document.getElementById('above').appendChild(block);
+};
+</script>
+</html>

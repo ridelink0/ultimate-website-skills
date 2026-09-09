@@ -83,7 +83,38 @@ What each finding means, and what to do about it:
 - **"largest type on the page is Npx"**. The house style opens at display
   scale. A hero that tops out at 32px is not a hero.
 - **"frames cost N ms each (no vsync headless)"**. Read the worst frame, not
-  the rate: headless is uncapped, so the rate flatters.
+  the rate: headless is uncapped, so the rate flatters. Nothing important is
+  judged on frame rate for exactly that reason - see the jank finding below,
+  which counts work instead.
+- **"scrolling forces N layouts per scroll event"**. Measured across one real
+  driven scroll, not a teleport. A scroll handler that reads a geometry
+  property (`getBoundingClientRect`, `offsetTop`, `scrollHeight`) and then
+  writes a style in the same pass forces a synchronous layout per element per
+  event. The detail line names the file and the invoker the browser itself
+  attributed it to, and the forced-layout milliseconds. Fix by reading
+  everything first and writing afterwards, or by moving the write into a
+  custom property the compositor can handle.
+- **"N long animation frames during the scroll"**. A warning, never an error on
+  its own: on a loaded machine any page can produce one. It only means
+  something next to the layout count above.
+- **"layout shift X (budget 0.1)"**. The detail line now names the elements
+  that actually moved and how far, taken from the browser's own layout-shift
+  sources. The element named is where the reserved space is missing.
+- **"N looping animations still running under prefers-reduced-motion"**. Only
+  ever reported from the pass that NAVIGATED with the media emulated, so a
+  page that reads `matchMedia` once at boot is never falsely accused. Wrap the
+  animation in `@media (prefers-reduced-motion: reduce)`, or check the media
+  before starting it.
+- **"clicking X threw"** / **"X moved out from under the pointer"** /
+  **"no visible focus indicator on X"**. Every interactive element on the page
+  is clicked and tabbed to (capped at 16, links that navigate are skipped).
+  The focus check compares outline, box-shadow, border, background, colour,
+  filter and transform between focused and unfocused, so `outline:none` with a
+  box-shadow ring is correctly silent. Only a shift whose source rect contained
+  the click point is reported - a panel opening below is not a defect.
+- **"request never resolved after Nms"**. A same-origin script, stylesheet,
+  font or image that produced neither a response nor a failure. It is invisible
+  to every other check because there is no 404 and no error to see.
 
 A page that passes every budget can still be wrong. The budgets catch the
 failures that a still frame hides; the still frames catch everything else.

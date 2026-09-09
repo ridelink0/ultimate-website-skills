@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>broken underneath fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}
+h1{font-size:48px;margin:0 0 16px;font-family:Missing,system-ui}p{max-width:60ch;margin:0}
+@font-face{font-family:Missing;src:url(missing-face.woff2) format('woff2')}</style>
+<h1>Perfect in a screenshot</h1>
+<p>Nothing here overlaps, nothing runs past the viewport, the contrast is fine and the type is a scale. Underneath it, a font 404s, a module script 404s, and one uncaught TypeError is thrown.</p>
+<script type="module" src="missing-module.js"></script>
+<script>
+// Not caught anywhere: this is the class of failure that leaves the page
+// looking exactly right and quietly doing less than it should.
+null.forEach(function () {});
+</script>
+</html>

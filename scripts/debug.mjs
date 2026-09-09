@@ -6,7 +6,7 @@ import { startServer } from './preview-server.mjs';
 import { inspect } from './inspect.mjs';
 import { writeReview } from './review.mjs';
 
-export async function debugSite(target, { out, widths = [1440, 390], wait = 1800, motion = 'both', actions = [], scrolls = 'auto', measured = false } = {}) {
+export async function debugSite(target, { out, widths = [1440, 390], wait = 1800, motion = 'both', actions = [], scrolls = 'auto', measured = false, interact = true } = {}) {
   if (!['normal', 'reduce', 'both'].includes(motion)) throw new Error('Motion must be normal, reduce or both.');
   const destination = resolve(out || mkdtempSync(join(tmpdir(), 'webdesign-review-')));
   let server, url = target;
@@ -18,9 +18,21 @@ export async function debugSite(target, { out, widths = [1440, 390], wait = 1800
     url = 'http://127.0.0.1:' + server.address().port + '/';
   }
   const results = [];
+  // What the no-preference pass saw, carried into the reduce pass. This is the
+  // cross-pass half of the reduced-motion check: a second full navigation with
+  // the media emulated from before the first document runs is the only way to
+  // catch a page that reads matchMedia once at boot, and it is the only result
+  // measure()/judge() will treat as authoritative.
+  const baseline = {};
   try {
     for (const reduce of motion === 'both' ? [false, true] : [motion === 'reduce']) {
-      results.push(...await inspect(url, { widths, wait, scrolls, actions, measured, reducedMotion: reduce, out: join(destination, reduce ? 'reduced' : 'normal') }));
+      const pass = await inspect(url, { widths, wait, scrolls, actions, measured, interact, reducedMotion: reduce, baseline: reduce ? baseline : null, out: join(destination, reduce ? 'reduced' : 'normal') });
+      if (!reduce) {
+        for (const r of pass) {
+          if (r.measured?.reduce) baseline[r.width] = { running: r.measured.reduce.running, underLiveFlip: r.measured.reduce.runningUnderLiveFlip };
+        }
+      }
+      results.push(...pass);
     }
     return { ...writeReview(results, destination, target), results, out: destination };
   } finally { if (server) await new Promise(resolve => server.close(resolve)); }

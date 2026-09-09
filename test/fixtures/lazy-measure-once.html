@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>one-off lazy measurement fixture</title>
+<style>body{margin:0;font:16px/1.5 system-ui}h1{font-size:48px;margin:0 0 16px}
+.pad{height:1000px}
+#words{max-width:60ch}
+.w{display:inline-block;margin:0 4px}</style>
+<h1>One measurement, once, on arrival</h1>
+<div class="pad"></div>
+<div id="sentinel"></div>
+<div id="words"></div>
+<div class="pad"></div>
+<script>
+const host = document.getElementById('words');
+for (let i = 0; i < 800; i++) { const s = document.createElement('span'); s.className = 'w'; s.textContent = 'word'; host.appendChild(s); }
+const words = [...document.querySelectorAll('.w')];
+// Fires once, disconnects, measures every word exactly once and never runs
+// again. There is no per-scroll-event thrash here at all: the entire cost is
+// one frame, which is why dividing it by a scroll-event count that the same
+// frame suppressed produced a per-event number describing nothing.
+const obs = new IntersectionObserver((entries) => {
+  if (!entries.some((e) => e.isIntersecting)) return;
+  obs.disconnect();
+  for (const w of words) { const r = w.getBoundingClientRect(); w.style.width = Math.round(r.width) + 'px'; }
+});
+obs.observe(document.getElementById('sentinel'));
+</script>
+</html>

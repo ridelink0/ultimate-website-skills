@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>click defects fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}
+h1{font-size:48px;margin:0 0 24px}
+button{display:block;margin:0 0 20px;padding:14px 20px;font:inherit;background:#e6e2d8;color:#1a1a1a;border:1px solid #1a1a1a}
+#noring{outline:none}
+#noring:focus{outline:none}</style>
+<h1>Three buttons, one defect each</h1>
+<div id="above"></div>
+<button id="throws">Throws when clicked</button>
+<button id="noring">No focus ring at all</button>
+<button id="jumps">Moves out from under the pointer</button>
+<script>
+document.getElementById('throws').onclick = () => { throw new TypeError('click handler regression'); };
+// Inserts ABOVE itself, so the button the pointer is on is the thing that moves.
+document.getElementById('jumps').onclick = () => {
+  const block = document.createElement('div');
+  block.id = 'inserted';
+  block.style.cssText = 'height:160px;background:#33141d';
+  document.getElementById('above').appendChild(block);
+};
+</script>
+</html>

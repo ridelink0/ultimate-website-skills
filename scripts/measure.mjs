@@ -26,8 +26,19 @@
  * they observe, so long tasks and layout shifts are collected from the first
  * frame rather than from whenever the probe happens to arrive. */
 export const MEASURE_INIT = `(() => {
-  const state = { longTasks: [], shifts: 0, errors: [] };
+  const state = { longTasks: [], shifts: 0, errors: [], loaf: [], loafSupported: false, shiftSources: [], shiftDropped: 0 };
   Object.defineProperty(window, '__measure', { value: state, configurable: true });
+  // An element seen inside an observer callback has to be named THERE. The
+  // node is a live reference and the thing that shifted is very often the
+  // thing that was then replaced, so by the time anything reads this buffer
+  // the element can be detached and its identity gone.
+  const label = (el) => {
+    if (!el || !el.tagName) return null;
+    const id = el.id ? '#' + el.id : '';
+    const cls = (el.className && typeof el.className === 'string')
+      ? '.' + el.className.trim().split(/\\s+/).slice(0, 2).join('.') : '';
+    return el.tagName.toUpperCase() + id + cls;
+  };
   try {
     new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) state.longTasks.push(Math.round(entry.duration));
@@ -35,9 +46,70 @@ export const MEASURE_INIT = `(() => {
   } catch (err) { state.errors.push('longtask: ' + err.message); }
   try {
     new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) if (!entry.hadRecentInput) state.shifts += entry.value;
+      for (const entry of list.getEntries()) {
+        if (!entry.hadRecentInput) state.shifts += entry.value;
+        // Sources are kept for EVERY entry, hadRecentInput or not. A shift
+        // that moves something out from under the pointer is by definition
+        // within 500 ms of a click, which is exactly when hadRecentInput is
+        // true - so the recent-input filter that is right for the CLS number
+        // is precisely wrong for attribution.
+        for (const src of entry.sources || []) {
+          const p = src.previousRect, c = src.currentRect;
+          const box = (r) => (r ? { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) } : null);
+          state.shiftSources.push({
+            t: Math.round(entry.startTime), value: Number((entry.value || 0).toFixed(4)),
+            recentInput: Boolean(entry.hadRecentInput), node: label(src.node),
+            from: box(p), to: box(c),
+          });
+        }
+        // A ceiling that is never released is the same as switching the check
+        // off partway through the page's life. Every reader takes an OFFSET
+        // into this buffer - SCROLL_PREP and the click sweep both do - so once
+        // a hard cap stopped it growing, every later window read empty and
+        // reported nothing, which is indistinguishable from "no defect". A
+        // parallax or lazy-loading page fills eighty sources during the load
+        // and the gesture alone, so that is exactly the page it went blind on.
+        // Drop the OLDEST instead and COUNT what was dropped, so an offset
+        // taken earlier still resolves to the right place.
+        if (state.shiftSources.length > 400) {
+          const over = state.shiftSources.length - 400;
+          state.shiftSources.splice(0, over);
+          state.shiftDropped += over;
+        }
+      }
     }).observe({ type: 'layout-shift', buffered: true });
   } catch (err) { state.errors.push('layout-shift: ' + err.message); }
+  try {
+    // long-animation-frame is what longtask attribution was supposed to be:
+    // the same "this frame took too long" signal, but carrying the script,
+    // the invoker and the forced synchronous layout that caused it. Where it
+    // is not supported the buffer simply stays empty and every judgement
+    // built on it is skipped - it is never approximated from durations.
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (state.loaf.length >= 150) break;
+        state.loaf.push({
+          start: Math.round(entry.startTime),
+          duration: Math.round(entry.duration || 0),
+          blocking: Math.round(entry.blockingDuration || 0),
+          // There was a styleAndLayoutMs here. It computed frame-end minus
+          // styleAndLayoutStart, which is not the renderStart gap its own
+          // comment described, it guarded on a timestamp it never used, and
+          // runScroll returns a summary object so the per-frame array never
+          // left the function. A mislabelled number nobody reads is a trap for
+          // whoever prints it next, so it is gone rather than corrected.
+          scripts: (entry.scripts || []).slice(0, 4).map((s) => ({
+            source: (String(s.sourceURL || '').split('/').pop() || '').slice(0, 48) || '(inline)',
+            fn: s.sourceFunctionName || null,
+            invoker: s.invokerType || null,
+            duration: Math.round(s.duration || 0),
+            forced: Math.round(s.forcedStyleAndLayoutDuration || 0),
+          })),
+        });
+      }
+    }).observe({ type: 'long-animation-frame', buffered: true });
+    state.loafSupported = true;
+  } catch (err) { state.errors.push('long-animation-frame: ' + err.message); }
 })()`;
 
 /* Two seconds of frames, and whether anything on the canvas changed across
@@ -145,6 +217,205 @@ const DEPTH = (distance) => `(async () => {
   });
 })()`;
 
+/* ------------------------------------------------------- the driven run --- */
+/* Checks 1, 2 and 5 are not three probes. They are ONE gesture, measured three
+   ways: per-frame work (is it janky), plane rates (does the parallax happen)
+   and named culprits (what cost that). Building them separately would mean
+   three scrolls and three chances for the three answers to disagree about the
+   same two seconds. */
+
+/* Armed before the gesture. Starts a rAF sampler recording where the page and
+   every plane actually are throughout the scroll, and counts the scroll events
+   the gesture produces so per-frame work can be expressed per scroll event
+   rather than in milliseconds - see runScroll() for why that matters. */
+const SCROLL_PREP = `(() => {
+  const m = window.__measure;
+  if (!m) return JSON.stringify({ error: 'the measurement init script did not run' });
+  // The LoAF buffer is cleared HERE, after load: page setup legitimately
+  // produces a long frame (a 281 ms boot frame is normal) and charging that
+  // to the scroll would call every page janky.
+  m.loaf.length = 0;
+  // ABSOLUTE index, not an array offset: the source buffer drops its oldest
+  // entries once full, so a raw length taken now would point at the wrong
+  // element by the time the gesture is read back.
+  const shiftFrom = m.shiftSources.length + (m.shiftDropped || 0);
+  const planes = [...document.querySelectorAll('[data-depth], [data-parallax], .plane, .layer')];
+  const run = { samples: [], scrollEvents: 0, stop: false, planes, shiftFrom };
+  window.__scrollRun = run;
+  run.onScroll = () => { run.scrollEvents++; };
+  addEventListener('scroll', run.onScroll, { passive: true });
+  const tick = () => {
+    if (run.stop) return;
+    if (run.samples.length < 800) {
+      run.samples.push({ y: window.scrollY, tops: planes.map((el) => el.getBoundingClientRect().top) });
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  return JSON.stringify({
+    ok: true, planes: planes.length,
+    width: innerWidth, height: innerHeight, scrollY: window.scrollY,
+    maxScroll: Math.max(0, document.documentElement.scrollHeight - innerHeight),
+    loafSupported: Boolean(m.loafSupported),
+  });
+})()`;
+
+/* Read back after the gesture, and put the page back where it was found -
+   exactly as the teleporting DEPTH probe already did. */
+const SCROLL_READ = (restore) => `(() => {
+  const m = window.__measure;
+  const run = window.__scrollRun;
+  if (!run) return JSON.stringify({ error: 'the scroll run was never armed' });
+  run.stop = true;
+  removeEventListener('scroll', run.onScroll);
+  const samples = run.samples;
+  const ys = samples.map((s) => s.y);
+  const travel = ys.length ? Math.max.apply(null, ys) - Math.min.apply(null, ys) : 0;
+  const named = (el) => (el.dataset.depth || el.dataset.parallax || el.className || el.tagName).toString().slice(0, 40);
+  // A page can have two elements called .layer that were never meant to move.
+  // Only an element that DECLARES a depth is promising anything - kept from
+  // the teleport probe, because this distinction is what took the false
+  // positives out of it.
+  const declared = (el) => el.dataset.depth !== undefined || el.dataset.parallax !== undefined;
+  // Least squares of each plane's top against the page's own scroll position,
+  // across every frame of the gesture. A gesture is asynchronous, so any two
+  // samples can straddle a compositing step and read a correct parallax as
+  // flat; a fit over thirty of them cannot.
+  const meanY = ys.length ? ys.reduce((a, v) => a + v, 0) / ys.length : 0;
+  let varY = 0;
+  for (const y of ys) varY += (y - meanY) * (y - meanY);
+  const usable = samples.length >= 8 && travel >= 400 && varY > 0;
+  const planes = run.planes.map((el, i) => {
+    let rate = null;
+    if (usable) {
+      const tops = samples.map((s) => s.tops[i]);
+      const meanT = tops.reduce((a, v) => a + v, 0) / tops.length;
+      let cov = 0;
+      for (let k = 0; k < tops.length; k++) cov += (ys[k] - meanY) * (tops[k] - meanT);
+      // top falls as the page scrolls, so a page-speed plane has slope -1 and
+      // a rate of 1. Same convention the teleport probe used.
+      const slope = cov / varY;
+      rate = Number.isFinite(slope) ? Number((-slope).toFixed(3)) : null;
+    }
+    return {
+      name: named(el),
+      declared: el.dataset.depth !== undefined ? Number(el.dataset.depth) : null,
+      promises: declared(el),
+      rate,
+      fixed: getComputedStyle(el).position === 'fixed',
+    };
+  });
+  const sources = m ? m.shiftSources.slice(Math.max(0, run.shiftFrom - (m.shiftDropped || 0))) : [];
+  const out = {
+    samples: samples.length, travel: Math.round(travel), scrollEvents: run.scrollEvents,
+    usable, planes, loaf: m ? m.loaf.slice() : [], shiftSources: sources,
+  };
+  window.scrollTo({ top: ${restore}, behavior: 'instant' });
+  delete window.__scrollRun;
+  return JSON.stringify(out);
+})()`;
+
+/* Running animations, straight from the page. document.getAnimations() gives
+   the list, the target and the play state in one evaluate, which is why the
+   Animation CDP domain is not used: two mechanisms for one answer is how two
+   probes drift apart. */
+const ANIMATIONS = `(() => {
+  if (!document.getAnimations) return JSON.stringify({ supported: false, animations: [], reduce: matchMedia('(prefers-reduced-motion: reduce)').matches });
+  const out = [];
+  for (const anim of document.getAnimations()) {
+    let timing = null;
+    try { timing = anim.effect && anim.effect.getComputedTiming ? anim.effect.getComputedTiming() : null; } catch (err) { timing = null; }
+    const target = anim.effect && anim.effect.target ? anim.effect.target : null;
+    out.push({
+      name: anim.animationName || anim.transitionProperty || anim.id || 'animation',
+      // A transition is a one-off response to a state change, not motion
+      // design; only keyframe animations are judged.
+      transition: Boolean(anim.transitionProperty),
+      state: anim.playState,
+      // Infinity does not survive Runtime.evaluate's returnByValue - it
+      // serialises to null - so "does it loop forever" has to be answered
+      // here, in the page, rather than inferred from a number on the far side.
+      infinite: Boolean(timing && timing.iterations === Infinity),
+      activeMs: timing && Number.isFinite(timing.activeDuration) ? Math.round(timing.activeDuration) : -1,
+      // The PER-ITERATION duration, which activeDuration cannot carry: it is
+      // Infinity for anything infinite and comes across as -1. The canonical
+      // reduced-motion reset collapses animation-duration to 0.01ms and leaves
+      // the iteration count alone, so the animation runs for ever while
+      // covering a hundredth of a millisecond a pass. -1 means unknown.
+      iterationMs: timing && Number.isFinite(timing.duration) ? timing.duration : -1,
+      // Whether the author declared this an indeterminate progress indicator.
+      // A spinner has to keep moving to mean anything and reasonable people
+      // disagree about whether it should stop, so an explicit role is taken at
+      // its word rather than argued with.
+      indicator: (() => {
+        let n = target;
+        for (let i = 0; i < 4 && n && n.getAttribute; i++) {
+          const role = n.getAttribute('role');
+          if (role === 'progressbar' || role === 'status') return true;
+          if (n.getAttribute('aria-busy') === 'true') return true;
+          n = n.parentElement;
+        }
+        return false;
+      })(),
+      target: target && target.tagName ? target.tagName.toUpperCase() + (target.id ? '#' + target.id : '') : null,
+    });
+    if (out.length >= 40) break;
+  }
+  return JSON.stringify({ supported: true, animations: out, reduce: matchMedia('(prefers-reduced-motion: reduce)').matches });
+})()`;
+
+/* Motion that document.getAnimations() cannot see. A requestAnimationFrame
+   loop writing el.style.transform creates no Animation object at all, so the
+   reduced-motion check was structurally blind to it - and that is how most
+   hand-written motion is driven, this plugin's own motion.js and depth.js
+   included. A page that flatly ignored the setting reported clean.
+
+   Measured, not enumerated: sample the computed transform, opacity and box of
+   the page across a window and ask what is STILL moving at the end of it. The
+   two-interval rule is the guard - an entrance that finishes changes between
+   the first pair of samples and not the second, and freezing a page mid-way
+   through an animation it already started is not what the setting asks for. */
+const RAF_MOTION = (ms) => `(async () => {
+  // Anything getAnimations() already accounts for is excluded, so the two
+  // findings never name the same element twice. A finite-but-long CSS
+  // animation is NOT in that set and is caught here, which is the second hole
+  // the infinite-only filter left open.
+  const skip = new Set();
+  try { for (const a of document.getAnimations()) { const t = a.effect && a.effect.target; if (t) skip.add(t); } } catch (err) {}
+  const nodes = [];
+  for (const el of document.querySelectorAll('body *')) {
+    if (nodes.length >= 300) break;
+    if (skip.has(el)) continue;
+    const r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) continue;
+    nodes.push(el);
+  }
+  const snap = () => nodes.map((el) => {
+    const cs = getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    return cs.transform + '|' + cs.opacity + '|' + Math.round(r.x * 10) + ',' + Math.round(r.y * 10);
+  });
+  const wait = (t) => new Promise((r) => setTimeout(r, t));
+  const a = snap();
+  await wait(${Math.round(ms / 2)});
+  const b = snap();
+  await wait(${Math.round(ms / 2)});
+  const c = snap();
+  const live = new Set();
+  for (let i = 0; i < nodes.length; i++) if (a[i] !== b[i] && b[i] !== c[i]) live.add(nodes[i]);
+  const moving = [];
+  for (const el of live) {
+    // A moving element drags its whole subtree, and naming forty descendants
+    // of one drifting section is noise. Only the topmost mover is named.
+    let p = el.parentElement, nested = false;
+    while (p) { if (live.has(p)) { nested = true; break; } p = p.parentElement; }
+    if (nested) continue;
+    moving.push(el.tagName.toUpperCase() + (el.id ? '#' + el.id : ''));
+    if (moving.length >= 6) break;
+  }
+  return JSON.stringify({ sampled: nodes.length, moving });
+})()`;
+
 /* What the page cost to load, and what it loaded and then did not use. The
  * unused-library check is deliberately narrow: each entry names a global that
  * only exists if the script ran, and a test that is true only if something
@@ -180,8 +451,13 @@ const COST = `(() => {
     .filter((entry) => entry.kb > 0)
     .sort((a, b) => b.kb - a.kb)
     .slice(0, 6);
-  const measure = window.__measure || { longTasks: [], shifts: 0 };
+  const measure = window.__measure || { longTasks: [], shifts: 0, shiftSources: [] };
+  // The elements that actually moved, riding along with the number they
+  // explain. Attribution is a detail line on the shift finding, never a
+  // finding of its own - see judge().
+  const shiftSources = (measure.shiftSources || []).filter((s) => !s.recentInput && s.node).slice(0, 6);
   return JSON.stringify({
+    shiftSources,
     requests: resources.length,
     totalKb: Math.round(total / 1024),
     scriptKb: Math.round(resources.filter((entry) => entry.initiatorType === 'script').reduce((sum, entry) => sum + bytes(entry), 0) / 1024),
@@ -320,13 +596,227 @@ async function evaluate(session, expression, awaitPromise) {
   return JSON.parse(value);
 }
 
+/* One real scroll, measured throughout. Needs the CDP session because the
+   gesture is a CDP command; measure() already takes one.
+   Returns { measured:false, why } rather than throwing whenever the page or
+   the browser cannot support the measurement - an unmeasured page must not be
+   able to fail. */
+export async function runScroll(session, options = {}) {
+  const { distance = 700 } = options;
+  const prep = await evaluate(session, SCROLL_PREP, false);
+  if (prep.error) return { measured: false, why: prep.error };
+  // A page shorter than the gesture produces a truncated scroll and a rate
+  // fitted to noise. Below 400 px of available travel there is nothing here
+  // worth measuring, so nothing is reported.
+  const room = Math.max(0, prep.maxScroll - prep.scrollY);
+  const want = Math.min(distance, room);
+  if (want < 400) {
+    await evaluate(session, SCROLL_READ(prep.scrollY), false).catch(() => ({}));
+    return { measured: false, why: 'the page is too short to scroll (' + Math.round(room) + 'px of travel available)' };
+  }
+
+  // Performance.getMetrics deltas are the honest half of the jank measurement:
+  // LayoutCount is a property of the CODE (7500 layouts for one gesture is
+  // 7500 layouts on any machine), while every millisecond figure is a property
+  // of the machine that happened to run it.
+  await session.send('Performance.enable').catch(() => {});
+  const readMetrics = async () => {
+    const r = await session.send('Performance.getMetrics').catch(() => null);
+    const map = {};
+    for (const m of (r && r.metrics) || []) map[m.name] = m.value;
+    return map;
+  };
+  const before = await readMetrics();
+
+  const x = Math.round(prep.width / 2), y = Math.round(prep.height / 2);
+  let how = 'synthesizeScrollGesture';
+  try {
+    // gestureSourceType is pinned to mouse so a mobile-width run still gets
+    // wheel events: a synthesised swipe can be swallowed by touch-action and
+    // then the page "did not scroll" for a reason that has nothing to do with
+    // the page.
+    await session.send('Input.synthesizeScrollGesture', {
+      x, y, yDistance: -want, speed: 1200, gestureSourceType: 'mouse', repeatCount: 0,
+    });
+  } catch (err) {
+    // Documented fallback: synthesizeScrollGesture is an experimental command.
+    // Six discrete wheel events are coarser (fewer samples, blockier travel)
+    // but they are real wheel events, which is what the check needs.
+    how = 'dispatchMouseEvent wheel';
+    const steps = Math.max(6, Math.round(want / 120));
+    for (let i = 0; i < steps; i++) {
+      await session.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x, y, deltaX: 0, deltaY: Math.round(want / steps) }).catch(() => {});
+      await new Promise((r) => setTimeout(r, 16));
+    }
+  }
+  const after = await readMetrics();
+  const read = await evaluate(session, SCROLL_READ(prep.scrollY), false);
+  if (read.error) return { measured: false, why: read.error };
+
+  const delta = (name) => (Number.isFinite(after[name]) && Number.isFinite(before[name]) ? after[name] - before[name] : null);
+  const metrics = {
+    layoutCount: delta('LayoutCount'), recalcStyleCount: delta('RecalcStyleCount'),
+    layoutMs: Number.isFinite(delta('LayoutDuration')) ? Math.round(delta('LayoutDuration') * 1000) : null,
+    recalcStyleMs: Number.isFinite(delta('RecalcStyleDuration')) ? Math.round(delta('RecalcStyleDuration') * 1000) : null,
+    scriptMs: Number.isFinite(delta('ScriptDuration')) ? Math.round(delta('ScriptDuration') * 1000) : null,
+    taskMs: Number.isFinite(delta('TaskDuration')) ? Math.round(delta('TaskDuration') * 1000) : null,
+  };
+
+  const scripts = [];
+  for (const frame of read.loaf || []) for (const s of frame.scripts || []) scripts.push(s);
+  const grouped = new Map();
+  for (const s of scripts) {
+    const key = (s.source || '(inline)') + (s.invoker ? ' [' + s.invoker + ']' : '');
+    const cur = grouped.get(key) || { key, forced: 0, duration: 0, cost: 0, fns: new Map() };
+    cur.forced += s.forced || 0;
+    cur.duration += s.duration || 0;
+    // forcedStyleAndLayoutDuration is a SUBSET of duration - the forced layout
+    // happens inside the script's own execution - so adding the two counted
+    // the forced part twice and inflated whichever script forces layout
+    // against one that merely runs long. The cost of a script is its duration;
+    // the max is only there so a missing duration cannot read as free.
+    const cost = Math.max(s.duration || 0, s.forced || 0);
+    cur.cost += cost;
+    if (s.fn) cur.fns.set(s.fn, (cur.fns.get(s.fn) || 0) + cost);
+    grouped.set(key, cur);
+  }
+  const ranked = [...grouped.values()].sort((a, b) => b.cost - a.cost);
+  const totalCost = ranked.reduce((sum, s) => sum + s.cost, 0);
+  // Naming the WRONG culprit is worse than naming none: a confident wrong name
+  // sends someone to edit correct code. One source has to account for a clear
+  // majority of the measured cost before it is named at all.
+  const culprit = ranked.length && totalCost > 0 && ranked[0].cost / totalCost >= 0.6 ? ranked[0] : null;
+  if (culprit) {
+    // LoAF names the FUNCTION, not just the file, and that name was being
+    // measured and thrown away - so on any bundled site the finding said
+    // "app.js [event-listener]" and sent nobody anywhere. The function is
+    // carried through whenever one of them accounts for the majority of that
+    // file's own cost; below that the file alone is the honest answer.
+    const fns = [...culprit.fns.entries()].sort((a, b) => b[1] - a[1]);
+    const top = fns.length && culprit.cost > 0 && fns[0][1] / culprit.cost >= 0.6 ? fns[0][0] : null;
+    culprit.fn = top;
+    culprit.label = culprit.key + (top ? ' - ' + top + '()' : '');
+    delete culprit.fns;
+  }
+  const loaf = {
+    supported: Boolean(prep.loafSupported),
+    count: (read.loaf || []).length,
+    longestMs: (read.loaf || []).reduce((max, f) => Math.max(max, f.duration || 0), 0),
+    blockingMs: (read.loaf || []).reduce((sum, f) => sum + (f.blocking || 0), 0),
+    forcedMs: scripts.reduce((sum, s) => sum + (s.forced || 0), 0),
+    culprit,
+  };
+  const events = read.scrollEvents || 0;
+  return {
+    measured: true, how, requested: want, travel: read.travel, samples: read.samples,
+    scrollEvents: events, usable: read.usable, planes: read.planes,
+    metrics, loaf,
+    // Layouts per scroll event, not per second: the ratio is a property of the
+    // page's own code and reproduces on any machine, where a duration does not.
+    layoutsPerScroll: Number.isFinite(metrics.layoutCount) && events > 0
+      ? Number((metrics.layoutCount / events).toFixed(1)) : null,
+    shiftSources: (read.shiftSources || []).filter((s) => s.node).slice(0, 8),
+  };
+}
+
+/* Does the page respond to prefers-reduced-motion.
+   Two paths, and the difference between them is the whole guard: emulating the
+   media live changes matchMedia and drains getAnimations() with no reload,
+   which is fast and is all a single inspect() run can do - but a page that
+   reads matchMedia ONCE at boot in JS does not re-evaluate, so a live flip
+   alone would falsely accuse a page that honours the setting perfectly.
+   A negative from the live flip is therefore never reported on its own; only
+   a pass that NAVIGATED under the emulated media can produce a finding, and
+   debug.mjs already performs exactly that second navigation. */
+export async function measureReducedMotion(session, options = {}) {
+  const emulated = options.reducedMotion ? 'reduce' : 'no-preference';
+  const setMedia = (value) => session.send('Emulation.setEmulatedMedia', {
+    features: [{ name: 'prefers-reduced-motion', value }],
+  });
+  const settle = () => evaluate(session, `(async () => { await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); return JSON.stringify({ ok: 1 }); })()`, true).catch(() => ({}));
+  const read = async () => evaluate(session, ANIMATIONS, false);
+  // Guard (b): a page that PAUSES its motion keeps its entries in
+  // getAnimations() forever, so raw .length is not a measurement of anything.
+  // Only a running keyframe animation that loops forever is counted: a finite
+  // one may simply be an entrance still playing, and calling that "ignored the
+  // setting" is a coin flip dressed as a check.
+  const looping = (list) => (list || []).filter((a) => a.state === 'running' && !a.transition && a.infinite
+    // Guard (d): the reset that collapses animation-duration to 0.01ms and
+    // leaves iteration-count alone is one of the three ways the canonical
+    // snippet is written, and it works - each pass is a hundredth of a
+    // millisecond, so nothing perceptible moves. Under one frame at any
+    // refresh rate anyone owns is not motion, and condemning it was
+    // condemning a page for honouring the setting. Only a POSITIVELY measured
+    // sub-frame duration excludes; an unknown one is still judged.
+    && !(Number.isFinite(a.iterationMs) && a.iterationMs >= 0 && a.iterationMs < 4)
+    // Guard (e): an indeterminate progress indicator the author has labelled
+    // as one. The media query asks for motion that triggers discomfort to be
+    // removed or replaced, not for every moving pixel to stop, and a checker
+    // that opens with an ERROR against any page with a loading state is a
+    // checker that gets switched off.
+    && !a.indicator);
+
+  const here = await read();
+  const atNav = looping(here.animations);
+  let underReduce = atNav;
+  let liveFlip = false;
+  if (emulated !== 'reduce') {
+    try {
+      await setMedia('reduce');
+      await settle();
+      underReduce = looping((await read()).animations);
+      liveFlip = true;
+    } catch (err) { underReduce = atNav; liveFlip = false; }
+    finally { await setMedia('no-preference').catch(() => {}); await settle(); }
+  }
+  // The observation surface getAnimations() cannot reach. Only run on the pass
+  // that NAVIGATED under the emulated media, because only that pass can
+  // produce a finding, and it costs the better part of a second.
+  let rafMoving = [];
+  if (emulated === 'reduce') {
+    const sampled = await evaluate(session, RAF_MOTION(900), true).catch(() => ({ moving: [] }));
+    rafMoving = sampled.moving || [];
+  }
+  return {
+    supported: here.supported !== false,
+    emulated,
+    // What this pass NAVIGATED with. Only this is authoritative.
+    running: atNav.length,
+    names: atNav.slice(0, 4).map((a) => a.name + (a.target ? ' on ' + a.target : '')),
+    // Script-driven motion, measured rather than enumerated. Kept as its own
+    // field so the two findings stay disjoint and neither borrows the other's
+    // wording.
+    rafMoving,
+    // The live flip, kept for the record and for debug.mjs's cross-pass
+    // reconciliation. Never judged on its own.
+    liveFlip, runningUnderLiveFlip: underReduce.length,
+    baseline: options.baseline || null,
+  };
+}
+
 export async function measure(session, options = {}) {
   const { motionMs = 1600, depthDistance = 700 } = options;
   const out = {};
   out.motion = await evaluate(session, MOTION(motionMs), true).catch((err) => ({ error: err.message }));
-  out.depth = await evaluate(session, DEPTH(depthDistance), true).catch((err) => ({ error: err.message }));
+  // One gesture, three measurements. Lands under a NEW key: out.cost keeps
+  // meaning load-time cost, so nothing that already reads this object changes
+  // meaning underneath it.
+  out.run = await runScroll(session, { distance: depthDistance }).catch((err) => ({ measured: false, why: err.message }));
+  // DEPTH is re-sourced, not deleted: the plane discovery, the
+  // declared-vs-merely-.layer distinction and the fixed-position exclusion are
+  // the parts that took the false positives out of it and they are unchanged.
+  // Only the two-sample before/after is replaced by the fit over the gesture.
+  if (out.run.measured && out.run.usable) {
+    out.depth = { distance: out.run.travel, planes: out.run.planes, source: 'gesture' };
+  } else {
+    out.depth = await evaluate(session, DEPTH(depthDistance), true).catch((err) => ({ error: err.message }));
+    if (out.depth && !out.depth.error) out.depth.source = 'teleport';
+  }
   out.cost = await evaluate(session, COST, false).catch((err) => ({ error: err.message }));
   out.type = await evaluate(session, TYPE, false).catch((err) => ({ error: err.message }));
+  // Last, because it emulates a media feature and puts it back: anything
+  // measured after it would be measured through the restoration.
+  out.reduce = await measureReducedMotion(session, options).catch((err) => ({ error: err.message }));
   return out;
 }
 
@@ -344,6 +834,24 @@ export const BUDGETS = {
   distinctSizes: 8,
   measureChars: [45, 80],
   depthSpread: 0.08,
+  // Layouts forced per scroll event. A read-then-write scroll handler over 300
+  // rows measured ~69; a passive handler writing one custom property measured
+  // 0. Four leaves room for a page that legitimately measures a couple of
+  // things per event without leaving room for a thrash.
+  layoutsPerScroll: 4,
+  // Long animation frames during the gesture. On its own this is only ever a
+  // warning - a loaded machine can produce one on any page - and it takes five
+  // of them plus real blocking time before even that is said.
+  loafFrames: 5,
+  loafBlockingMs: 200,
+  // Long frames the gesture has to RECUR over before the layout count is
+  // divided by scroll events and called per-event. A single expensive burst -
+  // one IntersectionObserver measuring and disconnecting - suppresses the very
+  // scroll events it is divided by, so its whole one-frame cost came out
+  // looking like per-event thrash. A real read-then-write scroll handler
+  // measured 9 to 10 long frames for one gesture; the one-off measured
+  // exactly 1.
+  thrashFrames: 3,
 };
 
 export function judge(measured, context = {}) {
@@ -378,6 +886,65 @@ export function judge(measured, context = {}) {
       if (motion.frames && motion.dropped / motion.frames > BUDGETS.droppedRatio) {
         note('warn', Math.round((motion.dropped / motion.frames) * 100) + '% of frames took over 32 ms');
       }
+    }
+  }
+
+  /* prefers-reduced-motion, judged ONLY on a pass that navigated with the
+     media emulated from before the first document ran. The live flip inside
+     measure() is a pre-filter and cannot condemn anything: a page that reads
+     matchMedia once at boot honours the setting perfectly and still keeps
+     animating when the media is flipped mid-life, and accusing it would be
+     the exact false positive that gets a checker switched off. */
+  const reduce = measured.reduce || {};
+  if (reduce.emulated === 'reduce' && Number.isFinite(reduce.running) && reduce.running > 0) {
+    const was = reduce.baseline && Number.isFinite(reduce.baseline.running)
+      ? '; the no-preference pass ran ' + reduce.baseline.running : '';
+    note('error', reduce.running + ' looping animation' + (reduce.running === 1 ? '' : 's') + ' still running under prefers-reduced-motion',
+      (reduce.names || []).join(', ') + was);
+  }
+  /* The other half of the same question, and the one getAnimations() cannot
+     answer: motion driven by a requestAnimationFrame loop, which creates no
+     Animation object and so reported zero on a page that ignores the setting
+     outright. Sampled under the same navigated-with-the-media rule. */
+  const rafMoving = (reduce.rafMoving || []);
+  if (reduce.emulated === 'reduce' && rafMoving.length > 0) {
+    note('error', rafMoving.length + ' element' + (rafMoving.length === 1 ? '' : 's') + ' still moving under prefers-reduced-motion',
+      rafMoving.join(', ') + ' - driven by script, so there is no animation to stop, only a loop to not start');
+  }
+
+  /* Motion over time: what one real scroll cost, judged on work counts rather
+     than on wall-clock. Every millisecond figure below is supporting detail,
+     never the trigger - a loaded CI box makes any duration cross any
+     threshold, while 7500 layouts for one gesture is 7500 layouts anywhere. */
+  const run = measured.run || {};
+  if (run.measured) {
+    const loaf = run.loaf || {};
+    const cost = [];
+    if (Number.isFinite(run.metrics?.layoutCount)) cost.push(run.metrics.layoutCount + ' layouts');
+    if (Number.isFinite(run.metrics?.layoutMs)) cost.push(run.metrics.layoutMs + ' ms in layout');
+    if (loaf.forcedMs) cost.push(loaf.forcedMs + ' ms of forced synchronous layout');
+    // Attribution rides here as a detail line rather than as a finding of its
+    // own: fixtures assert the COMPLETE finding set, so a probe that appends
+    // a finding to every measured page would break every one of them.
+    const named = loaf.culprit ? ' - ' + (loaf.culprit.label || loaf.culprit.key) + ', ' + loaf.culprit.forced + ' ms forced' : '';
+    const frames = loaf.count + ' long frame' + (loaf.count === 1 ? '' : 's');
+    if (Number.isFinite(run.layoutsPerScroll) && run.layoutsPerScroll > BUDGETS.layoutsPerScroll && loaf.count >= BUDGETS.thrashFrames) {
+      // Two signals, never one: a LoAF count alone is machine load, a layout
+      // count alone can be a page that legitimately relaid out once.
+      //
+      // And the long frames have to RECUR. The denominator here is scroll
+      // events, and heavy work SUPPRESSES scroll events, so one expensive
+      // burst - a lazy measurement that runs once and disconnects - divides
+      // its whole cost by a denominator it collapsed itself and comes out
+      // naming a per-event thrash that does not exist. A handler that really
+      // thrashes on scroll produces a long frame for the events it handles,
+      // not one; a single long frame is not evidence of anything per-event and
+      // is left unsaid rather than described wrongly.
+      note('error', 'scrolling forces ' + run.layoutsPerScroll + ' layouts per scroll event (budget ' + BUDGETS.layoutsPerScroll + ')',
+        cost.join(', ') + ' over ' + frames + named);
+    } else if (loaf.count >= BUDGETS.loafFrames && loaf.blockingMs > BUDGETS.loafBlockingMs) {
+      note('warn', frames + ' during the scroll, ' + loaf.blockingMs + ' ms blocking',
+        cost.length ? cost.join(', ') + named : null);
     }
   }
 
@@ -431,7 +998,14 @@ export function judge(measured, context = {}) {
     if (cost.scriptKb > BUDGETS.scriptKb) note('warn', cost.scriptKb + ' KB of script (budget ' + BUDGETS.scriptKb + ' KB)');
     if (cost.totalKb > BUDGETS.totalKb) note('warn', cost.totalKb + ' KB transferred over ' + cost.requests + ' requests');
     if (cost.longestTaskMs > BUDGETS.longestTaskMs) note('warn', 'longest main-thread task ' + cost.longestTaskMs + ' ms', 'the page cannot respond during it');
-    if (cost.layoutShift > BUDGETS.layoutShift) note('warn', 'layout shift ' + cost.layoutShift + ' (budget ' + BUDGETS.layoutShift + ')');
+    if (cost.layoutShift > BUDGETS.layoutShift) {
+      // What actually moved, named from the layout-shift sources rather than
+      // guessed. Only ever a detail on the finding that already exists.
+      const moved = (cost.shiftSources || []).filter((s) => s.node)
+        .map((s) => s.node + (s.from && s.to ? ' moved ' + Math.round(Math.abs(s.to.y - s.from.y)) + 'px' : ''));
+      note('warn', 'layout shift ' + cost.layoutShift + ' (budget ' + BUDGETS.layoutShift + ')',
+        moved.length ? 'moved: ' + [...new Set(moved)].slice(0, 4).join(', ') : null);
+    }
     if (!idle.length && cost.scriptKb <= BUDGETS.scriptKb && cost.layoutShift <= BUDGETS.layoutShift) {
       note('ok', cost.totalKb + ' KB over ' + cost.requests + ' requests, no idle libraries, no shift');
     }

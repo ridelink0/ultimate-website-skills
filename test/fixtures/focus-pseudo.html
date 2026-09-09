@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>focus ring drawn elsewhere fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}
+h1{font-size:48px;margin:0 0 24px}
+button{display:block;margin:0 0 20px;padding:14px 20px;font:inherit;background:#e6e2d8;color:#1a1a1a;border:1px solid #1a1a1a}
+/* Three correct, extremely common ways to draw a focus ring, none of which
+   appears in getComputedStyle(theElement) with no second argument. */
+#pseudo{position:relative;outline:none}
+#pseudo::after{content:"";position:absolute;inset:-6px;border:3px solid transparent}
+#pseudo:focus-visible::after{border-color:#b45309}
+#inner{outline:none}
+#inner .ring{display:inline-block;padding:2px}
+#inner:focus-visible .ring{box-shadow:0 0 0 3px #b45309}
+.field{display:inline-block;padding:4px;border:2px solid transparent}
+.field:focus-within{border-color:#b45309}
+#text{font:inherit;padding:10px;background:#ffffff;color:#1a1a1a;border:1px solid #1a1a1a}
+#text:focus{outline:none}</style>
+<h1>Rings drawn off the element itself</h1>
+<button id="pseudo">Ring on a pseudo element</button>
+<button id="inner"><span class="ring">Ring on an inner span</span></button>
+<div class="field"><input id="text" type="text" value="Ring on the wrapper"></div>
+</html>

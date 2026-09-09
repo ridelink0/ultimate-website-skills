@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>layout shift on load fixture</title>
+<style>body{margin:0;padding:32px;font:18px/1.6 system-ui;background:#f7f6f2;color:#1a1a1a}
+h1{font-size:48px;margin:0 0 16px}p{max-width:60ch;margin:0 0 12px}</style>
+<div id="top"></div>
+<h1 id="f">A block arrives after load</h1>
+<p class="row">Paragraph 1 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 2 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 3 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 4 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 5 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 6 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 7 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 8 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 9 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 10 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 11 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<p class="row">Paragraph 12 of body copy, here to fill the viewport so the block that arrives after load pushes a full screen of content down rather than a corner of one.</p>
+<script>
+// Inserted after load, above everything: a full screen of content moves down,
+// which is what makes this a shift rather than a repaint.
+addEventListener('load', () => {
+  setTimeout(() => {
+    const banner = document.createElement('div');
+    banner.id = 'banner';
+    banner.style.cssText = 'height:300px;background:#33141d';
+    document.getElementById('top').appendChild(banner);
+  }, 60);
+});
+</script>
+</html>

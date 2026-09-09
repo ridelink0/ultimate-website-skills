@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>honours reduced motion in JS fixture</title>
+<style>body{margin:0;font:18px system-ui}h1{font-size:48px;margin:0 0 24px}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(120px)}}
+.mark{width:120px;height:120px;background:#141d33}</style>
+<h1>Motion decided once, at boot, in JavaScript</h1>
+<div class="mark"></div>
+<script>
+// Reads the media ONCE and never binds a change listener - which is how most
+// real pages do it. Emulating the media mid-life cannot move this page, so a
+// live flip alone would condemn a page that honours the setting perfectly.
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelector('.mark').style.animation = 'drift 1.2s linear infinite alternate';
+}
+</script>
+</html>
