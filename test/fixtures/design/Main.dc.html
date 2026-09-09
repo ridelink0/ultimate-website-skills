@@ -1,0 +1,22 @@
+<script src="./support.js"></script>
+<!-- A bare artboard source, in the shape the design skill's own spec gives:
+     a support.js the editor swaps for an inline runtime (the file never exists
+     on disk), an <x-dc> root, a <helmet> style block, {{handlebars}} holes and
+     an <sc-for> the runtime expands. Rendered in a browser as-is this yields
+     ERR_FILE_NOT_FOUND for support.js, a literal "{{item.label}}" where three
+     repeated elements should be, and a dropped "color: {{accent}}" - a
+     degraded skeleton that still measures like a design. Parity refuses it
+     rather than measuring it. -->
+<x-dc>
+  <helmet><style>body { background: #faf7f2; font-family: Georgia, serif; }</style></helmet>
+  <h1 style="color: {{accent}}">{{title}}</h1>
+  <sc-for each="items">
+    <p class="label">{{item.label}}</p>
+  </sc-for>
+  <img src="logo.png" alt="">
+</x-dc>
+<script data-dc-script data-props='{"accent":"#b45309","title":"Coastal Survey"}'>
+class Component extends DCLogic {
+  renderVals() { return { accent: this.props.accent, title: this.props.title, items: [{ label: "One" }, { label: "Two" }, { label: "Three" }] }; }
+}
+</script>

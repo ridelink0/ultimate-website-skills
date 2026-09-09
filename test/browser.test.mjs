@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
+import { deflateSync } from 'node:zlib';
 import { once } from 'node:events';
 import { debugSite } from '../scripts/debug.mjs';
-import { Session, findBrowser, inspect } from '../scripts/inspect.mjs';
+import { Session, findBrowser, inspect, decodePNG, sampleImageContrast, readPortFile } from '../scripts/inspect.mjs';
 import { writeReview } from '../scripts/review.mjs';
-import { runVerify } from '../scripts/verify.mjs';
+import { runVerify, formatVerify } from '../scripts/verify.mjs';
 import { startServer } from '../scripts/preview-server.mjs';
 
 test('CDP synchronous send failure removes pending requests', async () => {
@@ -139,5 +140,186 @@ test('a WebGL canvas that never asked for a preserved buffer still reads as rend
     assert.ok(live.spread > 20, 'spread should measure the real range, got ' + live.spread);
     assert.equal(canvases.filter(c => c.uniform === true).length, 1, 'the untouched canvas must still be reported flat');
     assert.ok(canvases.every(c => c.readable === true));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+/* ------------------------------------------------------------------------
+   The pixel sampler, on its own, with no browser. The bug this guards is a
+   quiet one: the box handed to the sampler contains the GLYPHS as well as the
+   ground, so a naive mean-and-spread over the whole patch reads white display
+   type on a dark photograph as "too mixed to judge" and silently reports
+   nothing - the exact case the sampler was added for. These build the pixels
+   directly so the arithmetic is checked without a page in the way. */
+
+// A minimal PNG encoder: only what decodePNG accepts (8-bit truecolour, no
+// interlacing), so the test feeds the real decoder rather than a stub of it.
+function crc32(buf) {
+  let c, crc = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) {
+    c = (crc ^ buf[i]) & 0xff;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    crc = c ^ (crc >>> 8);
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+function chunk(type, data) {
+  const len = Buffer.alloc(4); len.writeUInt32BE(data.length);
+  const body = Buffer.concat([Buffer.from(type, 'ascii'), data]);
+  const crc = Buffer.alloc(4); crc.writeUInt32BE(crc32(body));
+  return Buffer.concat([len, body, crc]);
+}
+// paint(x, y) -> [r, g, b]
+function makePNG(width, height, paint) {
+  const raw = Buffer.alloc((width * 3 + 1) * height);
+  let p = 0;
+  for (let y = 0; y < height; y++) {
+    raw[p++] = 0; // filter: none, so the decoder's filter reversal is exercised too
+    for (let x = 0; x < width; x++) { const [r, g, b] = paint(x, y); raw[p++] = r; raw[p++] = g; raw[p++] = b; }
+  }
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(width, 0); ihdr.writeUInt32BE(height, 4);
+  ihdr[8] = 8; ihdr[9] = 2; ihdr[10] = 0; ihdr[11] = 0; ihdr[12] = 0;
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk('IHDR', ihdr), chunk('IDAT', deflateSync(raw)), chunk('IEND', Buffer.alloc(0)),
+  ]);
+}
+// Ink on every fifth row, the way a line of type covers part of its box.
+const withGlyphs = (ground, ink, every = 5) => (x, y) => (y % every === 0 ? ink : ground(x, y));
+
+test('white type on a light scrim is measured through its own glyphs, not thrown away', () => {
+  // A #9a9a9a ground with white ink over it. Measuring the whole patch, ink
+  // included, puts its spread far past the "this is not one surface" cutoff
+  // and the candidate is dropped in silence - so the check that exists to
+  // find white type on a photograph finds nothing on the one page shaped
+  // like the thing it was written for. The ground alone is 2.8:1.
+  const png = decodePNG(makePNG(120, 40, withGlyphs(() => [0x9a, 0x9a, 0x9a], [255, 255, 255])));
+  assert.ok(png, 'the encoder must produce something decodePNG accepts');
+  const [hit] = sampleImageContrast(png, [{
+    el: 'p "scrim"', fg: { r: 255, g: 255, b: 255 }, need: 4.5, size: 16,
+    rect: { left: 0, top: 0, width: 120, height: 40 },
+  }]);
+  assert.ok(hit, 'white body copy on a mid-grey ground must be reported');
+  assert.equal(hit.method, 'photo');
+  assert.ok(hit.ratio > 2.6 && hit.ratio < 3.0, 'the ground, not the ink, sets the ratio: ' + hit.ratio);
+});
+
+test('white type on a dark photograph is left alone', () => {
+  const png = decodePNG(makePNG(120, 40, withGlyphs(() => [0x12, 0x12, 0x12], [255, 255, 255])));
+  assert.equal(sampleImageContrast(png, [{
+    el: 'h1 "legible"', fg: { r: 255, g: 255, b: 255 }, need: 3, size: 56,
+    rect: { left: 0, top: 0, width: 120, height: 40 },
+  }]).length, 0);
+});
+
+test('a box spanning a hard edge in the photo is reported as nothing at all', () => {
+  // Mid-grey display type with half its box on black and half on white.
+  // Contrast is not monotonic in background luminance - it bottoms out where
+  // the ground matches the text - so averaging the two halves produces 1:1,
+  // a catastrophic failure that exists nowhere on the page: the dark half is
+  // 5.3:1 and the light half 3.9:1, and both clear the 3:1 a 56px face needs.
+  // This is the false failure the ambiguity guard is for.
+  const png = decodePNG(makePNG(120, 40, (x) => (x < 60 ? [0, 0, 0] : [255, 255, 255])));
+  assert.equal(sampleImageContrast(png, [{
+    el: 'h1 "edge"', fg: { r: 128, g: 128, b: 128 }, need: 3, size: 56,
+    rect: { left: 0, top: 0, width: 120, height: 40 },
+  }]).length, 0);
+});
+
+test('the worst region is the one with the least contrast, not the darkest one', () => {
+  // A vertical ease from near-black to light grey under white type. The
+  // darkest tenth is the SAFEST tenth here; reporting it as "at its worst"
+  // is the reassuring wrong answer.
+  const png = decodePNG(makePNG(120, 60, withGlyphs((x, y) => { const v = 120 + Math.round((y / 59) * 60); return [v, v, v]; }, [255, 255, 255])));
+  const [hit] = sampleImageContrast(png, [{
+    el: 'h1 "ease"', fg: { r: 255, g: 255, b: 255 }, need: 4.5, size: 16,
+    rect: { left: 0, top: 0, width: 120, height: 60 },
+  }]);
+  assert.ok(hit, 'white 16px type on a mid-grey ease must be reported');
+  assert.ok(hit.worstRatio < hit.ratio, `worst (${hit.worstRatio}) must be below the average (${hit.ratio}) for light type on a lightening ground`);
+});
+
+// The sampler only ever sees a candidate because bgOf() refused to guess. The
+// end-to-end shape of that: white display type over a real eased scrim, which
+// is the house style's single most likely legibility failure.
+test('white display type on an eased scrim is caught end to end', { skip: !findBrowser(), timeout: 30000 }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'visual-scrim-'));
+  try {
+    writeFileSync(join(dir, 'index.html'),
+      '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<style>body{margin:0}.hero{background:linear-gradient(180deg,#0a0a0a 0%,#dedede 100%);height:400px;display:flex;align-items:flex-end;padding:24px}' +
+      'h1{color:#fff;font-size:56px;margin:0}</style><div class="hero"><h1>Light end of the ease</h1></div></html>');
+    const [r] = await inspect('file:///' + join(dir, 'index.html').split(sep).join('/'), { widths: [900], wait: 120, scrolls: [0] });
+    const hit = r.contrast.find((c) => c.el.includes('Light end of the ease'));
+    assert.ok(hit, 'white type over the light end of a scrim must be reported: ' + JSON.stringify(r.contrast));
+    assert.equal(hit.method, 'photo');
+    assert.ok(hit.ratio < hit.need);
+    assert.equal(r.imageCandidates, undefined, 'the candidate list is internal and must not leak into the report');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+// One verdict means the reader sees the worst thing first without knowing
+// which checker produced it. Grouping the output by section instead - which
+// is how each of these already prints on its own - is the thing verify exists
+// to stop, so assert the order is severity's and not the sections'.
+test('verify prints one verdict ordered by severity, each finding naming its section', () => {
+  const text = formatVerify({
+    target: 'site',
+    sections: {
+      audit: { errors: 1, warns: 0, findings: [{ severity: 'error', text: 'no <main>' }] },
+      security: { errors: 0, warns: 1, findings: [{ severity: 'note', text: 'check headers after deploy' }, { severity: 'warning', text: 'unpinned CDN script' }] },
+      render: { errors: 0, warns: 1, findings: [{ severity: 'warning', text: 'contrast 2.1:1' }] },
+    },
+    totals: { error: 1, warning: 2, low: 0, note: 1 },
+    exitCode: 1,
+  });
+  const at = (needle) => text.indexOf(needle);
+  assert.ok(at('no <main>') > -1 && at('unpinned CDN script') > -1 && at('check headers after deploy') > -1);
+  assert.ok(at('no <main>') < at('unpinned CDN script'), 'errors come before warnings');
+  assert.ok(at('unpinned CDN script') < at('check headers after deploy'), 'warnings come before notes');
+  assert.ok(at('contrast 2.1:1') < at('check headers after deploy'), 'a render warning outranks a security note');
+  assert.match(text, /ERROR \[audit\] no <main>/);
+  assert.match(text, /warn {2}\[render\] contrast 2\.1:1/);
+  assert.match(text, /1 error\(s\), 2 warning\(s\), 0 low, 1 note\(s\)/);
+});
+
+test('verify says which sections it could not run, and says so even when nothing was found', () => {
+  const text = formatVerify({
+    target: 'https://example.com/',
+    sections: {
+      audit: { skipped: 'a URL target has no source files to audit' },
+      security: { skipped: 'a URL target has no source files to scan' },
+      render: { errors: 0, warns: 0, findings: [] },
+    },
+    totals: { error: 0, warning: 0, low: 0, note: 0 },
+    exitCode: 0,
+  });
+  assert.match(text, /skipped audit: a URL target has no source files to audit/);
+  assert.match(text, /skipped security:/);
+  assert.match(text, /ok {4}nothing found in render/,
+    'a clean run has to say what it actually checked, or "nothing found" reads as "nothing ran"');
+});
+
+/* The browser is discovered by polling for DevToolsActivePort, and Chrome
+   creates that file before it writes the port into it. Reading it once and
+   letting the error out is a launch that fails at random - EBUSY on Windows
+   while Chrome still holds the handle - and it is the reason a run with
+   several browser tests in flight would kill one of them for no reason. Every
+   "not readable yet" shape has to come back as "keep waiting". */
+test('a half-written or unreadable DevToolsActivePort means keep waiting, not crash', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cdp-port-'));
+  try {
+    assert.equal(readPortFile(join(dir, 'DevToolsActivePort')), null, 'absent');
+    writeFileSync(join(dir, 'empty'), '');
+    assert.equal(readPortFile(join(dir, 'empty')), null, 'created but not yet written');
+    writeFileSync(join(dir, 'partial'), '\n/devtools/browser/abc');
+    assert.equal(readPortFile(join(dir, 'partial')), null, 'first line not there yet');
+    writeFileSync(join(dir, 'junk'), 'not-a-port\n');
+    assert.equal(readPortFile(join(dir, 'junk')), null, 'not a number');
+    // A directory read throws EISDIR; that is the same class as EBUSY - the
+    // point is that no read error escapes.
+    assert.equal(readPortFile(dir), null, 'an unreadable path must not throw');
+    writeFileSync(join(dir, 'good'), '54321\n/devtools/browser/abc\n');
+    assert.equal(readPortFile(join(dir, 'good')), 54321);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

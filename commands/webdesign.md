@@ -12,7 +12,13 @@ and upgrade: run
 `node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" audit <dir>`, fix every error
 and every warning worth fixing, then walk `references/checklist.md`.
 
-If a Claude Design project or handoff is supplied, follow the skill's Claude Design reference and implement that design before auditing it. The scaffolding sequence below applies only when there is no supplied design.
+If a Claude Design project or handoff is supplied, follow the skill's Claude Design
+reference and implement that design before auditing it. Preserve it - typography,
+spacing, composition, palette - instead of rebuilding it in the house style, and
+prove you did:
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" verify <dir> --design <seeded canvas>.html`
+must not report the design ERROR. The scaffolding sequence below applies only when
+there is no supplied design.
 
 Otherwise build a new site:
 

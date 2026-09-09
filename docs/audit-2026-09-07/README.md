@@ -22,7 +22,7 @@ A fresh plugin reading matched the native Codex meter for both account windows. 
 
 ## Claude Design
 
-[Connection, sources and handoff workflow](../../skills/cinematic-web-design/references/claude-design.md). The plugin includes an optional setup helper using Anthropic's documented endpoint. Authentication remains interactive through /design-login. Authenticated remote design creation and the quality of a particular generated website were not tested.
+[Connection, sources and handoff workflow](../../skills/ultimate-website-skills/references/claude-design.md) (path corrected after the 4.0.0 rename; the old `skills/cinematic-web-design/` path in this audit's original text no longer exists). That reference was rewritten on 8 September 2026 against the running host: the live routes on a current Claude Code build are the built-in `design` canvas skill and the native `DesignSync` tool, and `scripts/design.mjs` now detects rather than registers. Authenticated remote design creation and the quality of a particular generated website were not tested, then or since.
 
 ## Reproduce
 

@@ -1,0 +1,29 @@
+<!doctype html>
+<!-- The implementation that DID keep the supplied design: the same type scale
+     (48 / 20 / 16), the same ink and ground, the same 24px rhythm and the same
+     content band as artboard-canvas.html. It has to report no delta at all -
+     a parity check that cries wolf on a correct page is worse than no check,
+     because it sends an agent off to "fix" work that was right. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Coastal Survey</title>
+<style>
+  html, body { margin: 0; }
+  body { background: #faf7f2; font-family: Georgia, "Times New Roman", serif; }
+  .page { padding: 32px; }
+  h1 { font-size: 48px; color: #b45309; margin: 0 0 24px; line-height: 1.1; }
+  p { font-size: 16px; color: #4a4a44; margin: 0 0 24px; line-height: 1.6; }
+  .label { display: block; font-size: 20px; color: #4a4a44; margin: 0 0 24px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Coastal Survey</h1>
+  <p>Forty miles of shingle, walked twice a year since 1974.</p>
+  <p>The counts are kept by hand and typed up in March.</p>
+  <span class="label">Shingle</span>
+  <span class="label">Saltmarsh</span>
+</div>
+</body>
+</html>

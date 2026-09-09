@@ -28,8 +28,10 @@ Layout:
 skills/ultimate-website-skills/SKILL.md         the doctrine
 skills/ultimate-website-skills/assets/          core.css, motion.js, sections.html
 skills/ultimate-website-skills/references/      loaded on demand
-scripts/webdesign.mjs             new / sections / add / audit / look / serve
+scripts/webdesign.mjs             new / sections / add / audit / look / serve / parity / verify
 scripts/inspect.mjs             headless-browser render check, over CDP
+scripts/parity.mjs              built page vs its Claude Design artboards, same probes both sides
+scripts/design.mjs              which Claude Design route exists here - reports, never enrols
 scripts/cut.py                  photograph -> parallax planes via rembg
 scripts/install.mjs             registers with both CLIs
 commands/webdesign.md           the /ultimate-website-skills:webdesign slash command

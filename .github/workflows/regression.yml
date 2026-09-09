@@ -23,6 +23,15 @@ jobs:
         id: setup-chrome
         with:
           chrome-version: stable
+      # Ubuntu 24.04 ships an AppArmor profile that denies unprivileged user
+      # namespaces, which is what Chrome's own sandbox is built on: without
+      # this the browser exits before it writes DevToolsActivePort and every
+      # browser test dies with "browser did not expose a debugging port".
+      # Relaxing it beats passing --no-sandbox, which would mean CI runs the
+      # browser in a configuration no developer ever does.
+      - name: allow the Chrome sandbox on ubuntu
+        if: runner.os == 'Linux'
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
       - name: fail fast if no browser is resolvable
         shell: bash
         env:
@@ -42,7 +51,14 @@ jobs:
         run: |
           set -o pipefail
           node --test --test-reporter=tap --test-reporter-destination=stdout test/*.test.mjs | tee test-output.tap
-          if grep -qE '^# skipped [1-9]' test-output.tap; then
-            echo "browser tests were skipped - a real browser must run in this job" >&2
+          # A skipped test is reported as a pass and node still exits 0, which
+          # is the whole reason this job could not previously prove anything
+          # about the browser half. A cancelled one is the same hole: it is
+          # counted separately from a failure. Name what was skipped rather
+          # than asserting which tests they were.
+          if grep -qE '^# (skipped|cancelled) [1-9]' test-output.tap; then
+            echo "tests did not actually run:" >&2
+            grep -E '# (SKIP|CANCELLED)' test-output.tap >&2 || true
+            echo "the browser half of this suite must run here - see findBrowser() in scripts/inspect.mjs" >&2
             exit 1
           fi

@@ -1,4 +1,4 @@
-Ultimate Website Skills 4.0.0 is the plugin formerly named cinematic-web-design (3.x), which in turn absorbed Atelier. [Migration and aliases](docs/merge.md) · [Claude Design setup](skills/ultimate-website-skills/references/claude-design.md)
+Ultimate Website Skills 4.0.0 is the plugin formerly named cinematic-web-design (3.x), which in turn absorbed Atelier. [Migration and aliases](docs/merge.md) · [Claude Design routes](skills/ultimate-website-skills/references/claude-design.md)
 
 # Ultimate Website Skills
 
@@ -110,7 +110,10 @@ webdesign.mjs look <dir|url>           RENDER it at two scroll positions: overla
 webdesign.mjs cut <photo>              one photograph into parallax planes (rembg, local)
 webdesign.mjs study --list editorial   render a batch of reference sites into contact sheets
 webdesign.mjs serve <dir>              local preview
-webdesign.mjs verify <dir|url>         one verdict: audit + render/quality + security, findings by severity
+webdesign.mjs parity <dir|url> --design <canvas>.html
+                                      compare a built page against its Claude Design artboards
+webdesign.mjs verify <dir|url> [--design REF]
+                                      one verdict: audit + render/quality + security (+ design parity)
 ```
 
 **`references/stack.md`** - which library for which job, with specifiers
@@ -135,13 +138,20 @@ Contrast has two paths. Where the background resolves to a solid colour, it is
 checked in the page directly. Where it does not - a background image, or a
 positioned layer painting underneath, which `bgOf()` correctly refuses to guess
 at rather than produce a false failure - the screenshot the inspector already
-captured is decoded and the actual pixels under the text are sampled: an
-average across the box, and the darkest tenth of it, since a scrim eases from
-clear to dark and a headline near the light end of that ease is the failure the
-average alone would hide. A sample that spans a hard edge in the photo (part of
-the box much lighter than the rest) is thrown out rather than turned into a
-confident-sounding wrong answer. Every contrast finding says which method
-produced it.
+captured is decoded and the actual pixels under the text are sampled. The
+sample is taken over the line boxes the glyphs really occupy, not the element
+box, and the brightest and darkest quarter of it are discarded before anything
+is measured: the box contains the type as well as the ground behind it, and
+without that step white display type on a dark photograph reads as "too mixed
+to judge" and is silently dropped - the exact case the sample exists for. What
+is left is the ground, reported as an average and as its worst tenth, where
+"worst" means least contrast against the text colour rather than simply
+darkest, because light type fails where a scrim is thinnest and dark type
+fails where it is deepest. A sample that still spans a hard edge in the photo
+is thrown out rather than turned into a confident-sounding wrong answer: mid
+grey type half on black and half on white would otherwise average out to a
+1:1 failure that exists nowhere on the page. Every contrast finding says which
+method produced it.
 
 A layer covering half the composition passes every static check ever written.
 This is how you catch it.
@@ -271,7 +281,7 @@ reasoning behind every rule.
 ## Verify - one command, one verdict
 
 ```
-node scripts/webdesign.mjs verify <site-directory-or-url> [--json]
+node scripts/webdesign.mjs verify <site-directory-or-url> [--design REF] [--json]
 ```
 
 Finishing a page today means running audit, debug, quality and security
@@ -290,3 +300,88 @@ to act on it rather than read it. The exit code is 1 exactly when any
 underlying checker would already have exited 1 today - an audit error, a
 render/quality `ERROR`, or a high-severity security finding - nothing here
 makes anything newly fatal.
+
+`--design <reference>` adds one more section: the design parity check below.
+
+## Design parity - is this still the design you were given?
+
+```
+node scripts/webdesign.mjs parity <built dir|file|url> --design <seeded canvas>.html
+```
+
+Neither half of the Claude Design pairing can answer that alone. Claude Design
+holds the intent and never sees the site running; this repo renders the site and
+was never told what was intended. Parity is the join: one browser session, the
+same probes from `inspect.mjs` and `measure.mjs`, pointed first at the design and
+then at the page, so a difference in the numbers is a difference in the pages and
+not a difference in the instruments. It compares the type sizes actually used, the
+rendered palette (text colours and area-weighted backgrounds), the vertical
+spacing rhythm, and the geometry of the content band and leading headline.
+
+A Claude Design canvas puts each artboard in a sandboxed `srcdoc` iframe with no
+`allow-same-origin`, which Chrome runs out of process. A probe evaluated the
+ordinary way therefore measures the **editor chrome** and comes back clean,
+confident and about the wrong document - so parity attaches to the artboard frame
+deliberately (an auto-attached target, or a subframe execution context - both,
+because only one of them is guaranteed) and names in the report which frame it
+read. A bare `.dc.html` is refused rather than measured: it needs the runtime the
+editor injects, and rendered on its own it produces a skeleton that still measures
+like a design.
+
+Colours are converted to sRGB inside the page before anything is compared.
+`getComputedStyle` returns `oklch()` and `color-mix()` verbatim, and `core.css`
+defines its whole palette in oklch, so a check that read the numbers out of an
+`rgb()` string would tell every house-style page that its own colours were "not
+in the design". A value that still cannot be read is reported as unread, not as
+different.
+
+Tolerances are loose on purpose, because a false "does not match" on a good
+implementation is the worst outcome available: it would send an agent off to
+damage a page that was right. They are fixed - there is no flag for any of them,
+and `TOLERANCE` at the top of the comparison in `scripts/parity.mjs` is the whole
+list: 2px on a type size, RGB distance 40 on a colour, 8% and 12% of the viewport
+on the content band and the heading, 40% drift on the dominant vertical gap, 3%
+of painted area before a background counts as a ground, and two uses before a
+size or colour stops being a stray.
+
+The stray filter has one exemption and severity has one rule. **The display line
+is never a stray** - the largest text appears once by definition, and filtering it
+out would exempt the element a design is most about from the check - so its size
+and colour are compared and named on their own. **Severity follows area, not
+count**: a ground covering the whole page is a warning even though it is one
+colour. Findings name things rather than scoring a percentage:
+
+```
+  warn  3 type sizes are not in the design: 30px, 13px, 11px
+  warn  2 text colours are not in the design: rgb(154, 154, 154), rgb(232, 196, 106)
+  warn  the largest type on the page is 30px; the design's is 48px
+  warn  1 background colour is not in the design: rgb(12, 10, 3) (covering 100% of what the page paints)
+  note  the design uses 48px, 20px, 16px; the page does not
+```
+
+Only one combination is an error - a page whose type scale **and** palette are
+both mostly absent from the design. Both command files already say a supplied
+design must be preserved rather than rebuilt in the house style; this is that rule
+made measurable, because overwriting a design does not produce a subtle delta. It
+needs a reference substantial enough for "absent from it" to mean something: a
+whole page measured against a hero-only artboard always looks mostly absent, and
+that is reported as a reference too thin to judge against, not as a wrong page.
+
+## Which Claude Design route do you have?
+
+```
+node scripts/design.mjs detect
+```
+
+Claude Design does not arrive the same way in every host. On a current Claude Code
+build it is the built-in `design` canvas skill plus the native `DesignSync` tool -
+neither is an MCP server. The HTTP MCP server at `api.anthropic.com/v1/design/mcp`
+is real and is the route for hosts that need it, Codex among them, but registering
+it on a build that already has the native routes just adds a server that shadows
+them. `detect` reports what is actually here and prints the registration step for both
+hosts - the `claude mcp add` command, and the `[mcp_servers.claude-design]` block
+Codex reads from `~/.codex/config.toml`, since the claude CLI is the one thing
+that cannot help a Codex user - without running either; it never registers,
+consents, logs in or publishes. See
+[Claude Design routes](skills/ultimate-website-skills/references/claude-design.md)
+for what each route can do and what was and was not exercised.

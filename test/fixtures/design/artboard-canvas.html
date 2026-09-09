@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- A stand-in for a seeded Claude Design canvas. It is NOT a copy of the real
+     2.5 MB editor payload and does not run the canvas runtime; what it
+     reproduces is the one structural fact that decides whether a parity check
+     measures the design or measures nothing: the artboard lives in a sandboxed
+     srcdoc iframe with no allow-same-origin, so it is unreachable from the top
+     document and the top document is all a naive probe ever sees.
+
+     Point a probe at this page the ordinary way and it reports a clean, calm,
+     four-element page - the toolbar. The design is the four hundred pixels
+     inside the frame. That is the failure this fixture exists to catch.
+
+     The state block below carries the same "appifact-doc" marker the real
+     seed-canvas.mjs writes and reads (its DOC_RE), so classifyReference()
+     recognises the file as a canvas and goes looking for the artboard frame. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Parity Fixture Canvas</title>
+<style>
+  html, body { margin: 0; }
+  body { background: #2b2b2b; font-family: system-ui, sans-serif; }
+  .chrome { padding: 10px 16px; color: #dddddd; font-size: 13px; }
+  .chrome span { margin-right: 18px; }
+  iframe { display: block; border: 0; width: 1440px; height: 900px; }
+</style>
+</head>
+<body>
+<div class="chrome">
+  <span>Fit</span><span>Read-only</span><span>Export</span><span>Back to canvas</span>
+</div>
+<iframe sandbox="allow-scripts" title="Main" srcdoc='
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><style>
+  html, body { margin: 0; }
+  body { background: #faf7f2; font-family: Georgia, "Times New Roman", serif; }
+  .page { padding: 32px; }
+  h1 { font-size: 48px; color: #b45309; margin: 0 0 24px; line-height: 1.1; }
+  p { font-size: 16px; color: #4a4a44; margin: 0 0 24px; line-height: 1.6; }
+  .label { display: block; font-size: 20px; color: #4a4a44; margin: 0 0 24px; }
+</style></head><body>
+<div class="page">
+  <h1>Coastal Survey</h1>
+  <p>Forty miles of shingle, walked twice a year since 1974.</p>
+  <p>The counts are kept by hand and typed up in March.</p>
+  <span class="label">Shingle</span>
+  <span class="label">Saltmarsh</span>
+</div>
+</body></html>
+'></iframe>
+<script type="application/json" id="appifact-doc">
+{"title":"Coastal Survey","files":{"Main.dc.html":"<x-dc><h1>Coastal Survey</h1></x-dc>"},"canvas":{"boards":[{"file":"Main.dc.html","w":1440,"h":900}]}}
+</script>
+</body>
+</html>

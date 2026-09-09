@@ -21,8 +21,11 @@ export function findClaude({ env = process.env, platform = process.platform, exi
   }
   return null;
 }
-export function runClaude(cli, args, { spawn = spawnSync } = {}) {
-  return spawn(cli.file, [...cli.prefix, ...args], { encoding: 'utf8', shell: false, windowsHide: true });
+// timeout is a caller concern, not a default: `claude mcp list` reaches out to
+// every registered server, so a read-only probe can otherwise sit there for as
+// long as the slowest one takes to refuse.
+export function runClaude(cli, args, { spawn = spawnSync, timeout } = {}) {
+  return spawn(cli.file, [...cli.prefix, ...args], { encoding: 'utf8', shell: false, windowsHide: true, timeout });
 }
 export function removeTables(text, headers) {
   const wanted = new Set(headers);

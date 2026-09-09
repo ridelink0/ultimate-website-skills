@@ -41,7 +41,21 @@ export function findBrowser() {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function launch(bin) {
+/* Chrome creates DevToolsActivePort and only then writes the port into it, so
+   between those two moments the file exists and is unreadable: on Windows the
+   read throws EBUSY because Chrome still holds the handle, and on any platform
+   it can come back empty or half-written. All three mean "not yet", not
+   "failed" - reading it once and letting the error out is why a browser test
+   would die at random whenever several ran at the same time, which is exactly
+   what CI now does on every push. Returns the port, or null to keep waiting. */
+export function readPortFile(path) {
+  let first;
+  try { first = readFileSync(path, 'utf8').split('\n')[0].trim(); } catch { return null; }
+  const port = Number(first);
+  return Number.isInteger(port) && port > 0 && port < 65536 ? port : null;
+}
+
+export async function launch(bin) {
   const udd = mkdtempSync(join(tmpdir(), 'webdesign-cdp-'));
   const proc = spawn(bin, [
     '--headless=new', '--hide-scrollbars', '--mute-audio',
@@ -55,10 +69,8 @@ async function launch(bin) {
   const portFile = join(udd, 'DevToolsActivePort');
   for (let i = 0; i < 150; i++) {
     if (launchError || proc.exitCode !== null) break;
-    if (existsSync(portFile)) {
-      const port = readFileSync(portFile, 'utf8').split('\n')[0].trim();
-      if (port) return { proc, udd, port: +port };
-    }
+    const port = readPortFile(portFile);
+    if (port) return { proc, udd, port };
     await sleep(100);
   }
   try { proc.kill(); } catch {}
@@ -104,14 +116,21 @@ export class Session {
     for (const { rej, timer } of this.waiting.values()) { clearTimeout(timer); rej(error); }
     this.waiting.clear();
   }
-  send(method, params = {}) {
+  /* sessionId addresses a command at an auto-attached child target instead of
+     the page. An out-of-process iframe - which is what a Claude Design canvas
+     puts each artboard in - has no reachable document from the top frame
+     (contentDocument is null, no allow-same-origin), so without this the only
+     way to "measure the artboard" is to measure the editor chrome around it
+     and get a clean, confident, entirely wrong answer. */
+  send(method, params = {}, sessionId = null) {
     const id = ++this.id;
     return new Promise((res, rej) => {
       const timer = setTimeout(() => {
         if (this.waiting.has(id)) { this.waiting.delete(id); rej(new Error(method + ' timed out')); }
       }, 45000);
       this.waiting.set(id, { res, rej, timer });
-      try { this.ws.send(JSON.stringify({ id, method, params })); }
+      const envelope = sessionId ? { id, method, params, sessionId } : { id, method, params };
+      try { this.ws.send(JSON.stringify(envelope)); }
       catch (err) { clearTimeout(timer); this.waiting.delete(id); rej(err); }
     });
   }
@@ -145,7 +164,7 @@ const CANVAS_INIT = `(() => {
 
 /* ------------------------------------------------- the in-page analysis ---- */
 /* Runs inside the page. Everything it needs must be self-contained. */
-const PROBE = `(() => {
+export const PROBE = `(() => {
   const out = { overlaps: [], overflow: [], contrast: [], collapsed: [], broken: [],
                 tiny: [], offscreen: [], imageCandidates: [], stats: {} };
   const vw = innerWidth, vh = innerHeight;
@@ -229,6 +248,26 @@ const PROBE = `(() => {
     }
     const c = parseRGB(getComputedStyle(document.body).backgroundColor);
     return c && c.a > 0.85 ? c : null;
+  };
+
+  // The union of the line boxes an element's OWN text nodes occupy, in
+  // viewport coordinates. A Range is the only way to ask the browser where the
+  // glyphs went; the element box includes padding and whatever whitespace the
+  // line-breaking left over, and both of those are ground the reader never
+  // has to read text against.
+  const _range = document.createRange();
+  const textRect = (el) => {
+    let l = Infinity, t = Infinity, rr = -Infinity, b = -Infinity;
+    for (const n of el.childNodes) {
+      if (n.nodeType !== 3 || !n.textContent.trim()) continue;
+      _range.selectNodeContents(n);
+      for (const box of _range.getClientRects()) {
+        if (box.width < 1 || box.height < 1) continue;
+        l = Math.min(l, box.left); t = Math.min(t, box.top);
+        rr = Math.max(rr, box.right); b = Math.max(b, box.bottom);
+      }
+    }
+    return l < rr && t < b ? { left: l, top: t, width: rr - l, height: b - t } : null;
   };
 
   // Elements whose own text is painted (not just inherited from a child).
@@ -330,9 +369,19 @@ const PROBE = `(() => {
     // anything in particular.
     if (r.right <= 0 || r.bottom <= 0 || r.left >= vw || r.top >= vh) continue;
     if (r.width < 2 || r.height < 2 || r.width * r.height > 400000) continue;
+    // The ELEMENT box is not the text box: a block <h1> in a flex row is as
+    // wide as the row, and sampling the empty two thirds measures a ground the
+    // words never sit on. Ranging over the element's own text nodes gives the
+    // line boxes the glyphs actually occupy, which is what legibility is
+    // about. Falls back to the element box if the range yields nothing.
+    const tr = textRect(el) || r;
+    const left = Math.max(0, tr.left), top = Math.max(0, tr.top);
+    const width = Math.min(vw, tr.left + tr.width) - left;
+    const height = Math.min(vh, tr.top + tr.height) - top;
+    if (width < 2 || height < 2) continue;
     out.imageCandidates.push({
       el: label(el), fg, need, size: Math.round(size),
-      rect: { left: Math.max(0, r.left), top: Math.max(0, r.top), width: Math.min(r.width, vw - Math.max(0, r.left)), height: Math.min(r.height, vh - Math.max(0, r.top)) },
+      rect: { left, top, width, height },
     });
   }
   out.contrast.sort((a, b) => a.ratio - b.ratio);
@@ -380,7 +429,7 @@ const PROBE = `(() => {
    candidate is silently skipped rather than sampled wrong. zlib is a Node
    builtin, so this stays a zero-dependency file the way the rest of the tool
    is; only the chunk framing and filter reversal are hand-rolled. */
-function decodePNG(buf) {
+export function decodePNG(buf) {
   if (buf.length < 8 || buf.readUInt32BE(0) !== 0x89504e47) return null;
   let pos = 8, width = 0, height = 0, bitDepth = 0, colorType = 0, interlace = 0;
   const idat = [];
@@ -444,20 +493,37 @@ const contrastRatio = (a, b) => {
   return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
 };
 
-// Samples the pixels a text box actually sits on and reports contrast against
-// their average, and against their darkest tenth - a scrim eases from clear
-// to dark, and a headline sitting near the light end of that ease is the
-// failure the average alone would hide. If the sampled patch is genuinely
-// mixed - part of it much lighter than the rest, which means the box spans an
-// edge in the photo rather than sitting on one tone - the sample is thrown
-// out instead of turned into a confident-sounding wrong answer.
-function sampleImageContrast(png, candidates) {
+// A text box contains the glyphs as well as the ground behind them, so the
+// plain mean of the patch is the mean of "ground plus ink" and its spread is
+// dominated by the ink: white display type on a dark photograph reads as a
+// wildly mixed patch and gets thrown away, which is exactly the case this
+// exists for. Ink is always a minority of a line box and always at one end of
+// the luminance order, so discarding the brightest and darkest quarter leaves
+// the ground - which is the thing whose contrast against the text colour we
+// actually want.
+const TRIM = 0.25;
+// Spread across the remaining ground, on a 0-1 luminance scale. Above this the
+// patch is not one surface - a hard edge in the photo runs through the words -
+// and any single "the background is X" answer would be a guess dressed as
+// data, so the candidate is dropped and nothing is reported.
+const MIXED_SD = 0.16;
+
+const meanColor = (list) => ({
+  r: Math.round(list.reduce((a, p) => a + p.r, 0) / list.length),
+  g: Math.round(list.reduce((a, p) => a + p.g, 0) / list.length),
+  b: Math.round(list.reduce((a, p) => a + p.b, 0) / list.length),
+});
+
+export function sampleImageContrast(png, candidates) {
   const found = [];
   for (const cand of candidates) {
     const { left, top, width, height } = cand.rect;
     if (width < 2 || height < 2) continue;
-    const cols = Math.min(10, Math.max(2, Math.round(width / 6)));
-    const rows = Math.min(10, Math.max(2, Math.round(height / 6)));
+    // Dense enough that a quarter can be trimmed off each end and still leave
+    // a meaningful sample of the ground, capped so a full-width headline does
+    // not turn into thousands of reads.
+    const cols = Math.min(24, Math.max(4, Math.round(width / 4)));
+    const rows = Math.min(24, Math.max(4, Math.round(height / 4)));
     const samples = [];
     for (let iy = 0; iy < rows; iy++) {
       for (let ix = 0; ix < cols; ix++) {
@@ -466,31 +532,25 @@ function sampleImageContrast(png, candidates) {
         samples.push(png.at(x, y));
       }
     }
-    if (!samples.length) continue;
+    if (samples.length < 16) continue;
     const lums = samples.map(relLum);
-    const mean = lums.reduce((a, v) => a + v, 0) / lums.length;
-    const variance = lums.reduce((a, v) => a + (v - mean) ** 2, 0) / lums.length;
-    // A stddev this size on a 0-1 luminance scale means the patch is not one
-    // surface - a hard edge in the photo runs through the text box - and any
-    // single "the background is X" answer would be a guess dressed as data.
-    if (Math.sqrt(variance) > 0.16) continue;
-    const avg = {
-      r: Math.round(samples.reduce((a, p) => a + p.r, 0) / samples.length),
-      g: Math.round(samples.reduce((a, p) => a + p.g, 0) / samples.length),
-      b: Math.round(samples.reduce((a, p) => a + p.b, 0) / samples.length),
-    };
-    const order = samples.map((p, i) => i).sort((i, j) => lums[i] - lums[j]);
-    const darkN = Math.max(1, Math.round(samples.length * 0.1));
-    const darkIdx = order.slice(0, darkN);
-    const dark = {
-      r: Math.round(darkIdx.reduce((a, i) => a + samples[i].r, 0) / darkIdx.length),
-      g: Math.round(darkIdx.reduce((a, i) => a + samples[i].g, 0) / darkIdx.length),
-      b: Math.round(darkIdx.reduce((a, i) => a + samples[i].b, 0) / darkIdx.length),
-    };
-    const avgRatio = contrastRatio(cand.fg, avg);
-    const darkRatio = contrastRatio(cand.fg, dark);
+    const cut = Math.floor(samples.length * TRIM);
+    const core = samples.map((p, i) => i).sort((i, j) => lums[i] - lums[j]).slice(cut, samples.length - cut);
+    if (core.length < 4) continue;
+    const coreLums = core.map((i) => lums[i]);
+    const mean = coreLums.reduce((a, v) => a + v, 0) / coreLums.length;
+    const variance = coreLums.reduce((a, v) => a + (v - mean) ** 2, 0) / coreLums.length;
+    if (Math.sqrt(variance) > MIXED_SD) continue;
+    const ground = core.map((i) => samples[i]);
+    const avgRatio = contrastRatio(cand.fg, meanColor(ground));
+    // The worst tenth of the ground, not the DARKEST tenth: white type on a
+    // scrim fails where the scrim is thinnest and dark type fails where it is
+    // deepest, so "worst" only means anything when it is measured against the
+    // text colour rather than assumed to be one end of the scale.
+    const byRisk = ground.slice().sort((a, b) => contrastRatio(cand.fg, a) - contrastRatio(cand.fg, b));
+    const worstRatio = contrastRatio(cand.fg, meanColor(byRisk.slice(0, Math.max(1, Math.round(ground.length * 0.1)))));
     if (avgRatio < cand.need)
-      found.push({ el: cand.el, ratio: +avgRatio.toFixed(2), darkRatio: +darkRatio.toFixed(2), need: cand.need, size: cand.size, method: 'photo' });
+      found.push({ el: cand.el, ratio: +avgRatio.toFixed(2), worstRatio: +worstRatio.toFixed(2), need: cand.need, size: cand.size, method: 'photo' });
   }
   return found;
 }
@@ -689,7 +749,7 @@ export function formatReport(results) {
     }
     for (const c of r.contrast) {
       warns++;
-      const via = c.method === 'photo' ? ' [sampled from the photo behind it' + (c.darkRatio != null ? `, ${c.darkRatio}:1 at its darkest` : '') + ']' : ' [solid background]';
+      const via = c.method === 'photo' ? ' [sampled from the photo behind it' + (c.worstRatio != null ? `, ${c.worstRatio}:1 at its worst` : '') + ']' : ' [solid background]';
       lines.push(`  warn  contrast ${c.ratio}:1 (needs ${c.need}) at ${c.size}px: ${c.el}${via}`);
     }
     for (const t of r.tiny) { warns++; lines.push(`  warn  tap target ${t.w}x${t.h}px (needs 24): ${t.el}`); }

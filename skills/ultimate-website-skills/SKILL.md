@@ -18,7 +18,16 @@ sentences and give the paths. If they want the reasoning, they will ask for it.
 Never use emoji - not in the page, the copy, the commit, or the reply. Icons are
 inline SVG.
 
-For Claude Design work, first read `references/claude-design.md`. Use the connected service for design iteration and handoff when requested or already available. Keep its chosen direction intact. Otherwise proceed with the local house style without a separate approval pass.
+For Claude Design work, first read `references/claude-design.md`, then run
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/design.mjs" detect` rather than assuming a route.
+On a current Claude Code build Claude Design arrives as the built-in `design` canvas
+skill and the native `DesignSync` tool, neither of which is an MCP server; the HTTP MCP
+server is for hosts that need it (Codex among them). `detect` only reports - never
+register, consent or log in on the user's behalf, and never report a remote Design
+operation as successful without its actual result.
+
+Keep a supplied design's direction intact; otherwise proceed with the local house style
+without a separate approval pass.
 
 For website debugging or final verification, read references/visual-debug.md. Run the rendered debug command and actually open its PNGs before declaring the visual check complete.
 
@@ -31,7 +40,16 @@ not say what the subject is, ask one question. Otherwise decide and go.
 
 ## Build
 
-If a Claude Design handoff exists, implement it in the current project and use the checks below; do not scaffold over it. The scaffold is for a new site without a supplied design.
+If a Claude Design handoff exists, implement it in the current project and use the checks
+below; do not scaffold over it. The scaffold is for a new site without a supplied design.
+
+Preserving a supplied design is now measurable, not just instructed:
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" verify <dir> --design <seeded canvas>.html`
+compares the built page against the artboards through the same probes - type sizes,
+palette, vertical rhythm, content geometry - and raises an ERROR when the type scale and
+the palette are both absent from the design, which is what overwriting one looks like.
+Hand it a seeded canvas page or a plain HTML rendering of the design; a bare `.dc.html`
+is not a renderable page and parity refuses it.
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/webdesign.mjs" new <dir> \
@@ -357,13 +375,16 @@ Do not call a site secure because the command printed nothing.
 
 ## One command for all of it
 
-`node scripts/webdesign.mjs verify <dir|url> [--json]` runs the audit, one
-browser pass covering both rendering and the quality budgets, and the
-security scan, then reports one verdict: a summary line, findings grouped by
+`node scripts/webdesign.mjs verify <dir|url> [--design REF] [--json]` runs the
+audit, one browser pass covering both rendering and the quality budgets, the
+security scan, and - when a design reference is supplied - the parity check
+against it, then reports one verdict: a summary line, findings grouped by
 severity (`error`, `warning`, `low`, `note`), and one exit code - 1 exactly
 when audit, render/quality or security would already have exited 1 on their
 own. Use it as the single before-you-call-it-done check instead of running
 the four commands above separately and reconciling their output by hand;
 `--json` gives the same result as data for anything that wants to act on it.
 A URL target has no source files, so its audit and security sections come
-back marked `skipped` rather than a guess.
+back marked `skipped` rather than a guess, and a design reference that cannot
+be read or rendered comes back `skipped` too rather than as a parity verdict
+from a check that never ran.

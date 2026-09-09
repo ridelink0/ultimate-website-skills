@@ -51,15 +51,21 @@ export async function runVerify(target, opts = {}) {
       // no .html found, or an unreadable path - not a crash, a skipped section.
       sections.audit = { skipped: e.message };
     }
-    const sec = securityAudit(resolved);
-    const shown = formatSecurity(sec, relative(process.cwd(), resolved) || '.');
-    sections.security = {
-      errors: shown.high, warns: shown.medium, low: shown.low, note: shown.note,
-      findings: sec.findings.map((f) => ({
-        severity: f.level === 'high' ? 'error' : f.level === 'medium' ? 'warning' : f.level,
-        text: (f.file ? `${f.file}${f.line ? ':' + f.line : ''}: ` : '') + f.text,
-      })),
-    };
+    try {
+      const sec = securityAudit(resolved);
+      const shown = formatSecurity(sec, relative(process.cwd(), resolved) || '.');
+      sections.security = {
+        errors: shown.high, warns: shown.medium, low: shown.low, note: shown.note,
+        findings: sec.findings.map((f) => ({
+          severity: f.level === 'high' ? 'error' : f.level === 'medium' ? 'warning' : f.level,
+          text: (f.file ? `${f.file}${f.line ? ':' + f.line : ''}: ` : '') + f.text,
+        })),
+      };
+    } catch (e) {
+      // Same reasoning as the audit above: one checker refusing a target is a
+      // skipped section, not a reason to lose the other two checkers' work.
+      sections.security = { skipped: e.message };
+    }
   }
 
   // Render + quality are one browser pass: formatReport already folds the
@@ -79,6 +85,33 @@ export async function runVerify(target, opts = {}) {
     reviewFile: debugResult.file,
   };
 
+  // Design parity only runs when a reference was supplied, because without
+  // one there is nothing to be faithful to. When it does run it is the check
+  // that makes "preserve a supplied design, do not rebuild it in the house
+  // style" measurable instead of merely instructed: a design that was
+  // overwritten shows up as a type scale and a palette that are both absent
+  // from the reference.
+  if (opts.design) {
+    try {
+      const { runParity } = await import('./parity.mjs');
+      const parity = await runParity(target, opts.design, {
+        width: (opts.widths && opts.widths[0]) || 1440,
+        wait: opts.wait ?? 2500,
+      });
+      sections.design = {
+        errors: parity.errors, warns: parity.warns,
+        reference: parity.reference, referenceKind: parity.referenceKind,
+        designFrame: parity.design.frame,
+        findings: parity.findings,
+      };
+    } catch (e) {
+      // A missing browser, an unreadable reference or a bare .dc.html is a
+      // section that could not run. Reporting that is honest; inventing a
+      // parity verdict from a check that never happened is not.
+      sections.design = { skipped: e.message };
+    }
+  }
+
   const totals = { error: 0, warning: 0, low: 0, note: 0 };
   for (const s of Object.values(sections)) {
     if (!s.findings) continue;
@@ -90,19 +123,54 @@ export async function runVerify(target, opts = {}) {
   return { target: isUrl ? target : relative(process.cwd(), resolved) || '.', sections, totals, exitCode };
 }
 
+const SEVERITIES = [
+  ['error', 'ERROR', 'fix before this ships'],
+  ['warning', 'warn ', 'decide deliberately'],
+  ['low', 'low  ', 'worth knowing'],
+  ['note', 'note ', 'for information'],
+];
+
+// Grouped by SEVERITY rather than by which checker happened to produce it -
+// the whole point of one verdict is reading the worst thing first without
+// having to know that contrast comes from the renderer and a leaked key comes
+// from the security scan. Each line still names its section, so a finding can
+// be traced back to the command that would reproduce it on its own.
 export function formatVerify(result) {
   const lines = [];
   lines.push(`\nwebdesign verify  ${result.target}`);
   lines.push(`  ${result.totals.error} error(s), ${result.totals.warning} warning(s), ${result.totals.low} low, ${result.totals.note} note(s)`);
-  for (const [name, s] of Object.entries(result.sections)) {
-    lines.push(`\n  -- ${name} --`);
-    if (s.skipped) { lines.push(`  skipped: ${s.skipped}`); continue; }
-    if (!s.findings.length) { lines.push('  ok    nothing found'); continue; }
-    for (const f of s.findings) {
-      const tag = f.severity === 'error' ? 'ERROR' : f.severity === 'warning' ? 'warn ' : f.severity === 'low' ? 'low  ' : 'note ';
-      lines.push(`  ${tag} ${f.text}`);
+  // Which frame the design was read from belongs in the header, not the
+  // footnotes: a canvas whose artboard frame was never found reports the
+  // editor chrome, and every design finding below would then be about the
+  // wrong document.
+  const design = result.sections.design;
+  if (design && !design.skipped) {
+    lines.push(`  design reference: ${design.reference}${design.referenceKind === 'canvas' ? ' (Claude Design canvas)' : ''}, read from ${design.designFrame}`);
+    if (design.referenceKind === 'canvas' && design.designFrame === 'document') {
+      lines.push('  warn  no artboard frame was found in that canvas - the design findings describe the editor page');
     }
   }
+
+  const skipped = Object.entries(result.sections).filter(([, s]) => s.skipped);
+  const ran = Object.entries(result.sections).filter(([, s]) => !s.skipped);
+  for (const [name, s] of skipped) lines.push(`  skipped ${name}: ${s.skipped}`);
+
+  let printed = 0;
+  for (const [severity, tag, gloss] of SEVERITIES) {
+    const hits = ran.flatMap(([name, s]) => (s.findings || []).filter((f) => f.severity === severity).map((f) => [name, f]));
+    if (!hits.length) continue;
+    lines.push(`\n  ${hits.length} ${severity}${hits.length === 1 ? '' : 's'} - ${gloss}`);
+    for (const [name, f] of hits) lines.push(`  ${tag} [${name}] ${f.text}`);
+    printed += hits.length;
+  }
+  // Naming the sections that came back empty is not decoration: grouped by
+  // severity, a section with nothing to say disappears from the report
+  // entirely, and "the security scan found nothing" and "the security scan
+  // never ran" then look exactly alike.
+  const clean = ran.filter(([, s]) => !(s.findings || []).length).map(([n]) => n);
+  if (clean.length) lines.push(`\n  ok    nothing found in ${clean.join(', ')}`);
+  if (!printed && !clean.length) lines.push('\n  ok    nothing ran');
+
   if (result.sections.render?.reviewFile) lines.push(`\n  visual review: ${result.sections.render.reviewFile}`);
   return lines.join('\n');
 }

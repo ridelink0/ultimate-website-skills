@@ -24,9 +24,6 @@ const cmd = argv[0];
 const { positional, flag } = parseArgs(argv);
 
 const die = (msg, code = 1) => { console.error('ultimate-website-skills: ' + msg); process.exit(code); };
-const ok = (s) => `  ok    ${s}`;
-const warn = (s) => `  warn  ${s}`;
-const err = (s) => `  ERROR ${s}`;
 
 /* ------------------------------------------------------------- sections -- */
 function loadSections() {
@@ -549,11 +546,32 @@ async function cmdVerify() {
     result = await runVerify(/^https?:\/\//i.test(target) ? target : resolve(target), {
       widths: String(flag('widths', '1440,390')).split(',').map(Number),
       wait: Number(flag('wait', 1800)),
+      design: flag('design'),
     });
   } catch (e) { die(e.message); }
   if (flag('json')) console.log(JSON.stringify(result, null, 2));
   else console.log(formatVerify(result));
   process.exitCode = result.exitCode;
+}
+/* Parity on its own, for when the question is only "is this still the design"
+   and the rest of the verdict is not wanted yet. verify --design runs the same
+   code and folds the result into the one verdict. */
+async function cmdParity() {
+  const { runParity, formatParity } = await import('./parity.mjs');
+  const target = positional[0];
+  const reference = flag('design') || positional[1];
+  if (!target || !reference) die('parity needs a built page and a design: parity <dir|file|url> --design <canvas.html|page>');
+  let result;
+  try {
+    result = await runParity(target, reference, {
+      width: Number(String(flag('widths', '1440')).split(',')[0]),
+      wait: Number(flag('wait', 2500)),
+      frame: String(flag('frame', 'auto')),
+    });
+  } catch (e) { die(e.message); }
+  if (flag('json')) console.log(JSON.stringify(result, null, 2));
+  else console.log(formatParity(result));
+  process.exitCode = result.errors ? 1 : 0;
 }
 async function cmdVideo() {
   const { studyVideo } = await import('./video.mjs');
@@ -578,6 +596,7 @@ switch (cmd) {
   case 'quality': case 'measure': await cmdQuality(); break;
   case 'security': case 'secure': await cmdSecurity(); break;
   case 'verify': await cmdVerify(); break;
+  case 'parity': await cmdParity(); break;
   case 'video': await cmdVideo(); break;
   default:
     console.log(`ultimate-website-skills
@@ -600,8 +619,11 @@ switch (cmd) {
   quality <dir|url> [--widths 1440] [--record MS] [--travel PX] [--expect-depth] [--json]
                                   measure the running page: frame rate, real parallax rates, idle libraries, type scale
   security <dir> [--json]         secrets, forms, CDN pins, headers config, disclosures - exits 1 on high
-  verify <dir|url> [--widths 1440,390] [--wait MS] [--json]
-                                  one verdict: audit + render/quality + security, findings by severity
+  parity <dir|file|url> --design <canvas.html|page> [--widths 1440] [--json]
+                                  compare a built page against its Claude Design artboard: type sizes,
+                                  palette, vertical rhythm, content geometry
+  verify <dir|url> [--widths 1440,390] [--wait MS] [--design REF] [--json]
+                                  one verdict: audit + render/quality + security (+ design parity), by severity
   video <file> [--frames 8] [--out DIR]   inspect timestamped local video frames
 `);
     process.exit(cmd ? 1 : 0);

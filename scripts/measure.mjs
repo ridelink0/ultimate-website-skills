@@ -197,14 +197,58 @@ const COST = `(() => {
   });
 })()`;
 
+/* One CSS colour, as sRGB, whatever colour space it was authored in.
+ *
+ * getComputedStyle does NOT normalise colour: a page written in oklch() gets
+ * "oklch(0.5586 0.1359 51.4)" back, color-mix() comes back as "oklab(...)",
+ * and anything that reads the numbers out of an rgb() string sees none of it.
+ * That is not exotic input - this plugin's own core.css defines its whole
+ * palette in oklch, so every page built in the house style would be
+ * unreadable to a naive parser. Painting the colour into a 1x1 canvas and
+ * reading the pixel back is the one conversion that works for every CSS
+ * Color 4 value, and it is the same trick inspect.mjs's PROBE uses.
+ *
+ * getImageData is unpremultiplied, so a translucent colour still yields its
+ * own channels; minAlpha lets a caller who is measuring PAINTED AREA reject
+ * a colour too faint to count as a ground, while a caller measuring ink
+ * takes the colour regardless of its alpha. */
+export const COLOUR_JS = `
+  const __cv = document.createElement('canvas');
+  __cv.width = __cv.height = 1;
+  const __cx = __cv.getContext('2d', { willReadFrequently: true });
+  const __memo = new Map();
+  const toRgb = (str, minAlpha) => {
+    const floor = minAlpha || 0;
+    if (!str || str === 'transparent') return null;
+    const key = str + '|' + floor;
+    if (__memo.has(key)) return __memo.get(key);
+    let out = null;
+    try {
+      __cx.clearRect(0, 0, 1, 1);
+      // Two assignments: an invalid value leaves fillStyle at the previous
+      // one, so seeding a known colour first makes "did not parse" visible
+      // instead of silently reporting whatever was set last.
+      __cx.fillStyle = '#000';
+      __cx.fillStyle = str;
+      __cx.fillRect(0, 0, 1, 1);
+      const d = __cx.getImageData(0, 0, 1, 1).data;
+      out = d[3] < floor ? null : 'rgb(' + d[0] + ', ' + d[1] + ', ' + d[2] + ')';
+    } catch (e) { out = null; }
+    __memo.set(key, out);
+    return out;
+  };
+`;
+
 /* Typography and ground, as computed values. Not taste - counts. A scale has a
  * handful of steps; a page with twenty distinct sizes has no scale, it has
  * twenty decisions nobody made together. */
-const TYPE = `(() => {
+export const TYPE = `(() => {
+  ${COLOUR_JS}
   const sizes = new Map();
   const families = new Map();
   const colours = new Map();
   let measured = null;
+  let display = null;
   const visible = (el) => {
     const rect = el.getBoundingClientRect();
     if (rect.width < 4 || rect.height < 4) return false;
@@ -221,7 +265,16 @@ const TYPE = `(() => {
     sizes.set(size, (sizes.get(size) || 0) + 1);
     const family = style.fontFamily.split(',')[0].replace(/["']/g, '').trim();
     families.set(family, (families.get(family) || 0) + 1);
-    colours.set(style.color, (colours.get(style.color) || 0) + 1);
+    // Normalised to sRGB, with the raw computed string kept only if the
+    // conversion failed - a colour nothing can read is still worth naming.
+    const ink = toRgb(style.color, 0) || style.color;
+    colours.set(ink, (colours.get(ink) || 0) + 1);
+    // The display line: the largest text on the page. It appears exactly once
+    // by definition, which is precisely why parity's "used only once is a
+    // stray" filter must not be allowed to drop it - it is the element a
+    // design is most about. Recorded here because only the probe knows which
+    // colour belongs to which size.
+    if (!display || size > display.px) display = { px: size, colour: ink, tag: el.tagName.toLowerCase() };
     if (el.tagName === 'P' && text.length > 120 && measured === null) {
       // Characters per line, from the width the paragraph actually occupies
       // and the width one character actually takes.
@@ -238,14 +291,23 @@ const TYPE = `(() => {
   const ordered = [...sizes.entries()].sort((a, b) => b[0] - a[0]);
   return JSON.stringify({
     distinctSizes: sizes.size,
+    // Sizes and colours with their usage counts, not just the count of them:
+    // design parity has to be able to drop a size used exactly once (a stray
+    // inline style is not a type scale) and to name the actual colours, and
+    // neither is recoverable from a bare tally.
+    sizeCounts: [...sizes.entries()].sort((a, b) => b[0] - a[0]),
+    textColours: [...colours.entries()].sort((a, b) => b[1] - a[1]),
+    display,
     largestPx: ordered.length ? ordered[0][0] : null,
     smallestPx: ordered.length ? ordered[ordered.length - 1][0] : null,
     scale: ordered.slice(0, 12).map((entry) => entry[0]),
     families: [...families.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map((entry) => entry[0]),
     distinctTextColours: colours.size,
     measureChars: measured,
-    background: body.backgroundColor,
-    colour: body.color,
+    // Through the same conversion as everything else above, so that no reader
+    // of this report has to know which of its colour fields is normalised.
+    background: toRgb(body.backgroundColor, 0) || body.backgroundColor,
+    colour: toRgb(body.color, 0) || body.color,
     fontsLoaded: document.fonts ? document.fonts.status : 'unknown',
   });
 })()`;

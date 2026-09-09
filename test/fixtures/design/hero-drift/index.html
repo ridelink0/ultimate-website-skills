@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- The match fixture with ONE element changed: the display line drops from
+     48px to 28px and from the design's amber to a teal that is nowhere in the
+     design. Everything else - body copy, labels, ground, rhythm, band - is
+     untouched.
+
+     A headline appears exactly once by definition, so the "a size or colour
+     used once on a big page is a stray" filter used to remove both of those
+     values before anything was compared: the size change surfaced as a single
+     note and the colour change was never mentioned at all. The element a
+     design is most about was the one element exempt from the check. Both must
+     now be named. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Coastal Survey</title>
+<style>
+  html, body { margin: 0; }
+  body { background: #faf7f2; font-family: Georgia, "Times New Roman", serif; }
+  .page { padding: 32px; }
+  h1 { font-size: 28px; color: #3fd0c9; margin: 0 0 24px; line-height: 1.1; }
+  p { font-size: 16px; color: #4a4a44; margin: 0 0 24px; line-height: 1.6; }
+  .label { display: block; font-size: 20px; color: #4a4a44; margin: 0 0 24px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Coastal Survey</h1>
+  <p>Forty miles of shingle, walked twice a year since 1974.</p>
+  <p>The counts are kept by hand and typed up in March.</p>
+  <span class="label">Shingle</span>
+  <span class="label">Saltmarsh</span>
+</div>
+</body>
+</html>
